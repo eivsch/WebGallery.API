@@ -11,7 +11,16 @@ namespace DomainModel.Aggregates.Gallery
     /// </summary>
     public class Gallery : IAggregateRoot
     {
-        private readonly List<GalleryItem> _galleryPictures;
-        public virtual IReadOnlyCollection<GalleryItem> Pictures => _galleryPictures.OrderBy(p => p.Id).ToList().AsReadOnly();
+        private int _numberOfItems;
+        public virtual int NumberOfItems => _numberOfItems;
+
+        private readonly List<string> _includeCategories;
+        public virtual IReadOnlyCollection<string> IncludeCategories => _includeCategories.AsReadOnly();
+
+        private readonly List<string> _excludeCategories;
+        public virtual IReadOnlyCollection<string> ExcludeCategories => _excludeCategories.AsReadOnly();
+
+        private readonly List<GalleryItem> _galleryItems;
+        public virtual IReadOnlyCollection<GalleryItem> GalleryItems => _galleryItems.AsReadOnly();
     }
 }

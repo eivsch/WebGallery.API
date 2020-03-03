@@ -13,9 +13,6 @@ namespace DomainModel.Aggregates.Gallery
         private string _name;
         public virtual string Name => _name;
 
-        private string _directory;
-        public virtual string Directory => _directory;
-
         private readonly List<string>  _categories;
         public virtual IReadOnlyCollection<string> Categories => _categories;
 
@@ -30,7 +27,7 @@ namespace DomainModel.Aggregates.Gallery
                 Id = id;
         }
 
-        internal static GalleryItem Create(string id, string fileSystemPath, string name, string directory, string mediaType)
+        internal static GalleryItem Create(string id, string fileSystemPath, string name, string mediaType)
         {
             return null;
         }

@@ -9,7 +9,7 @@ namespace Application.Services.Interfaces
 {
     interface IGalleryService : IApplicationService<GalleryResponse>
     {
-        Task<GalleryResponse> Get();
+        Task<GalleryResponse> Get(int numberOfItems);
         Task<GalleryResponse> Get(GalleryRequest galleryRequest);
     }
 }

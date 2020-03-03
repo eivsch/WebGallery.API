@@ -7,5 +7,6 @@ namespace Application.Gallery
 {
     public class GalleryResponse : IServiceResponse
     {
+        public List<GalleryItem> GalleryItems { get; set; }
     }
 }

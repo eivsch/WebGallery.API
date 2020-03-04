@@ -7,7 +7,7 @@ namespace DomainModel.Common.Enumerators
 {
     public class MediaType : Enumeration
     {
-        public static MediaType Picture = new MediaType(1, "Picture");
+        public static MediaType Image = new MediaType(1, "Image");
         public static MediaType Gif = new MediaType(2, "Gif");
         public static MediaType Video = new MediaType(3, "Video");
 
@@ -18,7 +18,7 @@ namespace DomainModel.Common.Enumerators
         public MediaType(int id, string name) : base(id, name)
         { }
 
-        public static IEnumerable<MediaType> List() => new[] { Picture, Gif, Video };
+        public static IEnumerable<MediaType> List() => new[] { Image, Gif, Video };
 
         public static MediaType Get(string name)
         {

@@ -1,15 +1,12 @@
 ﻿using Application.Common.Interfaces;
-using Application.Gallery;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Application.Galleries;
 using System.Threading.Tasks;
 
 namespace Application.Services.Interfaces
 {
-    interface IGalleryService : IApplicationService<GalleryResponse>
+    public interface IGalleryService : IApplicationService<GalleryResponse>
     {
-        Task<GalleryResponse> Get(int numberOfItems);
+        Task<GalleryResponse> Generate(int itemCount);
         Task<GalleryResponse> Get(GalleryRequest galleryRequest);
     }
 }

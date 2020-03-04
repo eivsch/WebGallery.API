@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Gallery
+namespace Application.Galleries
 {
     public class GalleryRequest
     {

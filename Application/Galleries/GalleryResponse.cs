@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Gallery
+namespace Application.Galleries
 {
     public class GalleryResponse : IServiceResponse
     {

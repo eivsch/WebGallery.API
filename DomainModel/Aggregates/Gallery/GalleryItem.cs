@@ -13,11 +13,11 @@ namespace DomainModel.Aggregates.Gallery
         private string _name;
         public virtual string Name => _name;
 
-        private readonly List<string>  _categories;
-        public virtual IReadOnlyCollection<string> Categories => _categories;
-
         private MediaType _mediaType;
         public virtual MediaType MediaType => _mediaType;
+
+        private readonly List<string>  _categories;
+        public virtual IReadOnlyCollection<string> Categories => _categories;
 
         private GalleryItem(string id)
         {
@@ -25,11 +25,19 @@ namespace DomainModel.Aggregates.Gallery
                 Id = Guid.NewGuid().ToString();
             else
                 Id = id;
+
+            _categories = new List<string>();
         }
 
-        internal static GalleryItem Create(string id, string fileSystemPath, string name, string mediaType)
+        internal static GalleryItem Create(string id, string fileSystemPath, string mediaType)
         {
-            return null;
+            var item = new GalleryItem(id)
+            {
+                _fileSystemPath = fileSystemPath,
+                _mediaType = MediaType.Get(mediaType)
+            };
+
+            return item;
         }
 
         internal virtual void AddCategory(string category)

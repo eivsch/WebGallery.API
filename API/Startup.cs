@@ -1,7 +1,10 @@
 using Application.Services;
 using Application.Services.Interfaces;
 using DomainModel.Aggregates.Gallery.Interfaces;
+using DomainModel.Aggregates.Picture.Interfaces;
+using Infrastructure.Common;
 using Infrastructure.Galleries;
+using Infrastructure.Pictures;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,8 +25,21 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Application 
+            // services
             services.AddTransient<IGalleryService, GalleryService>();
+            services.AddTransient<IPictureService, PictureService>();
+
+            // Infrastructure
+            // repos
             services.AddTransient<IGalleryRepository, GalleryRepository>();
+            services.AddTransient<IPictureRepository, PictureRepository>();
+
+            // db contexts
+            services.AddTransient<IWebGalleryDb, WebGalleryDb>((db) =>
+            {
+                return new WebGalleryDb(connectionString: Configuration.GetValue($"ConnectionStrings:WebGalleryContext", ""));
+            });
 
             services.AddControllers();
         }

@@ -1,6 +1,7 @@
 ﻿using DomainModel.Common;
 using DomainModel.Common.Enumerators;
 using DomainModel.Common.Interfaces;
+using DomainModel.Exceptions;
 using System;
 using System.Collections.Generic;
 
@@ -34,9 +35,15 @@ namespace DomainModel.Aggregates.Picture
                 Id = id;
         }
 
-        internal static Picture Create()
+        public static Picture Create(string id, string path)
         {
-            return null;
+            if (string.IsNullOrWhiteSpace(path))
+                throw new DomainLayerException($"Parameter {nameof(path)} cannot be empty");
+
+            return new Picture(id) 
+            { 
+                _fileSystemPath = path 
+            };
         }
     }
 }

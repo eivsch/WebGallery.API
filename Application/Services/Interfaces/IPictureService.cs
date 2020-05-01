@@ -7,5 +7,6 @@ namespace Application.Services.Interfaces
     public interface IPictureService : IApplicationService<PictureResponse>
     {
         Task<PictureResponse> Get(string id);
+        Task<string> Get(int id);
     }
 }

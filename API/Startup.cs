@@ -33,7 +33,13 @@ namespace API
             // Infrastructure
             // repos
             services.AddTransient<IGalleryRepository, GalleryRepository>();
-            services.AddTransient<IPictureRepository, PictureRepository>();
+            services.AddTransient<IPictureRepository, PictureRepositoryES>((es) =>
+            {
+                return new PictureRepositoryES(
+                    esEndpoint: Configuration.GetValue($"ConnectionStrings:ElasticSearchEndpoint", ""),
+                    root: Configuration.GetValue($"RootFolder", "")
+                );
+            });
 
             // db contexts
             services.AddTransient<IWebGalleryDb, WebGalleryDb>((db) =>

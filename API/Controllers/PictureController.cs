@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -19,12 +17,28 @@ namespace API.Controllers
             _pictureService = pictureService ?? throw new ArgumentNullException(nameof(pictureService));
         }
 
-        [HttpGet]
-        public async Task<ActionResult> Get()
+        [HttpGet("{id}")]
+        public async Task<ActionResult> Get(int id)
         {
-            var pictureResponse = await _pictureService.Get("1");
+            var path = await _pictureService.Get(id);
 
-            return Ok(pictureResponse);
+            return PhysicalFile(path, "image/jpeg");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Get(string path)
+        {
+            try
+            {
+                var file = PhysicalFile(path, "image/jpeg");
+
+                return file;
+            }
+            catch (Exception ex)
+            {
+                // TODO: Log
+                throw ex;
+            }
         }
     }
 }

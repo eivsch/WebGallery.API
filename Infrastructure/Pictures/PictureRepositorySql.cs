@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Pictures
 {
-    public class PictureRepository : IPictureRepository
+    public class PictureRepositorySql : IPictureRepository
     {
         private readonly IDataContext _webGalleryDb;
 
-        public PictureRepository(IWebGalleryDb webGalleryDb)
+        public PictureRepositorySql(IWebGalleryDb webGalleryDb)
         {
-            _webGalleryDb = webGalleryDb ?? throw new InfrastructureLayerException($"The parameter '{nameof(webGalleryDb)}' is required to initialise the {nameof(PictureRepository)} repository.", new ArgumentNullException(nameof(IWebGalleryDb)));
+            _webGalleryDb = webGalleryDb ?? throw new InfrastructureLayerException($"The parameter '{nameof(webGalleryDb)}' is required to initialise the {nameof(PictureRepositorySql)} repository.", new ArgumentNullException(nameof(IWebGalleryDb)));
         }
 
         public Task<Picture> Find(Picture aggregate)
@@ -74,6 +74,11 @@ namespace Infrastructure.Pictures
         }
 
         public Task<Picture> Save(Picture aggregate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> FindByIndex(int i)
         {
             throw new NotImplementedException();
         }

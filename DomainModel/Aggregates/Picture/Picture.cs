@@ -35,14 +35,14 @@ namespace DomainModel.Aggregates.Picture
                 Id = id;
         }
 
-        public static Picture Create(string id, string path)
+        public static Picture Create(string id, string fileSystemPath)
         {
-            if (string.IsNullOrWhiteSpace(path))
-                throw new DomainLayerException($"Parameter {nameof(path)} cannot be empty");
+            if (string.IsNullOrWhiteSpace(fileSystemPath))
+                throw new DomainLayerException($"Parameter {nameof(fileSystemPath)} cannot be empty");
 
             return new Picture(id) 
             { 
-                _fileSystemPath = path 
+                _fileSystemPath = fileSystemPath 
             };
         }
     }

@@ -27,5 +27,12 @@ namespace Application.Services
                 Path = pic.FileSystemPath
             };
         }
+
+        public async Task<string> Get(int id)
+        {
+            var pic = await _pictureRepository.FindByIndex(id);
+
+            return pic;
+        }
     }
 }

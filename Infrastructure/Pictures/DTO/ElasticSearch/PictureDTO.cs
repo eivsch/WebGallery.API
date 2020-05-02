@@ -1,6 +1,6 @@
-﻿namespace Infrastructure.Pictures.DtoEs
+﻿namespace Infrastructure.Pictures.DTO.ElasticSearch
 {
-    internal class EsPictureDto
+    internal class PictureDTO
     {
         public string Name { get; set; }
         public string AppPath { get; set; }

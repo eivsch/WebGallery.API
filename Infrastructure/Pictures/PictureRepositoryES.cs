@@ -1,6 +1,6 @@
 ﻿using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
-using Infrastructure.Pictures.DtoEs;
+using Infrastructure.Pictures.DTO.ElasticSearch;
 using Microsoft.Extensions.Configuration;
 using Nest;
 using System;
@@ -54,7 +54,7 @@ namespace Infrastructure.Pictures
 
         public async Task<string> FindByIndex(int i)
         {
-            var searchResponse = await _client.SearchAsync<EsPictureDto>(s => s
+            var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
                 .Query(q => q
                     .Match(m => m
                         .Field(f => f.GlobalSortOrder)

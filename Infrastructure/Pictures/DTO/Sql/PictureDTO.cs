@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Pictures.DTO
+﻿namespace Infrastructure.Pictures.DTO.Sql
 {
     internal class PictureDTO
     {

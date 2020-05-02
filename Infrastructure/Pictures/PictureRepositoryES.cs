@@ -1,6 +1,7 @@
 ﻿using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
 using Infrastructure.Pictures.DtoEs;
+using Microsoft.Extensions.Configuration;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,15 @@ namespace Infrastructure.Pictures
     {
         private readonly string _root;
 
-        private readonly ElasticClient _client;
+        private readonly IElasticClient _client;
+        private readonly IConfiguration _configuration;
 
-        public PictureRepositoryES(string esEndpoint, string root)
+        public PictureRepositoryES(IElasticClient elasticClient, IConfiguration configuration)
         {
-            _root = root;
+            _client = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
-            var settings = new ConnectionSettings(new Uri(esEndpoint))
-                .DefaultIndex("picture");
-            _client = new ElasticClient(settings);
+            _root = _configuration.GetValue($"RootFolder", "");
         }
 
         public Task<Picture> Find(Picture aggregate)
@@ -61,6 +62,7 @@ namespace Infrastructure.Pictures
                     )
                 )
                 .Size(1)
+                .Index("picture")
             );
 
             var pic = searchResponse.Documents.Single();

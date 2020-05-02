@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nest;
+using System;
 
 namespace API
 {
@@ -33,18 +35,21 @@ namespace API
             // Infrastructure
             // repos
             services.AddTransient<IGalleryRepository, GalleryRepository>();
-            services.AddTransient<IPictureRepository, PictureRepositoryES>((es) =>
-            {
-                return new PictureRepositoryES(
-                    esEndpoint: Configuration.GetValue($"ConnectionStrings:ElasticSearchEndpoint", ""),
-                    root: Configuration.GetValue($"RootFolder", "")
-                );
-            });
+            services.AddTransient<IPictureRepository, PictureRepositoryES>();
 
-            // db contexts
+            // External dependencies
             services.AddTransient<IWebGalleryDb, WebGalleryDb>((db) =>
             {
                 return new WebGalleryDb(connectionString: Configuration.GetValue($"ConnectionStrings:WebGalleryContext", ""));
+            });
+
+            services.AddTransient<IElasticClient, ElasticClient>((client) =>
+            {
+                var connectionSettings = new ConnectionSettings(
+                    new Uri(Configuration.GetValue($"ConnectionStrings:ElasticSearchEndpoint", ""))
+                );
+
+                return new ElasticClient(connectionSettings);
             });
 
             services.AddControllers();

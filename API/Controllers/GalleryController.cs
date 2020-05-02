@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace API.Controllers
 {
@@ -22,6 +23,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult> Get(int itemCount = 24)
         {
+            Log.Information("BEGIN - GalleryController|GET");
             var galleryResponse = await _galleryService.Generate(itemCount);
 
             return Ok(galleryResponse);

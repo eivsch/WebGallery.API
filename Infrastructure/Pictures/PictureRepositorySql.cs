@@ -3,7 +3,7 @@ using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
 using DomainModel.Exceptions;
 using Infrastructure.Common;
-using Infrastructure.Pictures.DTO;
+using Infrastructure.Pictures.DTO.Sql;
 using System;
 using System.Collections.Generic;
 using System.Linq;

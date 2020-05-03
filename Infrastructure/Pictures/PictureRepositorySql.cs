@@ -37,9 +37,10 @@ namespace Infrastructure.Pictures
 
         public async Task<Picture> FindById(string id)
         {
-            var pictureDto = await GetPictureFromPersistence(id);
+            throw new NotImplementedException();
+            //var pictureDto = await GetPictureFromPersistence(id);
 
-            return Picture.Create(pictureDto.Id, pictureDto.Path);
+            //return Picture.Create(pictureDto.Id, pictureDto.Path);
         }
 
         private async Task<PictureDTO> GetPictureFromPersistence(string id)

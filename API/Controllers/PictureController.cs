@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Application.Pictures;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             var path = await _pictureService.Get(id);
 
@@ -26,7 +27,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get(string path)
+        public IActionResult Get(string path)
         {
             try
             {
@@ -39,6 +40,14 @@ namespace API.Controllers
                 // TODO: Log
                 throw ex;
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(PictureRequest pictureRequest)
+        {
+            var response = await _pictureService.Add(pictureRequest);
+
+            return Ok(response);
         }
     }
 }

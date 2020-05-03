@@ -82,9 +82,35 @@ namespace Infrastructure.Pictures
             throw new NotImplementedException();
         }
 
-        public Task<Picture> Save(Picture aggregate)
+        public async Task<Picture> Save(Picture aggregate)
         {
-            throw new NotImplementedException();
+            var existing = _client.Get<PictureDTO>(new GetRequest<PictureDTO>("picture", aggregate.Id));
+
+            if (!existing.Found)
+            {
+                var dto = new PictureDTO
+                {
+                    Id = aggregate.Id,
+                    AppPath = aggregate.AppPath,
+                    Name = aggregate.Name,
+                    FolderName = aggregate.FolderName,
+                    FolderSortOrder = aggregate.FolderSortOrder,
+                    FolderId = aggregate.FolderId,
+                    OriginalPath = aggregate.OriginalPath,
+                    Size = aggregate.Size,
+                    CreateTimestamp = aggregate.CreateTimestamp,
+                    GlobalSortOrder = aggregate.GlobalSortOrder
+                };
+
+                var indexRequest = new IndexRequest<PictureDTO>(dto, "picture");
+                var response = _client.Index(indexRequest);
+                if (!response.IsValid)
+                {
+                    throw new Exception(response.DebugInformation);
+                }
+            }
+
+            return aggregate;
         }
     }
 }

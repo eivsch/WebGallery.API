@@ -8,5 +8,6 @@ namespace Application.Services.Interfaces
     {
         Task<PictureResponse> Get(string id);
         Task<string> Get(int id);
+        Task<PictureResponse> Add(PictureRequest pictureRequest);
     }
 }

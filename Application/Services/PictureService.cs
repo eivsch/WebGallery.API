@@ -1,5 +1,6 @@
 ﻿using Application.Pictures;
 using Application.Services.Interfaces;
+using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,29 @@ namespace Application.Services
             _pictureRepository = pictureRepository ?? throw new ArgumentNullException(nameof(pictureRepository));
         }
 
+        public async Task<PictureResponse> Add(PictureRequest pictureRequest)
+        {
+            Picture pic = Picture.Create
+                (
+                    appPath: pictureRequest.AppPath,
+                    originalPath: pictureRequest.OriginalPath,
+                    name: pictureRequest.Name,
+                    folderName: pictureRequest.FolderName,
+                    folderAppPath: pictureRequest.FolderAppPath,
+                    folderSortOrder: pictureRequest.FolderSortOrder,
+                    size: pictureRequest.Size,
+                    globalSortOrder: pictureRequest.GlobalSortOrder
+                );
+
+            var picResp = await _pictureRepository.Save(pic);
+
+            return new PictureResponse
+            {
+                Id = picResp.Id,
+                Path = picResp.AppPath
+            };
+        }
+
         public async Task<PictureResponse> Get(string id)
         {
             var pic = await _pictureRepository.FindById(id);
@@ -24,7 +48,7 @@ namespace Application.Services
             return new PictureResponse
             {
                 Id = pic.Id,
-                Path = pic.FileSystemPath
+                Path = pic.OriginalPath
             };
         }
 

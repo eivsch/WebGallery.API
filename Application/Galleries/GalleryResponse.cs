@@ -1,12 +1,13 @@
 ﻿using Application.Common.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Galleries
 {
     public class GalleryResponse : IServiceResponse
     {
-        public List<GalleryItem> GalleryItems { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public int ImageCount { get; set; }
+        public IEnumerable<string> Categories { get; set; }
     }
 }

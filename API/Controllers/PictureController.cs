@@ -26,6 +26,14 @@ namespace API.Controllers
             return PhysicalFile(path, "image/jpeg");
         }
 
+        [HttpGet("{galleryId}/{pictureId}")]
+        public async Task<IActionResult> GetByGallery(string galleryId, int pictureId)
+        {
+            var path = await _pictureService.Get(galleryId, pictureId);
+
+            return PhysicalFile(path, "image/jpeg");
+        }
+
         [HttpGet]
         public IActionResult Get(string path)
         {

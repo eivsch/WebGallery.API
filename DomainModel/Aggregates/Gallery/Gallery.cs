@@ -1,4 +1,5 @@
-﻿using DomainModel.Common.Enumerators;
+﻿using DomainModel.Common;
+using DomainModel.Common.Enumerators;
 using DomainModel.Common.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,32 +11,33 @@ namespace DomainModel.Aggregates.Gallery
     /// <summary>
     /// An aggregate representing a gallery
     /// </summary>
-    public class Gallery : IAggregateRoot
+    public class Gallery : Entity, IAggregateRoot
     {
         private int _numberOfItems;
         public virtual int NumberOfItems => _numberOfItems;
 
-        private readonly List<string> _categories;
+        private readonly List<string> _categories = new List<string>();
         public virtual IReadOnlyCollection<string> Categories => _categories.AsReadOnly();
 
-        private readonly List<MediaType> _mediaTypes;
+        private readonly List<MediaType> _mediaTypes = new List<MediaType>();
         public virtual IReadOnlyCollection<MediaType> MediaTypes => _mediaTypes.AsReadOnly();
 
-        private readonly List<GalleryItem> _galleryItems;
+        private readonly List<GalleryItem> _galleryItems = new List<GalleryItem>();
         public virtual IReadOnlyCollection<GalleryItem> GalleryItems => _galleryItems.AsReadOnly();
 
-        private Gallery()
+        private Gallery(string id)
         {
-            _categories = new List<string>();
-            _mediaTypes = new List<MediaType>();
-            _galleryItems = new List<GalleryItem>();
+            Id = id;
         }
 
-        public static Gallery Create(int items)
+        public static Gallery Create(string id, int numberOfitems)
         {
-            var gallery = new Gallery
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentNullException($"Parameter {nameof(id)} cannot be empty");
+
+            var gallery = new Gallery(id)
             {
-                _numberOfItems = items,
+                _numberOfItems = numberOfitems,
             };
 
             return gallery;

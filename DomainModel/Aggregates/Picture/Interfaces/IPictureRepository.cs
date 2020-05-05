@@ -6,5 +6,6 @@ namespace DomainModel.Aggregates.Picture.Interfaces
     public interface IPictureRepository : IRepository<Picture>
     {
         Task<string> FindByIndex(int i);
+        Task<string> FindByGalleryIndex(string galleryId, int index);
     }
 }

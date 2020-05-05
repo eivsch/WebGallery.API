@@ -1,4 +1,5 @@
-﻿using DomainModel.Aggregates.Picture;
+﻿using DomainModel.Aggregates.Gallery;
+using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
 using Infrastructure.Pictures.DTO.ElasticSearch;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +36,35 @@ namespace Infrastructure.Pictures
         public Task<IEnumerable<Picture>> FindAll(Picture aggregate)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<string> FindByGalleryIndex(string galleryId, int imageIndex)
+        {
+            var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
+                .Query(q => q
+                    .Match(m => m
+                        .Field(f => f.FolderId)
+                        .Query(galleryId)
+                    ) && q
+                    .Match(m => m
+                        .Field(f => f.FolderSortOrder)
+                        .Query(imageIndex.ToString())
+                    )
+                )
+                .Size(1)
+                .Index("picture")
+            );
+
+            var pic = searchResponse.Documents.Single();
+
+            if (Path.DirectorySeparatorChar == '/')
+            {
+                pic.AppPath = pic.AppPath.Replace('\\', '/');
+            }
+
+            var currentPath = Path.Combine(_root, pic.AppPath);
+
+            return currentPath;
         }
 
         public Task<Picture> FindById(Guid id)

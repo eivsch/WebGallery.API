@@ -83,5 +83,10 @@ namespace Infrastructure.Pictures
         {
             throw new NotImplementedException();
         }
+
+        public Task<string> FindByGalleryIndex(string galleryId, int index)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

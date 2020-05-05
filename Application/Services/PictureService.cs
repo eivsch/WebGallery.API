@@ -58,5 +58,12 @@ namespace Application.Services
 
             return pic;
         }
+
+        public async Task<string> Get(string galleryId, int pictureId)
+        {
+            var pic = await _pictureRepository.FindByGalleryIndex(galleryId, pictureId);
+
+            return pic;
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace API.Controllers
         public async Task<ActionResult> Get(int itemCount = 24)
         {
             Log.Information("BEGIN - GalleryController|GET");
-            var galleryResponse = await _galleryService.Generate(itemCount);
+            var galleryResponse = await _galleryService.GetAll();
 
             return Ok(galleryResponse);
         }

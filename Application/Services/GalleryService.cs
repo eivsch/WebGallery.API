@@ -18,31 +18,26 @@ namespace Application.Services
             _galleryRepository = galleryRepository ?? throw new ArgumentNullException(nameof(galleryRepository));
         }
 
-        public async Task<GalleryResponse> Generate(int itemCount)
-        {
-            Gallery gallery = Gallery.Create(itemCount);
-
-            gallery = await _galleryRepository.GetItems(gallery);
-
-            GalleryResponse galleryResponse = new GalleryResponse { GalleryItems = new List<Galleries.GalleryItem>() };
-            foreach(var item in gallery.GalleryItems)
-            {
-                var itemResponse = new Galleries.GalleryItem
-                {
-                    Id = item.Id,
-                    Path = item.FileSystemPath,
-                    Categories = item.Categories
-                };
-
-                galleryResponse.GalleryItems.Add(itemResponse);
-            }
-
-            return galleryResponse;
-        }
-
         public Task<GalleryResponse> Get(GalleryRequest galleryRequest)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<GalleryResponse>> GetAll()
+        {
+            var allGalleries = await _galleryRepository.GetAll();
+
+            List<GalleryResponse> list = new List<GalleryResponse>();
+            foreach(var gal in allGalleries)
+            {
+                list.Add(new GalleryResponse
+                {
+                    Id = gal.Id,
+                    ImageCount = gal.NumberOfItems
+                });
+            }
+
+            return list;
         }
     }
 }

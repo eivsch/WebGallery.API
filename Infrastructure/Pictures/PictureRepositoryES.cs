@@ -120,28 +120,19 @@ namespace Infrastructure.Pictures
                 .Index("picture")
             );
 
+            List<Picture> list = new List<Picture>();
             foreach(var pic in searchResponse.Documents)
             {
                 var picture = Picture.Create(
-                    appPath: @"C:\Eivsch\temp\pics\2017-NSX-3-1-1024x576.jpg",
-                    originalPath: "",
-                    name: "2017-NSX-3-1-1024x576.jpg",
-                    folderName: "pics",
-                    folderAppPath: @"temp\pics",
-                    folderSortOrder: 1,
-                    size: 1,
-                    globalSortOrder: 1
-                )
+                        id: pic.Id,
+                        name: pic.Name,
+                        globalSortOrder: pic.GlobalSortOrder
+                );
+
+                list.Add(picture);
             }
 
-            if (Path.DirectorySeparatorChar == '/')
-            {
-                pics.AppPath = pics.AppPath.Replace('\\', '/');
-            }
-
-            var currentPath = Path.Combine(_root, pics.AppPath);
-
-            return currentPath;
+            return list;
         }
 
         public void Remove(Picture aggregate)

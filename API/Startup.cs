@@ -35,8 +35,8 @@ namespace API
 
             // Infrastructure
             // repos
-            services.AddTransient<IGalleryRepository, GalleryRepositoryMock>();
-            services.AddTransient<IPictureRepository, PictureRepositoryMock>();
+            services.AddTransient<IGalleryRepository, GalleryRepository>();
+            services.AddTransient<IPictureRepository, PictureRepositoryES>();
 
             // External dependencies
             services.AddTransient<IWebGalleryDb, WebGalleryDb>((db) =>

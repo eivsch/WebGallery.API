@@ -11,7 +11,7 @@ namespace Infrastructure.Pictures.DTO.ElasticSearch
         public string FolderName { get; set; }
         public string FolderId { get; set; }
         public int FolderSortOrder { get; set; }
-        public int? GlobalSortOrder { get; set; }
+        public int GlobalSortOrder { get; set; }
         public int Size { get; set; }
         public DateTime? CreateTimestamp { get; set; }
     }

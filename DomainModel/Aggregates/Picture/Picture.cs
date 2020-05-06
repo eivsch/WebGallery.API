@@ -65,5 +65,19 @@ namespace DomainModel.Aggregates.Picture
                 _globalSortOrder = globalSortOrder
             };
         }
+
+        public static Picture Create(string id, string name, int globalSortOrder)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentNullException($"Parameter {nameof(id)} cannot be empty");
+            if (globalSortOrder == 0)
+                throw new ArgumentException("A valid global sort order must be provded.");
+
+            return new Picture(id)
+            {
+                _name = name,
+                _globalSortOrder = globalSortOrder
+            };
+        }
     }
 }

@@ -41,9 +41,9 @@ namespace Application.Services
             };
         }
 
-        public async Task<PictureResponse> Get(string id)
+        public async Task<PictureResponse> Get(string pictureId)
         {
-            var pic = await _pictureRepository.FindById(id);
+            var pic = await _pictureRepository.FindById(pictureId);
 
             return new PictureResponse
             {
@@ -52,9 +52,9 @@ namespace Application.Services
             };
         }
 
-        public async Task<string> Get(int id)
+        public async Task<string> Get(int index)
         {
-            var pic = await _pictureRepository.FindByIndex(id);
+            var pic = await _pictureRepository.FindByIndex(index);
 
             return pic;
         }
@@ -64,6 +64,24 @@ namespace Application.Services
             var pic = await _pictureRepository.FindByGalleryIndex(galleryId, pictureId);
 
             return pic;
+        }
+
+        public async Task<IEnumerable<PictureResponse>> GetPictures(string galleryId)
+        {
+            var pics = await _pictureRepository.FindAll(galleryId);
+
+            var list = new List<PictureResponse>();
+            foreach(var pic in pics)
+            {
+                list.Add(new PictureResponse 
+                { 
+                    Id = pic.Id, 
+                    GlobalSortOrder = pic.GlobalSortOrder, 
+                    Name = pic.Name 
+                });
+            }
+
+            return list;
         }
     }
 }

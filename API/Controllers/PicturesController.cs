@@ -9,11 +9,11 @@ namespace API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class PictureController : ControllerBase
+    public class PicturesController : ControllerBase
     {
         private readonly IPictureService _pictureService;
 
-        public PictureController(IPictureService pictureService)
+        public PicturesController(IPictureService pictureService)
         {
             _pictureService = pictureService ?? throw new ArgumentNullException(nameof(pictureService));
         }
@@ -35,20 +35,28 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(string path)
+        public async Task<IActionResult> Get(string galleryId)
         {
-            try
-            {
-                var file = PhysicalFile(path, "image/jpeg");
+            var pics = await _pictureService.GetPictures(galleryId);
 
-                return file;
-            }
-            catch (Exception ex)
-            {
-                // TODO: Log
-                throw ex;
-            }
+            return Ok(pics);
         }
+
+        //[HttpGet]
+        //public IActionResult Get(string path)
+        //{
+        //    try
+        //    {
+        //        var file = PhysicalFile(path, "image/jpeg");
+
+        //        return file;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // TODO: Log
+        //        throw ex;
+        //    }
+        //}
 
         [HttpPost]
         public async Task<IActionResult> Post(PictureRequest pictureRequest)

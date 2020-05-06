@@ -107,6 +107,43 @@ namespace Infrastructure.Pictures
             return currentPath;
         }
 
+        public async Task<IEnumerable<Picture>> FindAll(string galleryId)
+        {
+            var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
+                .Query(q => q
+                    .Match(m => m
+                        .Field(f => f.FolderId)
+                        .Query(galleryId)
+                    )
+                )
+                .Size(24)
+                .Index("picture")
+            );
+
+            foreach(var pic in searchResponse.Documents)
+            {
+                var picture = Picture.Create(
+                    appPath: @"C:\Eivsch\temp\pics\2017-NSX-3-1-1024x576.jpg",
+                    originalPath: "",
+                    name: "2017-NSX-3-1-1024x576.jpg",
+                    folderName: "pics",
+                    folderAppPath: @"temp\pics",
+                    folderSortOrder: 1,
+                    size: 1,
+                    globalSortOrder: 1
+                )
+            }
+
+            if (Path.DirectorySeparatorChar == '/')
+            {
+                pics.AppPath = pics.AppPath.Replace('\\', '/');
+            }
+
+            var currentPath = Path.Combine(_root, pics.AppPath);
+
+            return currentPath;
+        }
+
         public void Remove(Picture aggregate)
         {
             throw new NotImplementedException();

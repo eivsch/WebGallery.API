@@ -11,11 +11,11 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class GalleryController : ControllerBase
+    public class GalleriesController : ControllerBase
     {
         private readonly IGalleryService _galleryService;
 
-        public GalleryController(IGalleryService galleryService)
+        public GalleriesController(IGalleryService galleryService)
         {
             _galleryService = galleryService ?? throw new ArgumentNullException(nameof(galleryService));
         }

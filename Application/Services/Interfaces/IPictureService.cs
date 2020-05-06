@@ -1,14 +1,16 @@
 ﻿using Application.Common.Interfaces;
 using Application.Pictures;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Application.Services.Interfaces
 {
     public interface IPictureService : IApplicationService<PictureResponse>
     {
-        Task<PictureResponse> Get(string id);
-        Task<string> Get(int id);
-        Task<string> Get(string galleryId, int pictureId);
+        Task<IEnumerable<PictureResponse>> GetPictures(string galleryId);
+        Task<PictureResponse> Get(string pictureId);
+        Task<string> Get(int pictureIndexGlobal);
+        Task<string> Get(string galleryId, int pictureIndex);
         Task<PictureResponse> Add(PictureRequest pictureRequest);
     }
 }

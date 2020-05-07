@@ -107,16 +107,20 @@ namespace Infrastructure.Pictures
             return currentPath;
         }
 
-        public async Task<IEnumerable<Picture>> FindAll(string galleryId)
+        public async Task<IEnumerable<Picture>> FindAll(string galleryId, int offset = 0)
         {
             var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
                 .Query(q => q
                     .Match(m => m
                         .Field(f => f.FolderId)
                         .Query(galleryId)
+                    ) && q
+                    .Range(r => r
+                        .Field( f => f.FolderSortOrder)
+                        .GreaterThan(offset)
                     )
                 )
-                .Size(24)
+                .Size(48)
                 .Index("picture")
             );
 
@@ -126,7 +130,8 @@ namespace Infrastructure.Pictures
                 var picture = Picture.Create(
                         id: pic.Id,
                         name: pic.Name,
-                        globalSortOrder: pic.GlobalSortOrder
+                        globalSortOrder: pic.GlobalSortOrder,
+                        folderSortOrder: pic.FolderSortOrder
                 );
 
                 list.Add(picture);

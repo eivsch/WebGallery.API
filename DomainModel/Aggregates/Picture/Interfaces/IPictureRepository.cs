@@ -8,6 +8,6 @@ namespace DomainModel.Aggregates.Picture.Interfaces
     {
         Task<string> FindByIndex(int i);
         Task<string> FindByGalleryIndex(string galleryId, int index);
-        Task<IEnumerable<Picture>> FindAll(string galleryId);
+        Task<IEnumerable<Picture>> FindAll(string galleryId, int offset = 0);
     }
 }

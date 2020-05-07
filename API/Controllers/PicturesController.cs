@@ -35,9 +35,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(string galleryId)
+        public async Task<IActionResult> Get(string galleryId, int offset)
         {
-            var pics = await _pictureService.GetPictures(galleryId);
+            var pics = await _pictureService.GetPictures(galleryId, offset);
 
             return Ok(pics);
         }

@@ -7,7 +7,7 @@ namespace Application.Services.Interfaces
 {
     public interface IPictureService : IApplicationService<PictureResponse>
     {
-        Task<IEnumerable<PictureResponse>> GetPictures(string galleryId);
+        Task<IEnumerable<PictureResponse>> GetPictures(string galleryId, int offset = 0);
         Task<PictureResponse> Get(string pictureId);
         Task<string> Get(int pictureIndexGlobal);
         Task<string> Get(string galleryId, int pictureIndex);

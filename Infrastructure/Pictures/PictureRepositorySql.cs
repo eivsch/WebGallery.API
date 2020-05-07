@@ -89,7 +89,7 @@ namespace Infrastructure.Pictures
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Picture>> FindAll(string galleryId)
+        public Task<IEnumerable<Picture>> FindAll(string galleryId, int offset = 0)
         {
             throw new NotImplementedException();
         }

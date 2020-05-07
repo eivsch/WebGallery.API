@@ -66,7 +66,7 @@ namespace DomainModel.Aggregates.Picture
             };
         }
 
-        public static Picture Create(string id, string name, int globalSortOrder)
+        public static Picture Create(string id, string name, int globalSortOrder, int folderSortOrder)
         {
             if (string.IsNullOrWhiteSpace(id))
                 throw new ArgumentNullException($"Parameter {nameof(id)} cannot be empty");
@@ -76,7 +76,8 @@ namespace DomainModel.Aggregates.Picture
             return new Picture(id)
             {
                 _name = name,
-                _globalSortOrder = globalSortOrder
+                _globalSortOrder = globalSortOrder,
+                _folderSortOrder = folderSortOrder
             };
         }
     }

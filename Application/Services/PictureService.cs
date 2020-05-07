@@ -66,9 +66,9 @@ namespace Application.Services
             return pic;
         }
 
-        public async Task<IEnumerable<PictureResponse>> GetPictures(string galleryId)
+        public async Task<IEnumerable<PictureResponse>> GetPictures(string galleryId, int offset = 0)
         {
-            var pics = await _pictureRepository.FindAll(galleryId);
+            var pics = await _pictureRepository.FindAll(galleryId, offset);
 
             var list = new List<PictureResponse>();
             foreach(var pic in pics)
@@ -77,7 +77,8 @@ namespace Application.Services
                 { 
                     Id = pic.Id, 
                     GlobalSortOrder = pic.GlobalSortOrder, 
-                    Name = pic.Name 
+                    Name = pic.Name ,
+                    FolderSortOrder = pic.FolderSortOrder,
                 });
             }
 

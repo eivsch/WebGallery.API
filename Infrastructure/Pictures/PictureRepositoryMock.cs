@@ -52,19 +52,21 @@ namespace Infrastructure.Pictures
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Picture>> FindAll(string galleryId)
+        public async Task<IEnumerable<Picture>> FindAll(string galleryId, int offset = 0)
         {
             return new List<Picture>
             {
                 Picture.Create(
                     id: "dfgdsfgg",
                     name: "2017-NSX-3-1-1024x576.jpg",
-                    globalSortOrder: 1
+                    globalSortOrder: 1,
+                    folderSortOrder: 1
                 ),
                 Picture.Create(
                     id: "lkjjhg",
                     name: "b.jpg",
-                    globalSortOrder: 2
+                    globalSortOrder: 2,
+                    folderSortOrder: 2
                 ),
             };
         }

@@ -18,22 +18,6 @@ namespace API.Controllers
             _pictureService = pictureService ?? throw new ArgumentNullException(nameof(pictureService));
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
-        {
-            var path = await _pictureService.Get(id);
-
-            return PhysicalFile(path, "image/jpeg");
-        }
-
-        [HttpGet("{galleryId}/{pictureId}")]
-        public async Task<IActionResult> GetByGallery(string galleryId, int pictureId)
-        {
-            var path = await _pictureService.Get(galleryId, pictureId);
-
-            return PhysicalFile(path, "image/jpeg");
-        }
-
         [HttpGet]
         public async Task<IActionResult> Get(string galleryId, int offset)
         {

@@ -28,16 +28,6 @@ namespace Infrastructure.Pictures
             _root = _configuration.GetValue($"RootFolder", "");
         }
 
-        public Task<Picture> Find(Picture aggregate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Picture>> FindAll(Picture aggregate)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<string> FindByGalleryIndex(string galleryId, int imageIndex)
         {
             var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
@@ -67,44 +57,55 @@ namespace Infrastructure.Pictures
             return currentPath;
         }
 
-        public Task<Picture> FindById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Picture> FindById(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Picture> FindById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<string> FindByIndex(int i)
+        {
+            PictureDTO pictureDto;
+
+            if(i > 0)
+            {
+                var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
+                    .Query(q => q
+                        .Match(m => m
+                            .Field(f => f.GlobalSortOrder)
+                            .Query(i.ToString())
+                        )
+                    )
+                    .Size(1)
+                    .Index("picture")
+                );
+
+                pictureDto = searchResponse.Documents.Single();
+            }
+            else 
+            { 
+                pictureDto = await FindRandom();
+            }
+
+            if(Path.DirectorySeparatorChar == '/')
+            {
+                pictureDto.AppPath = pictureDto.AppPath.Replace('\\', '/');
+            }
+
+            var currentPath = Path.Combine(_root, pictureDto.AppPath);
+
+            return currentPath;
+        }
+
+        private async Task<PictureDTO> FindRandom()
         {
             var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
                 .Query(q => q
-                    .Match(m => m
-                        .Field(f => f.GlobalSortOrder)
-                        .Query(i.ToString())
+                    .FunctionScore(f => f
+                        .Functions(fx => fx
+                            .RandomScore(rng => rng.Seed(DateTime.Now.Millisecond))
+                        )
                     )
                 )
                 .Size(1)
                 .Index("picture")
             );
 
-            var pic = searchResponse.Documents.Single();
-
-            if(Path.DirectorySeparatorChar == '/')
-            {
-                pic.AppPath = pic.AppPath.Replace('\\', '/');
-            }
-
-            var currentPath = Path.Combine(_root, pic.AppPath);
-
-            return currentPath;
+            return searchResponse.Documents.Single();
         }
 
         public async Task<IEnumerable<Picture>> FindAll(string galleryId, int offset = 0)
@@ -140,11 +141,6 @@ namespace Infrastructure.Pictures
             return list;
         }
 
-        public void Remove(Picture aggregate)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Picture> Save(Picture aggregate)
         {
             var existing = _client.Get<PictureDTO>(new GetRequest<PictureDTO>("picture", aggregate.Id));
@@ -174,6 +170,36 @@ namespace Infrastructure.Pictures
             }
 
             return aggregate;
+        }
+
+        public Task<Picture> FindById(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Picture> FindById(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Picture> FindById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Remove(Picture aggregate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Picture> Find(Picture aggregate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Picture>> FindAll(Picture aggregate)
+        {
+            throw new NotImplementedException();
         }
     }
 }

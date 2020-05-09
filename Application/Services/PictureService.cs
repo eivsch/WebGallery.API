@@ -4,6 +4,7 @@ using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,7 +38,7 @@ namespace Application.Services
             return new PictureResponse
             {
                 Id = picResp.Id,
-                Path = picResp.AppPath
+                AppPath = picResp.AppPath
             };
         }
 
@@ -48,22 +49,39 @@ namespace Application.Services
             return new PictureResponse
             {
                 Id = pic.Id,
-                Path = pic.OriginalPath
+                AppPath = pic.AppPath,
+                FolderSortOrder = pic.FolderSortOrder,
+                GlobalSortOrder = pic.GlobalSortOrder,
+                Name = pic.Name
             };
         }
 
-        public async Task<string> Get(int index)
+        public async Task<PictureResponse> Get(int index)
         {
             var pic = await _pictureRepository.FindByIndex(index);
 
-            return pic;
+            return new PictureResponse
+            {
+                Id = pic.Id,
+                AppPath = pic.AppPath,
+                FolderSortOrder = pic.FolderSortOrder,
+                GlobalSortOrder = pic.GlobalSortOrder,
+                Name = pic.Name
+            };
         }
 
-        public async Task<string> Get(string galleryId, int pictureId)
+        public async Task<PictureResponse> Get(string galleryId, int pictureId)
         {
             var pic = await _pictureRepository.FindByGalleryIndex(galleryId, pictureId);
 
-            return pic;
+            return new PictureResponse
+            {
+                Id = pic.Id,
+                AppPath = pic.AppPath,
+                FolderSortOrder = pic.FolderSortOrder,
+                GlobalSortOrder = pic.GlobalSortOrder,
+                Name = pic.Name
+            };
         }
 
         public async Task<IEnumerable<PictureResponse>> GetPictures(string galleryId, int offset = 0)

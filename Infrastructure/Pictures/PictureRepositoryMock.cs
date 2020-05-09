@@ -80,5 +80,15 @@ namespace Infrastructure.Pictures
         {
             throw new NotImplementedException();
         }
+
+        Task<Picture> IPictureRepository.FindByIndex(int i)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Picture> IPictureRepository.FindByGalleryIndex(string galleryId, int index)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -15,20 +15,14 @@ namespace Infrastructure.Pictures
 {
     public class PictureRepositoryES : IPictureRepository
     {
-        private readonly string _root;
-
         private readonly IElasticClient _client;
-        private readonly IConfiguration _configuration;
 
-        public PictureRepositoryES(IElasticClient elasticClient, IConfiguration configuration)
+        public PictureRepositoryES(IElasticClient elasticClient)
         {
             _client = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-
-            _root = _configuration.GetValue($"RootFolder", "");
         }
 
-        public async Task<string> FindByGalleryIndex(string galleryId, int imageIndex)
+        public async Task<Picture> FindByGalleryIndex(string galleryId, int imageIndex)
         {
             var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
                 .Query(q => q
@@ -45,21 +39,22 @@ namespace Infrastructure.Pictures
                 .Index("picture")
             );
 
-            var pic = searchResponse.Documents.Single();
+            var dto = searchResponse.Documents.Single();
+            
+            Picture picture = Picture.Create(
+                id: dto.Id,
+                name: dto.Name,
+                globalSortOrder: dto.GlobalSortOrder,
+                folderSortOrder: dto.FolderSortOrder,
+                appPath: dto.AppPath
+            );
 
-            if (Path.DirectorySeparatorChar == '/')
-            {
-                pic.AppPath = pic.AppPath.Replace('\\', '/');
-            }
-
-            var currentPath = Path.Combine(_root, pic.AppPath);
-
-            return currentPath;
+            return picture;
         }
 
-        public async Task<string> FindByIndex(int i)
+        public async Task<Picture> FindByIndex(int i)
         {
-            PictureDTO pictureDto;
+            PictureDTO dto;
 
             if(i > 0)
             {
@@ -74,21 +69,31 @@ namespace Infrastructure.Pictures
                     .Index("picture")
                 );
 
-                pictureDto = searchResponse.Documents.Single();
+                dto = searchResponse.Documents.Single();
             }
             else 
             { 
-                pictureDto = await FindRandom();
+                dto = await FindRandom();
             }
 
-            if(Path.DirectorySeparatorChar == '/')
-            {
-                pictureDto.AppPath = pictureDto.AppPath.Replace('\\', '/');
-            }
+            Picture picture = Picture.Create(
+                id: dto.Id,
+                name: dto.Name,
+                globalSortOrder: dto.GlobalSortOrder,
+                folderSortOrder: dto.FolderSortOrder,
+                appPath: dto.AppPath
+            );
 
-            var currentPath = Path.Combine(_root, pictureDto.AppPath);
+            return picture;
 
-            return currentPath;
+            //if(Path.DirectorySeparatorChar == '/')
+            //{
+            //    dto.AppPath = dto.AppPath.Replace('\\', '/');
+            //}
+
+            //var currentPath = Path.Combine(_root, dto.AppPath);
+
+            //return currentPath;
         }
 
         private async Task<PictureDTO> FindRandom()

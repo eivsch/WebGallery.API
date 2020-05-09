@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Application.Pictures;
 using Application.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -16,6 +15,14 @@ namespace API.Controllers
         public PicturesController(IPictureService pictureService)
         {
             _pictureService = pictureService ?? throw new ArgumentNullException(nameof(pictureService));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var pictureResponse = await _pictureService.Get(id);
+
+            return Ok(pictureResponse);
         }
 
         [HttpGet]

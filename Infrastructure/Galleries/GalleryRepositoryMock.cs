@@ -38,8 +38,8 @@ namespace Infrastructure.Galleries
         {
             var list = new List<Gallery>()
             {
-                Gallery.Create("abc"),
-                Gallery.Create("dfg"),
+                Gallery.Create("abc", 1),
+                Gallery.Create("dfg", 1),
             };
 
             return list;

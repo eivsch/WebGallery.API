@@ -55,10 +55,11 @@ namespace Infrastructure.Galleries
             {
                 var result = await _client.SearchAsync<GalleryDTO>(s => s
                     .Aggregations(a => a
-                        .Terms("my_agg", st => st
-                            .Field(f => f.FolderId.Suffix("keyword"))   // "keyword" is an ElasticSearch data-type: https://www.elastic.co/guide/en/elasticsearch/client/net-api/current/multi-fields.html
+                            .Terms("my_agg", st => st
+                                .Field(f => f.FolderId.Suffix("keyword"))   // "keyword" is an ElasticSearch data-type: https://www.elastic.co/guide/en/elasticsearch/client/net-api/current/multi-fields.html
+                                .Size(100)
+                            )
                         )
-                    )
                     .Index("picture")
                 );
 
@@ -66,7 +67,7 @@ namespace Infrastructure.Galleries
                 foreach(var bucket in result.Aggregations.Terms("my_agg").Buckets)
                 {
                     list.Add(
-                        Gallery.Create(bucket.Key)
+                        Gallery.Create(bucket.Key, Convert.ToInt32(bucket.DocCount))
                     );
                 }
 
@@ -106,7 +107,7 @@ namespace Infrastructure.Galleries
                     .Index("picture")
                 );
 
-                var gallery = Gallery.Create("");
+                var gallery = Gallery.Create("", itemsInGallery);
                 foreach (var pic in searchResponse.Documents)
                 {
                     gallery.AddGalleryItem(pic.Id, pic.GlobalSortOrder);

@@ -13,7 +13,8 @@ namespace DomainModel.Aggregates.Gallery
     /// </summary>
     public class Gallery : Entity, IAggregateRoot
     {
-        public virtual int NumberOfItems => _galleryItems.Count();
+        private int _numberOfItems;
+        public virtual int NumberOfItems => _numberOfItems;
 
         private readonly List<string> _categories = new List<string>();
         public virtual IReadOnlyCollection<string> Categories => _categories.AsReadOnly();
@@ -32,9 +33,12 @@ namespace DomainModel.Aggregates.Gallery
                 Id = id;
         }
 
-        public static Gallery Create(string id)
+        public static Gallery Create(string id, int numberOfItems)
         {
-            var gallery = new Gallery(id);
+            var gallery = new Gallery(id)
+            {
+                _numberOfItems = numberOfItems
+            };
 
             return gallery;
         }

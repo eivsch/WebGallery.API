@@ -25,6 +25,14 @@ namespace API.Controllers
             return Ok(pictureResponse);
         }
 
+        [HttpGet("sha/{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            var pictureResponse = await _pictureService.Get(id);
+
+            return Ok(pictureResponse);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Get(string galleryId, int offset)
         {

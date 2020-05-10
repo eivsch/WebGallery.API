@@ -85,15 +85,6 @@ namespace Infrastructure.Pictures
             );
 
             return picture;
-
-            //if(Path.DirectorySeparatorChar == '/')
-            //{
-            //    dto.AppPath = dto.AppPath.Replace('\\', '/');
-            //}
-
-            //var currentPath = Path.Combine(_root, dto.AppPath);
-
-            //return currentPath;
         }
 
         private async Task<PictureDTO> FindRandom()
@@ -182,9 +173,31 @@ namespace Infrastructure.Pictures
             throw new NotImplementedException();
         }
 
-        public Task<Picture> FindById(string id)
+        public async Task<Picture> FindById(string id)
         {
-            throw new NotImplementedException();
+            var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
+                .Query(q => q
+                    .Match(m => m
+                        .Field(f => f.Id)
+                        .Query(id)
+                    )
+                )
+                .Size(1)
+                .Index("picture")
+            );
+
+            var dto = searchResponse.Documents.Single();
+
+
+            Picture picture = Picture.Create(
+                id: dto.Id,
+                name: dto.Name,
+                globalSortOrder: dto.GlobalSortOrder,
+                folderSortOrder: dto.FolderSortOrder,
+                appPath: dto.AppPath
+            );
+
+            return picture;
         }
 
         public Task<Picture> FindById(int id)

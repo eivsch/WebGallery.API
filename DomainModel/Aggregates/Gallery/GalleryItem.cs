@@ -7,6 +7,9 @@ namespace DomainModel.Aggregates.Gallery
 {
     public class GalleryItem : Entity
     {
+        private int _index;
+        public virtual int Index => _index;
+
         private string _fileSystemPath;
         public virtual string FileSystemPath => _fileSystemPath;
 
@@ -16,8 +19,8 @@ namespace DomainModel.Aggregates.Gallery
         private MediaType _mediaType;
         public virtual MediaType MediaType => _mediaType;
 
-        private readonly List<string>  _categories;
-        public virtual IReadOnlyCollection<string> Categories => _categories;
+        private readonly List<string>  _tags;
+        public virtual IReadOnlyCollection<string> Tags => _tags;
 
         private GalleryItem(string id)
         {
@@ -26,24 +29,23 @@ namespace DomainModel.Aggregates.Gallery
             else
                 Id = id;
 
-            _categories = new List<string>();
+            _tags = new List<string>();
         }
 
-        internal static GalleryItem Create(string id, string fileSystemPath, string mediaType)
+        internal static GalleryItem Create(string id, int index)
         {
             var item = new GalleryItem(id)
             {
-                _fileSystemPath = fileSystemPath,
-                _mediaType = MediaType.Get(mediaType)
+                _index = index
             };
 
             return item;
         }
 
-        internal virtual void AddCategory(string category)
+        internal virtual void AddTag(string tag)
         {
-            if (!_categories.Contains(category))
-                _categories.Add(category.ToUpper());
+            if (!_tags.Contains(tag))
+                _tags.Add(tag.ToUpper());
         }
     }
 }

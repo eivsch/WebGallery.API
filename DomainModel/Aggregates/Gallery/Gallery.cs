@@ -13,8 +13,7 @@ namespace DomainModel.Aggregates.Gallery
     /// </summary>
     public class Gallery : Entity, IAggregateRoot
     {
-        private int _numberOfItems;
-        public virtual int NumberOfItems => _numberOfItems;
+        public virtual int NumberOfItems => _galleryItems.Count();
 
         private readonly List<string> _categories = new List<string>();
         public virtual IReadOnlyCollection<string> Categories => _categories.AsReadOnly();
@@ -27,18 +26,15 @@ namespace DomainModel.Aggregates.Gallery
 
         private Gallery(string id)
         {
-            Id = id;
+            if (string.IsNullOrWhiteSpace(id))
+                Id = Guid.NewGuid().ToString();
+            else
+                Id = id;
         }
 
-        public static Gallery Create(string id, int numberOfitems)
+        public static Gallery Create(string id)
         {
-            if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentNullException($"Parameter {nameof(id)} cannot be empty");
-
-            var gallery = new Gallery(id)
-            {
-                _numberOfItems = numberOfitems,
-            };
+            var gallery = new Gallery(id);
 
             return gallery;
         }
@@ -75,15 +71,15 @@ namespace DomainModel.Aggregates.Gallery
             _mediaTypes.Add(mediaType);
         }
 
-        public virtual void AddGalleryItem(string galleryItemId, string fileSystemPath, string mediaType, string categories = "")
+        public virtual void AddGalleryItem(string galleryItemId, int index, string tags = "")
         {
-            var galleryItem = GalleryItem.Create(galleryItemId, fileSystemPath, mediaType);
+            var galleryItem = GalleryItem.Create(galleryItemId, index);
 
-            if (!string.IsNullOrWhiteSpace(categories))
+            if (!string.IsNullOrWhiteSpace(tags))
             {
-                foreach(var category in categories.Split(','))
+                foreach(var tag in tags.Split(','))
                 {
-                    galleryItem.AddCategory(category);
+                    galleryItem.AddTag(tag);
                 }
             }
             

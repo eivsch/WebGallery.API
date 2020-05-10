@@ -38,14 +38,19 @@ namespace Infrastructure.Galleries
         {
             var list = new List<Gallery>()
             {
-                Gallery.Create("abc", 1),
-                Gallery.Create("dfg", 5),
+                Gallery.Create("abc"),
+                Gallery.Create("dfg"),
             };
 
             return list;
         }
 
         public Task<Gallery> GetItems(Gallery gallery)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Gallery>> GetRandom(int numberOfGalleries, int itemsInGallery)
         {
             throw new NotImplementedException();
         }

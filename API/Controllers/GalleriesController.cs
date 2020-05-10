@@ -28,5 +28,14 @@ namespace API.Controllers
 
             return Ok(galleryResponse);
         }
+
+        [HttpGet("random")]
+        public async Task<ActionResult> GetRandom(int num = 12, int itemsInEach = 24)
+        {
+            Log.Information("BEGIN - GalleryController|GET");
+            var galleryResponse = await _galleryService.GetRandom(num, itemsInEach);
+
+            return Ok(galleryResponse);
+        }
     }
 }

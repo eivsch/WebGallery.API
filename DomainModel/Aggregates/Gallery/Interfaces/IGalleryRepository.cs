@@ -8,5 +8,6 @@ namespace DomainModel.Aggregates.Gallery.Interfaces
     {
         Task<Gallery> GetItems(Gallery gallery);
         Task<List<Gallery>> GetAll();
+        Task<List<Gallery>> GetRandom(int numberOfGalleries, int itemsInGallery);
     }
 }

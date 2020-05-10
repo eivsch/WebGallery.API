@@ -46,13 +46,7 @@ namespace Infrastructure.Galleries
 
         public async Task<Gallery> GetItems(Gallery gallery)
         {
-            gallery.AddGalleryItem("1", "test/path/pic1.jpg", "image", categories: "tractor,football");
-            gallery.AddGalleryItem("2", "test/path/pic2.jpg", "image");
-            gallery.AddGalleryItem("3", "test/path/pic3.jpg", "image");
-            gallery.AddGalleryItem("4", "test/path/pic4.jpg", "image", categories: "football");
-            gallery.AddGalleryItem("5", "test/path/pic5.jpg", "image");
-
-            return gallery;
+            throw new NotImplementedException();
         }
 
         public async Task<List<Gallery>> GetAll()
@@ -72,7 +66,7 @@ namespace Infrastructure.Galleries
                 foreach(var bucket in result.Aggregations.Terms("my_agg").Buckets)
                 {
                     list.Add(
-                        Gallery.Create(bucket.Key, Convert.ToInt32(bucket.DocCount))
+                        Gallery.Create(bucket.Key)
                     );
                 }
 
@@ -92,6 +86,38 @@ namespace Infrastructure.Galleries
         public Task<Gallery> Save(Gallery aggregate)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<Gallery>> GetRandom(int galleriesToGenerate, int itemsInGallery)
+        {
+            var galleryList = new List<Gallery>();
+            var counter = 0;
+            while (counter < galleriesToGenerate)
+            {
+                var searchResponse = await _client.SearchAsync<GalleryPictureDTO>(s => s
+                    .Query(q => q
+                        .FunctionScore(f => f
+                            .Functions(fx => fx
+                                .RandomScore(rng => rng.Seed(DateTime.Now.Millisecond))
+                            )
+                        )
+                    )
+                    .Size(itemsInGallery)
+                    .Index("picture")
+                );
+
+                var gallery = Gallery.Create("");
+                foreach (var pic in searchResponse.Documents)
+                {
+                    gallery.AddGalleryItem(pic.Id, pic.GlobalSortOrder);
+                }
+
+                galleryList.Add(gallery);
+
+                counter++;
+            }
+
+            return galleryList;
         }
     }
 }

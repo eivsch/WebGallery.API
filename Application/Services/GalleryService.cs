@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using DomainModel.Aggregates.Gallery.Interfaces;
+using System.Linq;
 
 namespace Application.Services
 {
@@ -38,6 +39,33 @@ namespace Application.Services
             }
 
             return list;
+        }
+
+        public async Task<IEnumerable<GalleryResponse>> GetRandom(int numberOfGalleries, int itemsInGallery)
+        {
+            var randomGalleries = await _galleryRepository.GetRandom(numberOfGalleries, itemsInGallery);
+
+            List<GalleryResponse> list = new List<GalleryResponse>();
+            foreach (var gal in randomGalleries)
+            {
+                list.Add(new GalleryResponse
+                {
+                    Id = gal.Id,
+                    ImageCount = gal.NumberOfItems,
+                    GalleryPictures = gal.GalleryItems.ToList().Select(i => Map(i)),
+                });
+            }
+
+            return list;
+        }
+
+        private GalleryPicture Map(GalleryItem item)
+        {
+            return new GalleryPicture
+            {
+                Id = item.Id,
+                Index = item.Index
+            };
         }
     }
 }

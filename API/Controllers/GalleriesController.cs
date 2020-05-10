@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Galleries;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get(int itemCount = 24)
+        public async Task<IActionResult> Get(int itemCount = 24)
         {
             Log.Information("BEGIN - GalleryController|GET");
             var galleryResponse = await _galleryService.GetAll();
@@ -30,10 +31,19 @@ namespace API.Controllers
         }
 
         [HttpGet("random")]
-        public async Task<ActionResult> GetRandom(int num = 12, int itemsInEach = 24)
+        public async Task<IActionResult> GetRandom(int num = 12, int itemsInEach = 24)
         {
             Log.Information("BEGIN - GalleryController|GET");
             var galleryResponse = await _galleryService.GetRandom(num, itemsInEach);
+
+            return Ok(galleryResponse);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Save(GalleryRequest request)
+        {
+            Log.Information("BEGIN - GalleryController|POST");
+            var galleryResponse = await _galleryService.Save(request);
 
             return Ok(galleryResponse);
         }

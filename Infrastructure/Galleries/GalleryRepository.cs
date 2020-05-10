@@ -64,7 +64,7 @@ namespace Infrastructure.Galleries
                 );
 
                 var list = new List<Gallery>();
-                foreach(var bucket in result.Aggregations.Terms("my_agg").Buckets)
+                foreach (var bucket in result.Aggregations.Terms("my_agg").Buckets)
                 {
                     list.Add(
                         Gallery.Create(bucket.Key, Convert.ToInt32(bucket.DocCount))
@@ -73,7 +73,7 @@ namespace Infrastructure.Galleries
 
                 return list;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -84,9 +84,34 @@ namespace Infrastructure.Galleries
             throw new NotImplementedException();
         }
 
-        public Task<Gallery> Save(Gallery aggregate)
+        public async Task<Gallery> Save(Gallery aggregate)
         {
-            throw new NotImplementedException();
+            var dto = new GalleryDTO
+            {
+                Id = aggregate.Id,
+                FolderId = aggregate.FolderId,
+                GalleryPictures = aggregate.GalleryItems.ToList().Select(i => Map(i))
+            };
+
+            var indexRequest = new IndexRequest<GalleryDTO>(dto, "gallery");
+            var response = await _client.IndexAsync(indexRequest);
+            if (!response.IsValid)
+            {
+                throw new Exception(response.DebugInformation);
+            }
+
+            return aggregate;
+        }
+        
+
+
+        private GalleryPictureDTO Map(GalleryItem galleryItem)
+        {
+            return new GalleryPictureDTO
+            {
+                Id = galleryItem.Id,
+                GlobalSortOrder = galleryItem.Index
+            };
         }
 
         public async Task<List<Gallery>> GetRandom(int galleriesToGenerate, int itemsInGallery)

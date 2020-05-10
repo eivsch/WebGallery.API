@@ -16,8 +16,11 @@ namespace DomainModel.Aggregates.Gallery
         private int _numberOfItems;
         public virtual int NumberOfItems => _numberOfItems;
 
-        private readonly List<string> _categories = new List<string>();
-        public virtual IReadOnlyCollection<string> Categories => _categories.AsReadOnly();
+        private string _folderId;
+        public virtual string FolderId => _folderId;
+        
+        private readonly List<string> _tags = new List<string>();
+        public virtual IReadOnlyCollection<string> Tags => _tags.AsReadOnly();
 
         private readonly List<MediaType> _mediaTypes = new List<MediaType>();
         public virtual IReadOnlyCollection<MediaType> MediaTypes => _mediaTypes.AsReadOnly();
@@ -33,22 +36,23 @@ namespace DomainModel.Aggregates.Gallery
                 Id = id;
         }
 
-        public static Gallery Create(string id, int numberOfItems)
+        public static Gallery Create(string id, int numberOfItems, string folderId = "")
         {
             var gallery = new Gallery(id)
             {
-                _numberOfItems = numberOfItems
+                _numberOfItems = numberOfItems,
+                _folderId = folderId
             };
 
             return gallery;
         }
 
-        public virtual void AddCategory(string category)
+        public virtual void AddTag(string tag)
         {
-            if (string.IsNullOrWhiteSpace(category))
-                throw new ArgumentNullException(nameof(category));
+            if (string.IsNullOrWhiteSpace(tag))
+                throw new ArgumentNullException(nameof(tag));
                 
-            _categories.Add(category);
+            _tags.Add(tag);
         }
 
         public virtual void AddMediaType(string mediaTypeName)

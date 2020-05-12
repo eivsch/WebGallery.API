@@ -115,6 +115,7 @@ namespace Infrastructure.Pictures
                     .Range(r => r
                         .Field( f => f.FolderSortOrder)
                         .GreaterThan(offset)
+                        .LessThanOrEquals(offset + 48)
                     )
                 )
                 .Size(48)

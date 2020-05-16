@@ -4,8 +4,7 @@ using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -30,58 +29,37 @@ namespace Application.Services
                     folderAppPath: pictureRequest.FolderAppPath,
                     folderSortOrder: pictureRequest.FolderSortOrder,
                     size: pictureRequest.Size,
-                    globalSortOrder: pictureRequest.GlobalSortOrder
+                    globalSortOrder: pictureRequest.GlobalSortOrder,
+                    created: pictureRequest.Created
                 );
 
-            var picResp = await _pictureRepository.Save(pic);
+            foreach (var tag in pictureRequest.Tags)
+                pic.AddTag(tag);
 
-            return new PictureResponse
-            {
-                Id = picResp.Id,
-                AppPath = picResp.AppPath
-            };
+            pic = await _pictureRepository.Save(pic);
+
+            return Map(pic);
         }
 
         public async Task<PictureResponse> Get(string pictureId)
         {
             var pic = await _pictureRepository.FindById(pictureId);
 
-            return new PictureResponse
-            {
-                Id = pic.Id,
-                AppPath = pic.AppPath,
-                FolderSortOrder = pic.FolderSortOrder,
-                GlobalSortOrder = pic.GlobalSortOrder,
-                Name = pic.Name
-            };
+            return Map(pic);
         }
 
         public async Task<PictureResponse> Get(int index)
         {
             var pic = await _pictureRepository.FindByIndex(index);
 
-            return new PictureResponse
-            {
-                Id = pic.Id,
-                AppPath = pic.AppPath,
-                FolderSortOrder = pic.FolderSortOrder,
-                GlobalSortOrder = pic.GlobalSortOrder,
-                Name = pic.Name
-            };
+            return Map(pic);
         }
 
         public async Task<PictureResponse> Get(string galleryId, int pictureId)
         {
             var pic = await _pictureRepository.FindByGalleryIndex(galleryId, pictureId);
 
-            return new PictureResponse
-            {
-                Id = pic.Id,
-                AppPath = pic.AppPath,
-                FolderSortOrder = pic.FolderSortOrder,
-                GlobalSortOrder = pic.GlobalSortOrder,
-                Name = pic.Name
-            };
+            return Map(pic);
         }
 
         public async Task<IEnumerable<PictureResponse>> GetPictures(string galleryId, int offset = 0)
@@ -89,18 +67,27 @@ namespace Application.Services
             var pics = await _pictureRepository.FindAll(galleryId, offset);
 
             var list = new List<PictureResponse>();
-            foreach(var pic in pics)
-            {
-                list.Add(new PictureResponse 
-                { 
-                    Id = pic.Id, 
-                    GlobalSortOrder = pic.GlobalSortOrder, 
-                    Name = pic.Name ,
-                    FolderSortOrder = pic.FolderSortOrder,
-                });
-            }
+            pics.ToList().ForEach(p => list.Add(Map(p)));
 
             return list;
+        }
+
+        private PictureResponse Map(Picture pic)
+        {
+            return new PictureResponse
+            {
+                Id = pic.Id,
+                Name = pic.Name,
+                AppPath = pic.AppPath,
+                OriginalPath = pic.OriginalPath,
+                FolderName = pic.FolderName,
+                FolderId = pic.FolderId,
+                FolderSortOrder = pic.FolderSortOrder,
+                GlobalSortOrder = pic.GlobalSortOrder,
+                Size = pic.Size,
+                CreateTimestamp = pic.CreateTimestamp,
+                Tags = pic.Tags
+            };
         }
     }
 }

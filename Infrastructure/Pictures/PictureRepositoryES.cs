@@ -1,8 +1,6 @@
-﻿using DomainModel.Aggregates.Gallery;
-using DomainModel.Aggregates.Picture;
+﻿using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
 using Infrastructure.Pictures.DTO.ElasticSearch;
-using Microsoft.Extensions.Configuration;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -41,15 +39,7 @@ namespace Infrastructure.Pictures
 
             var dto = searchResponse.Documents.Single();
             
-            Picture picture = Picture.Create(
-                id: dto.Id,
-                name: dto.Name,
-                globalSortOrder: dto.GlobalSortOrder,
-                folderSortOrder: dto.FolderSortOrder,
-                appPath: dto.AppPath
-            );
-
-            return picture;
+            return BuildAggregateFromDto(dto);
         }
 
         public async Task<Picture> FindByIndex(int i)
@@ -76,15 +66,7 @@ namespace Infrastructure.Pictures
                 dto = await FindRandom();
             }
 
-            Picture picture = Picture.Create(
-                id: dto.Id,
-                name: dto.Name,
-                globalSortOrder: dto.GlobalSortOrder,
-                folderSortOrder: dto.FolderSortOrder,
-                appPath: dto.AppPath
-            );
-
-            return picture;
+            return BuildAggregateFromDto(dto);
         }
 
         private async Task<PictureDTO> FindRandom()
@@ -122,14 +104,9 @@ namespace Infrastructure.Pictures
             );
 
             List<Picture> list = new List<Picture>();
-            foreach(var pic in searchResponse.Documents)
+            foreach(var dto in searchResponse.Documents)
             {
-                var picture = Picture.Create(
-                        id: pic.Id,
-                        name: pic.Name,
-                        globalSortOrder: pic.GlobalSortOrder,
-                        folderSortOrder: pic.FolderSortOrder
-                );
+                var picture = BuildAggregateFromDto(dto);
 
                 list.Add(picture);
             }
@@ -139,38 +116,44 @@ namespace Infrastructure.Pictures
 
         public async Task<Picture> Save(Picture aggregate)
         {
+            var dto = new PictureDTO
+            {
+                Id = aggregate.Id,
+                AppPath = aggregate.AppPath,
+                Name = aggregate.Name,
+                FolderName = aggregate.FolderName,
+                FolderSortOrder = aggregate.FolderSortOrder,
+                FolderId = aggregate.FolderId,
+                OriginalPath = aggregate.OriginalPath,
+                Size = aggregate.Size,
+                CreateTimestamp = aggregate.CreateTimestamp,
+                GlobalSortOrder = aggregate.GlobalSortOrder,
+                Tags = aggregate.Tags.Select(s => new TagDTO { Name = s, Added = DateTime.UtcNow })
+            };
+
             var existing = _client.Get<PictureDTO>(new GetRequest<PictureDTO>("picture", aggregate.Id));
 
+            WriteResponseBase response;
             if (!existing.Found)
             {
-                var dto = new PictureDTO
-                {
-                    Id = aggregate.Id,
-                    AppPath = aggregate.AppPath,
-                    Name = aggregate.Name,
-                    FolderName = aggregate.FolderName,
-                    FolderSortOrder = aggregate.FolderSortOrder,
-                    FolderId = aggregate.FolderId,
-                    OriginalPath = aggregate.OriginalPath,
-                    Size = aggregate.Size,
-                    CreateTimestamp = aggregate.CreateTimestamp,
-                    GlobalSortOrder = aggregate.GlobalSortOrder
-                };
-
                 var indexRequest = new IndexRequest<PictureDTO>(dto, "picture");
-                var response = _client.Index(indexRequest);
-                if (!response.IsValid)
-                {
-                    throw new Exception(response.DebugInformation);
-                }
+                response = await _client.IndexAsync(indexRequest);
+            }
+            else
+            {
+                response = await _client.UpdateAsync<PictureDTO>(dto.Id, u => u
+                    .Doc(dto)
+                    .Upsert(dto)
+                    .Index("picture")
+                );
+            }
+
+            if (!response.IsValid)
+            {
+                throw new Exception(response.DebugInformation);
             }
 
             return aggregate;
-        }
-
-        public Task<Picture> FindById(Guid id)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<Picture> FindById(string id)
@@ -188,16 +171,32 @@ namespace Infrastructure.Pictures
 
             var dto = searchResponse.Documents.Single();
 
+            return BuildAggregateFromDto(dto);
+        }
 
-            Picture picture = Picture.Create(
+        private Picture BuildAggregateFromDto(PictureDTO dto)
+        {
+            Picture aggregate =  Picture.Create(
                 id: dto.Id,
                 name: dto.Name,
+                appPath: dto.AppPath,
+                originalPath: dto.OriginalPath,
+                folderName: dto.FolderName,
+                folderId: dto.FolderId,
                 globalSortOrder: dto.GlobalSortOrder,
                 folderSortOrder: dto.FolderSortOrder,
-                appPath: dto.AppPath
+                size: dto.Size,
+                created: dto.CreateTimestamp
             );
 
-            return picture;
+            dto.Tags?.ToList().ForEach(tag => aggregate.AddTag(tag.Name));
+
+            return aggregate;
+        }
+
+        public Task<Picture> FindById(Guid id)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<Picture> FindById(int id)

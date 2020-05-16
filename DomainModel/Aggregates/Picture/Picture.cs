@@ -5,6 +5,7 @@ using DomainModel.Exceptions;
 using DomainModel.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DomainModel.Aggregates.Picture
 {
@@ -22,6 +23,7 @@ namespace DomainModel.Aggregates.Picture
         private int _globalSortOrder;
         private int _size;
         private DateTime _createTimestamp;
+        private List<string> _tags = new List<string>();
 
         public virtual string Name => _name;
         public virtual string AppPath => _appPath;
@@ -31,8 +33,8 @@ namespace DomainModel.Aggregates.Picture
         public virtual int FolderSortOrder => _folderSortOrder;
         public virtual int GlobalSortOrder => _globalSortOrder;
         public virtual int Size => _size;
-        public virtual DateTime? CreateTimestamp => _createTimestamp;
-
+        public virtual DateTime CreateTimestamp => _createTimestamp;
+        public virtual IReadOnlyCollection<string> Tags => _tags;
 
         private Picture(string id)
         {
@@ -42,7 +44,17 @@ namespace DomainModel.Aggregates.Picture
                 Id = id;
         }
 
-        public static Picture Create(string appPath, string originalPath, string name, string folderName, string folderAppPath, int folderSortOrder, int size, int globalSortOrder)
+        public static Picture Create(
+            string appPath, 
+            string originalPath, 
+            string name, 
+            string folderName, 
+            string folderAppPath, 
+            int folderSortOrder, 
+            int size, 
+            int globalSortOrder, 
+            DateTime? created = null
+        )
         {
             if (string.IsNullOrWhiteSpace(appPath))
                 throw new ArgumentNullException($"Parameter {nameof(appPath)} cannot be empty");
@@ -61,25 +73,52 @@ namespace DomainModel.Aggregates.Picture
                 _folderId = folderId,
                 _folderSortOrder = folderSortOrder,
                 _size = size,
-                _createTimestamp = DateTime.UtcNow,
+                _createTimestamp = created ?? DateTime.UtcNow,
                 _globalSortOrder = globalSortOrder
             };
         }
 
-        public static Picture Create(string id, string name, int globalSortOrder, int folderSortOrder, string appPath = "")
+        public static Picture Create(
+            string id, 
+            string name, 
+            string appPath,
+            string originalPath,
+            string folderName,
+            string folderId,
+            int folderSortOrder, 
+            int globalSortOrder, 
+            int size,
+            DateTime created
+        )
         {
             if (string.IsNullOrWhiteSpace(id))
                 throw new ArgumentNullException($"Parameter {nameof(id)} cannot be empty");
+            if(string.IsNullOrWhiteSpace(folderId))
+                throw new ArgumentNullException($"Parameter {nameof(folderId)} cannot be empty");
             if (globalSortOrder == 0)
                 throw new ArgumentException("A valid global sort order must be provded.");
 
             return new Picture(id)
             {
                 _name = name,
-                _globalSortOrder = globalSortOrder,
+                _appPath = appPath,
+                _originalPath = originalPath,
+                _folderName = folderName,
+                _folderId = folderId,
                 _folderSortOrder = folderSortOrder,
-                _appPath = appPath
+                _globalSortOrder = globalSortOrder,
+                _size = size,
+                _createTimestamp = created
             };
+        }
+
+        public void AddTag(string tagName)
+        {
+            if (string.IsNullOrWhiteSpace(tagName))
+                throw new ArgumentNullException(nameof(tagName));
+
+            if (!_tags.Contains(tagName))
+                _tags.Add(tagName);
         }
     }
 }

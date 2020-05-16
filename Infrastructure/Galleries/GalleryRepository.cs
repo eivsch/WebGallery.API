@@ -57,7 +57,7 @@ namespace Infrastructure.Galleries
                     .Aggregations(a => a
                             .Terms("my_agg", st => st
                                 .Field(f => f.FolderId.Suffix("keyword"))   // "keyword" is an ElasticSearch data-type: https://www.elastic.co/guide/en/elasticsearch/client/net-api/current/multi-fields.html
-                                .Size(100)
+                                .Size(200)
                             )
                         )
                     .Index("picture")

@@ -5,6 +5,7 @@ using DomainModel.Aggregates.Picture.Interfaces;
 using Infrastructure.Common;
 using Infrastructure.Galleries;
 using Infrastructure.Pictures;
+using Infrastructure.Tags;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -32,11 +33,13 @@ namespace API
             // services
             services.AddTransient<IGalleryService, GalleryService>();
             services.AddTransient<IPictureService, PictureService>();
+            services.AddTransient<ITagService, TagService>();
 
             // Infrastructure
             // repos
             services.AddTransient<IGalleryRepository, GalleryRepository>();
             services.AddTransient<IPictureRepository, PictureRepositoryES>();
+            services.AddTransient<ITagRepositoy, TagRepository>();
 
             // External dependencies
             services.AddTransient<IWebGalleryDb, WebGalleryDb>((db) =>

@@ -1,4 +1,7 @@
-﻿namespace Application.Pictures
+﻿using System;
+using System.Collections.Generic;
+
+namespace Application.Pictures
 {
     public class PictureRequest
     {
@@ -11,5 +14,7 @@
         public int FolderSortOrder { get; set; }
         public int Size { get; set; }
         public int GlobalSortOrder { get; set; }
+        public IEnumerable<string> Tags { get; set; } = new List<string>();
+        public DateTime Created { get; set; }
     }
 }

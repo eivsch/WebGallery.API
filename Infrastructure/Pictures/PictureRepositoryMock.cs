@@ -56,18 +56,18 @@ namespace Infrastructure.Pictures
         {
             return new List<Picture>
             {
-                Picture.Create(
-                    id: "dfgdsfgg",
-                    name: "2017-NSX-3-1-1024x576.jpg",
-                    globalSortOrder: 1,
-                    folderSortOrder: 1
-                ),
-                Picture.Create(
-                    id: "lkjjhg",
-                    name: "b.jpg",
-                    globalSortOrder: 2,
-                    folderSortOrder: 2
-                ),
+                //Picture.Create(
+                //    id: "dfgdsfgg",
+                //    name: "2017-NSX-3-1-1024x576.jpg",
+                //    globalSortOrder: 1,
+                //    folderSortOrder: 1
+                //),
+                //Picture.Create(
+                //    id: "lkjjhg",
+                //    name: "b.jpg",
+                //    globalSortOrder: 2,
+                //    folderSortOrder: 2
+                //),
             };
         }
 

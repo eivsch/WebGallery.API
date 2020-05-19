@@ -75,6 +75,18 @@ namespace Application.Services
             return Map(pic);
         }
 
+        public async Task<PictureResponse> GetByAppPath(string appPath)
+        {
+            var pic = await _pictureRepository.FindByAppPath(appPath);
+
+            if (pic is null)
+                return null;
+
+            await GetTagsFromPersistenceAndAdd(pic);
+
+            return Map(pic);
+        }
+
         public async Task<IEnumerable<PictureResponse>> GetPictures(string galleryId, int offset = 0)
         {
             var pics = await _pictureRepository.FindAll(galleryId, offset);

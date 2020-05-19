@@ -90,5 +90,10 @@ namespace Infrastructure.Pictures
         {
             throw new NotImplementedException();
         }
+
+        public Task<Picture> FindByAppPath(string appPath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

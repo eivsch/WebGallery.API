@@ -41,6 +41,17 @@ namespace API.Controllers
             return Ok(pics);
         }
 
+        [HttpGet("single")]
+        public async Task<IActionResult> GetSingle(string appPath)
+        {
+            var pic = await _pictureService.GetByAppPath(appPath);
+
+            if (pic is null)
+                return NotFound();
+
+            return Ok(pic);
+        }
+
         //[HttpGet]
         //public IActionResult Get(string path)
         //{

@@ -215,5 +215,26 @@ namespace Infrastructure.Pictures
         {
             throw new NotImplementedException();
         }
+
+        public async Task<Picture> FindByAppPath(string appPath)
+        {
+            var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
+                .Query(q => q
+                    .Match(m => m
+                        .Field(f => f.AppPath.Suffix("keyword"))
+                        .Query(appPath)
+                    )
+                )
+                .Size(1)
+                .Index("picture")
+            );
+
+            if (searchResponse.Documents.Count == 0)
+                return null;
+
+            var dto = searchResponse.Documents.Single();
+            
+            return BuildAggregateFromDto(dto);
+        }
     }
 }

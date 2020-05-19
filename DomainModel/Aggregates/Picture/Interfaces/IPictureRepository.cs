@@ -9,5 +9,6 @@ namespace DomainModel.Aggregates.Picture.Interfaces
         Task<Picture> FindByIndex(int i);
         Task<Picture> FindByGalleryIndex(string galleryId, int index);
         Task<IEnumerable<Picture>> FindAll(string galleryId, int offset = 0);
+        Task<Picture> FindByAppPath(string appPath);
     }
 }

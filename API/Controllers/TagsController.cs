@@ -6,6 +6,7 @@ using Application.Services.Interfaces;
 using Application.Tags;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace API.Controllers
 {
@@ -31,7 +32,16 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(TagRequest tagRequest)
         {
-            await _tagService.AddTag(tagRequest);
+            try
+            {
+                await _tagService.AddTag(tagRequest);
+            }
+            catch (ApplicationException appEx)
+            {
+                Log.Error(appEx.Message);
+
+                return NotFound();
+            }
 
             return Ok();
         }

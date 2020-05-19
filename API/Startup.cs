@@ -2,6 +2,7 @@ using Application.Services;
 using Application.Services.Interfaces;
 using DomainModel.Aggregates.Gallery.Interfaces;
 using DomainModel.Aggregates.Picture.Interfaces;
+using DomainModel.Aggregates.Tag.Interfaces;
 using Infrastructure.Common;
 using Infrastructure.Galleries;
 using Infrastructure.Pictures;
@@ -39,7 +40,7 @@ namespace API
             // repos
             services.AddTransient<IGalleryRepository, GalleryRepository>();
             services.AddTransient<IPictureRepository, PictureRepositoryES>();
-            services.AddTransient<ITagRepositoy, TagRepository>();
+            services.AddTransient<ITagRepository, TagRepository>();
 
             // External dependencies
             services.AddTransient<IWebGalleryDb, WebGalleryDb>((db) =>

@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace Infrastructure.Tags.DTO
 {
-    internal class PictureDTO
-    {
-        public IEnumerable<TagDTO> Tags { get; set; }
-    }
-
     internal class TagDTO
     {
-        public string Name { get; set; }
+        public string TagName { get; set; }
+        public string PictureId { get; set; }
+        public DateTime Added { get; set; }
     }
 }

@@ -128,7 +128,6 @@ namespace Infrastructure.Pictures
                 Size = aggregate.Size,
                 CreateTimestamp = aggregate.CreateTimestamp,
                 GlobalSortOrder = aggregate.GlobalSortOrder,
-                Tags = aggregate.Tags.Select(s => new TagDTO { Name = s, Added = DateTime.UtcNow })
             };
 
             var existing = _client.Get<PictureDTO>(new GetRequest<PictureDTO>("picture", aggregate.Id));
@@ -188,8 +187,6 @@ namespace Infrastructure.Pictures
                 size: dto.Size,
                 created: dto.CreateTimestamp
             );
-
-            dto.Tags?.ToList().ForEach(tag => aggregate.AddTag(tag.Name));
 
             return aggregate;
         }

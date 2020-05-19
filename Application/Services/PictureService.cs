@@ -2,6 +2,8 @@
 using Application.Services.Interfaces;
 using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
+using DomainModel.Aggregates.Tag;
+using DomainModel.Aggregates.Tag.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +14,12 @@ namespace Application.Services
     public class PictureService : IPictureService
     {
         private readonly IPictureRepository _pictureRepository;
+        private readonly ITagRepository _tagRepository;
 
-        public PictureService(IPictureRepository pictureRepository)
+        public PictureService(IPictureRepository pictureRepository, ITagRepository tagRepository)
         {
-            _pictureRepository = pictureRepository ?? throw new ArgumentNullException(nameof(pictureRepository));
+            _pictureRepository = pictureRepository;
+            _tagRepository = tagRepository;
         }
 
         public async Task<PictureResponse> Add(PictureRequest pictureRequest)
@@ -34,7 +38,10 @@ namespace Application.Services
                 );
 
             foreach (var tag in pictureRequest.Tags)
-                pic.AddTag(tag);
+            {
+                var tagAggregate = Tag.Create(tag, pic.Id);
+                await _tagRepository.Save(tagAggregate);
+            }
 
             pic = await _pictureRepository.Save(pic);
 
@@ -45,12 +52,16 @@ namespace Application.Services
         {
             var pic = await _pictureRepository.FindById(pictureId);
 
+            await GetTagsFromPersistenceAndAdd(pic);
+
             return Map(pic);
         }
 
         public async Task<PictureResponse> Get(int index)
         {
             var pic = await _pictureRepository.FindByIndex(index);
+
+            await GetTagsFromPersistenceAndAdd(pic);
 
             return Map(pic);
         }
@@ -59,6 +70,8 @@ namespace Application.Services
         {
             var pic = await _pictureRepository.FindByGalleryIndex(galleryId, pictureId);
 
+            await GetTagsFromPersistenceAndAdd(pic);
+
             return Map(pic);
         }
 
@@ -66,10 +79,19 @@ namespace Application.Services
         {
             var pics = await _pictureRepository.FindAll(galleryId, offset);
 
+            // TODO: Add tags
+
             var list = new List<PictureResponse>();
             pics.ToList().ForEach(p => list.Add(Map(p)));
 
             return list;
+        }
+
+        private async Task GetTagsFromPersistenceAndAdd(Picture aggregate)
+        {
+            var tags = await _tagRepository.FindAllTagsForPicture(aggregate.Id);
+            foreach (var tag in tags)
+                aggregate.AddTag(tag.TagName);
         }
 
         private PictureResponse Map(Picture pic)

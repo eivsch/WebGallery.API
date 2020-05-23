@@ -100,6 +100,7 @@ namespace Infrastructure.Pictures
                         .LessThanOrEquals(offset + 48)
                     )
                 )
+                .Size(48)
                 .Index("picture")
             );
 

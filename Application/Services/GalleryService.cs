@@ -41,17 +41,11 @@ namespace Application.Services
             return list;
         }
 
-        public async Task<IEnumerable<GalleryResponse>> GetRandom(int numberOfGalleries, int itemsInGallery)
+        public async Task<GalleryResponse> GetRandom(int itemsInGallery)
         {
-            var randomGalleries = await _galleryRepository.GetRandom(numberOfGalleries, itemsInGallery);
+            var randomGallery = await _galleryRepository.GetRandom(itemsInGallery);
 
-            List<GalleryResponse> list = new List<GalleryResponse>();
-            foreach (var gal in randomGalleries)
-            {
-                list.Add(Map(gal));
-            }
-
-            return list;
+            return Map(randomGallery);
         }
 
         public async Task<GalleryResponse> Save(GalleryRequest request)

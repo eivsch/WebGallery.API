@@ -9,7 +9,7 @@ namespace Application.Services.Interfaces
     {
         Task<GalleryResponse> Get(GalleryRequest galleryRequest);
         Task<IEnumerable<GalleryResponse>> GetAll();
-        Task<IEnumerable<GalleryResponse>> GetRandom(int numberOfGalleries, int itemsInGallery);
+        Task<GalleryResponse> GetRandom(int itemsInGallery);
         Task<GalleryResponse> Save(GalleryRequest request);
     }
 }

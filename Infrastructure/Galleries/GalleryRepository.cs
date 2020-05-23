@@ -114,36 +114,28 @@ namespace Infrastructure.Galleries
             };
         }
 
-        public async Task<List<Gallery>> GetRandom(int galleriesToGenerate, int itemsInGallery)
+        public async Task<Gallery> GetRandom(int itemsInGallery)
         {
-            var galleryList = new List<Gallery>();
-            var counter = 0;
-            while (counter < galleriesToGenerate)
-            {
-                var searchResponse = await _client.SearchAsync<GalleryPictureDTO>(s => s
-                    .Query(q => q
-                        .FunctionScore(f => f
-                            .Functions(fx => fx
-                                .RandomScore(rng => rng.Seed(DateTime.Now.Millisecond))
-                            )
+            Gallery gallery;
+            var searchResponse = await _client.SearchAsync<GalleryPictureDTO>(s => s
+                .Query(q => q
+                    .FunctionScore(f => f
+                        .Functions(fx => fx
+                            .RandomScore(rng => rng.Seed(DateTime.Now.Millisecond))
                         )
                     )
-                    .Size(itemsInGallery)
-                    .Index("picture")
-                );
+                )
+                .Size(itemsInGallery)
+                .Index("picture")
+            );
 
-                var gallery = Gallery.Create("", itemsInGallery);
-                foreach (var pic in searchResponse.Documents)
-                {
-                    gallery.AddGalleryItem(pic.Id, pic.GlobalSortOrder);
-                }
-
-                galleryList.Add(gallery);
-
-                counter++;
+            gallery = Gallery.Create("", itemsInGallery);
+            foreach (var pic in searchResponse.Documents)
+            {
+                gallery.AddGalleryItem(pic.Id, pic.GlobalSortOrder);
             }
 
-            return galleryList;
+            return gallery;
         }
     }
 }

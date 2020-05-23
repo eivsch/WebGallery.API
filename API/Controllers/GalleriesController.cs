@@ -31,10 +31,10 @@ namespace API.Controllers
         }
 
         [HttpGet("random")]
-        public async Task<IActionResult> GetRandom(int num = 12, int itemsInEach = 24)
+        public async Task<IActionResult> GetRandom(int itemsInEach = 24)
         {
             Log.Information("BEGIN - GalleryController|GET");
-            var galleryResponse = await _galleryService.GetRandom(num, itemsInEach);
+            var galleryResponse = await _galleryService.GetRandom(itemsInEach);
 
             return Ok(galleryResponse);
         }

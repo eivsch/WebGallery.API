@@ -50,7 +50,7 @@ namespace Infrastructure.Galleries
             throw new NotImplementedException();
         }
 
-        public Task<List<Gallery>> GetRandom(int numberOfGalleries, int itemsInGallery)
+        public Task<Gallery> GetRandom(int itemsInGallery)
         {
             throw new NotImplementedException();
         }

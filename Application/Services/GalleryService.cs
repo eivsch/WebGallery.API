@@ -54,7 +54,7 @@ namespace Application.Services
         {
             var tags = await _tagService.GetAll(tag);
 
-
+            return null;
         }
 
         public async Task<GalleryResponse> Save(GalleryRequest request)

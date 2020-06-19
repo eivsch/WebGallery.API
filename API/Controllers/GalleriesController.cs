@@ -15,10 +15,12 @@ namespace API.Controllers
     public class GalleriesController : ControllerBase
     {
         private readonly IGalleryService _galleryService;
+        private readonly ITagService _tagService;
 
-        public GalleriesController(IGalleryService galleryService)
+        public GalleriesController(IGalleryService galleryService, ITagService tagService)
         {
-            _galleryService = galleryService ?? throw new ArgumentNullException(nameof(galleryService));
+            _galleryService = galleryService;
+            _tagService = tagService;
         }
 
         [HttpGet]
@@ -37,6 +39,15 @@ namespace API.Controllers
             var galleryResponse = await _galleryService.GetRandom(itemsInEach);
 
             return Ok(galleryResponse);
+        }
+
+        [HttpGet("tags")]
+        public async Task<IActionResult> GetTagged(string tag)
+        {
+            Log.Information("BEGIN - GalleryController|GET");
+            var tags = await _tagService.GetAll(tag);
+
+            return Ok(tags);
         }
 
         [HttpPost]

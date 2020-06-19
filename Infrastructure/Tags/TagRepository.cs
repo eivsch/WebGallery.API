@@ -120,5 +120,22 @@ namespace Infrastructure.Tags
             return Tag.Create(tagName: dto.TagName, pictureId: dto.PictureId);
         }
 
+        public async Task<IEnumerable<Tag>> FindAll(string tagName)
+        {
+            var searchResponse = await _client.SearchAsync<TagDTO>(s => s
+                .Query(q => q
+                    .Match(m => m
+                        .Field(f => f.TagName)
+                        .Query(tagName)
+                    )
+                )
+                .Size(1000)
+                .Index("tag")
+            );
+
+            var tags = searchResponse.Documents;
+
+            return tags.Select(s => BuildAggregateFromDto(s));
+        }
     }
 }

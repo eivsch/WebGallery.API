@@ -10,5 +10,6 @@ namespace DomainModel.Aggregates.Tag.Interfaces
     {
         Task<List<string>> GetAllUniqueTags();
         Task<IEnumerable<Tag>> FindAllTagsForPicture(string pictureId);
+        Task<IEnumerable<Tag>> FindAll(string tagName);
     }
 }

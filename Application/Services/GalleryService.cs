@@ -13,10 +13,12 @@ namespace Application.Services
     public class GalleryService : IGalleryService
     {
         private readonly IGalleryRepository _galleryRepository;
+        private readonly ITagService _tagService;
 
-        public GalleryService(IGalleryRepository galleryRepository)
+        public GalleryService(IGalleryRepository galleryRepository, ITagService tagService)
         {
             _galleryRepository = galleryRepository ?? throw new ArgumentNullException(nameof(galleryRepository));
+            _tagService = tagService;
         }
 
         public Task<GalleryResponse> Get(GalleryRequest galleryRequest)
@@ -46,6 +48,13 @@ namespace Application.Services
             var randomGallery = await _galleryRepository.GetRandom(itemsInGallery);
 
             return Map(randomGallery);
+        }
+
+        public async Task<GalleryResponse> GetRandom(int itemsInGallery, string tag)
+        {
+            var tags = await _tagService.GetAll(tag);
+
+
         }
 
         public async Task<GalleryResponse> Save(GalleryRequest request)

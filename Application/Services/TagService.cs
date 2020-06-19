@@ -6,6 +6,7 @@ using DomainModel.Aggregates.Tag;
 using DomainModel.Aggregates.Tag.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,9 +43,25 @@ namespace Application.Services
             await _tagRepository.Save(aggregate);
         }
 
+        public async Task<IEnumerable<TagResponse>> GetAll(string tagName)
+        {
+            var tags = await _tagRepository.FindAll(tagName);
+
+            return tags.Select(s => Map(s));
+        }
+
         public async Task<IEnumerable<string>> GetAllUniqueTags()
         {
             return await _tagRepository.GetAllUniqueTags();
+        }
+
+        private TagResponse Map(Tag aggregate)
+        {
+            return new TagResponse 
+            { 
+                PictureId = aggregate.PictureId, 
+                TagName = aggregate.TagName 
+            };
         }
     }
 }

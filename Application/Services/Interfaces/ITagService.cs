@@ -8,5 +8,6 @@ namespace Application.Services.Interfaces
     {
         Task AddTag(TagRequest tagRequest);
         Task<IEnumerable<string>> GetAllUniqueTags();
+        Task<IEnumerable<TagResponse>> GetAll(string tagName);
     }
 }

@@ -44,9 +44,9 @@ namespace Application.Services
             return list;
         }
 
-        public async Task<GalleryResponse> GetCustomizedRandom(int itemsInGallery, string tags, string tagFilteringMode)
+        public async Task<GalleryResponse> GetCustomizedRandom(int itemsInGallery, string tags, string tagFilteringMode, string gifMode)
         {
-            GalleryDescriptor descriptor = GalleryDescriptor.Create(itemsInGallery);
+            GalleryDescriptor descriptor = GalleryDescriptor.Create(itemsInGallery, gifMode);
             descriptor.AddTagFilter(tags, tagFilteringMode);
 
             var galleryGenerator = _galleryGeneratorFactory.GetGalleryGenerator(descriptor.TagFilter.Mode);
@@ -66,7 +66,7 @@ namespace Application.Services
 
             foreach(var item in request.GalleryPictures)
             {
-                aggregate.AddGalleryItem(galleryItemId: item.Id, index: item.Index);
+                aggregate.AddGalleryItem(galleryItemId: item.Id, index: item.Index, name: "Unknown");
             }
 
             aggregate = await _galleryRepository.Save(aggregate);

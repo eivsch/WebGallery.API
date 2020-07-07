@@ -25,7 +25,12 @@ namespace DomainModel.Generators
                     if (gallery.GalleryItems.Count == galleryDescriptor.NumberOfItems)
                         break;
 
-                    gallery.AddGalleryItem(item.Id, item.Index, tags: item.Tag);
+                    gallery.AddGalleryItem(
+                        galleryItemId: item.Id, 
+                        index: item.Index, 
+                        name: item.Name, 
+                        tags: item.Tag
+                    );
                 }
             }
 

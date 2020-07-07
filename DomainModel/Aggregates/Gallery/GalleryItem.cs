@@ -32,11 +32,13 @@ namespace DomainModel.Aggregates.Gallery
             _tags = new List<string>();
         }
 
-        internal static GalleryItem Create(string id, int index)
+        internal static GalleryItem Create(string id, int index, string name, MediaType mediaType)
         {
             var item = new GalleryItem(id)
             {
-                _index = index
+                _index = index,
+                _name = name,
+                _mediaType = mediaType
             };
 
             return item;

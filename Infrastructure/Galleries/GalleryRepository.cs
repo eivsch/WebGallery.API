@@ -132,7 +132,11 @@ namespace Infrastructure.Galleries
             gallery = Gallery.Create("", itemsInGallery);
             foreach (var pic in searchResponse.Documents)
             {
-                gallery.AddGalleryItem(pic.Id, pic.GlobalSortOrder);
+                gallery.AddGalleryItem(
+                    galleryItemId: pic.Id, 
+                    index: pic.GlobalSortOrder, 
+                    name: pic.Name
+                );
             }
 
             return gallery;

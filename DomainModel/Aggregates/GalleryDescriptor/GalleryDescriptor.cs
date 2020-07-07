@@ -1,8 +1,6 @@
 ﻿using DomainModel.Common.Enumerators;
 using DomainModel.Common.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DomainModel.Aggregates.GalleryDescriptor
 {
@@ -10,18 +8,26 @@ namespace DomainModel.Aggregates.GalleryDescriptor
     {
         private int _numberOfItems;
         private TagFilter _tagFilter;
+        private GifMode _gifMode;
 
         public virtual int NumberOfItems => _numberOfItems;
         public virtual TagFilter TagFilter => _tagFilter;
+        public virtual GifMode GifMode => _gifMode;
 
         private GalleryDescriptor()
         {
-
         }
 
-        public static GalleryDescriptor Create(int numberOfItems)
+        public static GalleryDescriptor Create(int numberOfItems, string gifMode = "")
         {
-            return new GalleryDescriptor { _numberOfItems = numberOfItems };
+            if (string.IsNullOrWhiteSpace(gifMode))
+                gifMode = GifMode.Include.Name;
+
+            return new GalleryDescriptor 
+            { 
+                _numberOfItems = numberOfItems, 
+                _gifMode = GifMode.Get(gifMode) 
+            };
         }
 
         public virtual void AddTagFilter(string tagsToFilter, string modeOfFiltering)

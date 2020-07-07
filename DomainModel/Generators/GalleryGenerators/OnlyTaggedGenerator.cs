@@ -1,6 +1,8 @@
 ﻿using DomainModel.Aggregates.GalleryDescriptor;
 using DomainModel.Aggregates.Picture.Interfaces;
 using DomainModel.Aggregates.Tag.Interfaces;
+using DomainModel.Common.Enumerators;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,17 +21,26 @@ namespace DomainModel.Generators.GalleryGenerators
 
         protected override async Task<List<GeneratedItem>> GenerateGalleryItems(GalleryDescriptor galleryDescriptor)
         {
-            List<GeneratedItem> list = new List<GeneratedItem>();
+            if (galleryDescriptor.TagFilter.Mode != TagFilterMode.OnlyTagged)
+                throw new NotSupportedException($"The '{nameof(AllRandomGenerator)}' does not support the current tag mode: {galleryDescriptor.TagFilter.Mode}");
+            if (galleryDescriptor.GifMode == GifMode.OnlyGifs)
+                throw new NotSupportedException($"The '{nameof(AllRandomGenerator)}' does not support the current gif mode '{GifMode.OnlyGifs.Name}'.");
 
+            var list = new List<GeneratedItem>();
             var taggedImages = await _tagRepository.GetRandom(null, galleryDescriptor.NumberOfItems);
 
             foreach (var taggedImage in taggedImages)
             {
                 var picture = await _pictureRepository.FindById(taggedImage.PictureId);
+                
+                if (picture.Name.ToLower().EndsWith(".gif") && galleryDescriptor.GifMode == GifMode.Exclude)
+                    continue;
+
                 list.Add(new GeneratedItem
                 {
                     Id = picture.Id,
                     Index = picture.GlobalSortOrder,
+                    Name = picture.Name,
                     Tag = taggedImage.TagName
                 });
             }

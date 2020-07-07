@@ -1,11 +1,9 @@
 ﻿using DomainModel.Common;
 using DomainModel.Common.Enumerators;
 using DomainModel.Common.Interfaces;
-using DomainModel.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DomainModel.Aggregates.Gallery
 {
@@ -45,36 +43,18 @@ namespace DomainModel.Aggregates.Gallery
             return gallery;
         }
 
-        public virtual void AddMediaType(string mediaTypeName)
-        {
-            if (string.IsNullOrWhiteSpace(mediaTypeName))
-                throw new ArgumentNullException(nameof(mediaTypeName));
-
-            MediaType mediaType;
-            switch (mediaTypeName.ToLower())
-            {
-                case "image":
-                    mediaType = MediaType.Image;
-                    break;
-                case "gif":
-                    mediaType = MediaType.Gif;
-                    break;
-                case "video":
-                    mediaType = MediaType.Video;
-                    break;
-                default:
-                    throw new ArgumentException($"Unsupported media type '{mediaTypeName}'");
-            }
-
-            _mediaTypes.Add(mediaType);
-        }
-
-        public virtual void AddGalleryItem(string galleryItemId, int index, string tags = "")
+        public virtual void AddGalleryItem(string galleryItemId, int index, string name, string tags = "")
         {
             GalleryItem galleryItem = _galleryItems.FirstOrDefault(i => i.Id == galleryItemId);
             if (galleryItem == null)
             {
-                galleryItem = GalleryItem.Create(galleryItemId, index);
+                galleryItem = GalleryItem.Create(
+                    id: galleryItemId, 
+                    index: index, 
+                    name: name, 
+                    mediaType: ParseMediaTypeFromName(name)
+                );
+
                 _galleryItems.Add(galleryItem);
             }
 
@@ -83,6 +63,17 @@ namespace DomainModel.Aggregates.Gallery
                 foreach(var tag in tags.Split(','))
                     galleryItem.AddTag(tag);
             }
+        }
+
+        private MediaType ParseMediaTypeFromName(string name)
+        {
+            if (name.ToLower().EndsWith(".gif"))
+                return MediaType.Gif;
+            else if (name.ToLower().EndsWith(".mp4"))
+                return MediaType.Video;
+            // Etc.
+
+            return MediaType.Image;
         }
     }
 }

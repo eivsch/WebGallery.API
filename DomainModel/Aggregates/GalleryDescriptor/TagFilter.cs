@@ -3,9 +3,8 @@ using DomainModel.Common.Enumerators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace DomainModel.Aggregates.Gallery
+namespace DomainModel.Aggregates.GalleryDescriptor
 {
     public class TagFilter : ValueObject
     {

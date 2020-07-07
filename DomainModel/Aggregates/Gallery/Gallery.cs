@@ -16,14 +16,12 @@ namespace DomainModel.Aggregates.Gallery
     {
         private int _numberOfItems;
         private string _folderId;
-        private TagFilter _tagFilter;
         private List<string> _tags = new List<string>();
         private readonly List<MediaType> _mediaTypes = new List<MediaType>();
         private readonly List<GalleryItem> _galleryItems = new List<GalleryItem>();
 
         public virtual int NumberOfItems => _numberOfItems;
         public virtual string FolderId => _folderId;
-        public virtual TagFilter TagFilter => _tagFilter;
         public virtual IReadOnlyCollection<string> Tags => _tags.AsReadOnly();
         public virtual IReadOnlyCollection<MediaType> MediaTypes => _mediaTypes.AsReadOnly();
         public virtual IReadOnlyCollection<GalleryItem> GalleryItems => _galleryItems.AsReadOnly();
@@ -45,28 +43,6 @@ namespace DomainModel.Aggregates.Gallery
             };
 
             return gallery;
-        }
-
-        public virtual void AddTagFilter(string tagsToFilter, string modeOfFiltering)
-        {
-            TagFilterMode filterMode;
-            if (string.IsNullOrWhiteSpace(modeOfFiltering))
-                filterMode = TagFilterMode.Undefined;
-            else
-                filterMode = TagFilterMode.Get(modeOfFiltering);
-
-            if (filterMode == TagFilterMode.CustomInclusive || filterMode == TagFilterMode.CustomExclusive)
-            {
-                if (string.IsNullOrWhiteSpace(tagsToFilter))
-                    throw new ArgumentException($"Tag list cannot be null when filter mode is set to '{filterMode}'");
-            }
-
-            TagFilter tagFilter = TagFilter.Create(filterMode);
-
-            foreach(var tag in tagsToFilter.Split(','))
-                tagFilter.AddTag(tag);
-
-            _tagFilter = tagFilter;
         }
 
         public virtual void AddMediaType(string mediaTypeName)

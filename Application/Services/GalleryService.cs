@@ -8,20 +8,19 @@ using System.Threading.Tasks;
 using DomainModel.Aggregates.Gallery.Interfaces;
 using System.Linq;
 using DomainModel.Services;
+using DomainModel.Aggregates.GalleryDescriptor;
 
 namespace Application.Services
 {
     public class GalleryService : IGalleryService
     {
         private readonly IGalleryRepository _galleryRepository;
-        private readonly ITagService _tagService;
-        private readonly IGalleryCustomizerService _galleryCustomizerService;
+        private readonly IGalleryGeneratorFactory _galleryGeneratorFactory;
 
-        public GalleryService(IGalleryRepository galleryRepository, ITagService tagService, IGalleryCustomizerService galleryCustomizerService)
+        public GalleryService(IGalleryRepository galleryRepository, IGalleryGeneratorFactory galleryGeneratorFactory)
         {
             _galleryRepository = galleryRepository ?? throw new ArgumentNullException(nameof(galleryRepository));
-            _tagService = tagService;
-            _galleryCustomizerService = galleryCustomizerService;
+            _galleryGeneratorFactory = galleryGeneratorFactory;
         }
 
         public Task<GalleryResponse> Get(GalleryRequest galleryRequest)
@@ -55,10 +54,12 @@ namespace Application.Services
 
         public async Task<GalleryResponse> GetCustomizedRandom(int itemsInGallery, string tags, string tagFilteringMode)
         {
-            Gallery aggregate = Gallery.Create(Guid.NewGuid().ToString(), itemsInGallery);
-            aggregate.AddTagFilter(tags, tagFilteringMode);
+            GalleryDescriptor descriptor = GalleryDescriptor.Create(itemsInGallery);
+            descriptor.AddTagFilter(tags, tagFilteringMode);
 
-            aggregate = await _galleryCustomizerService.GetCustomizedGallery(aggregate);
+            var galleryGenerator = _galleryGeneratorFactory.GetGalleryGenerator(descriptor);
+
+            var aggregate = await galleryGenerator.GenerateGallery(descriptor);
 
             return Map(aggregate);
         }

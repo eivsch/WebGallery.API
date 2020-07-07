@@ -37,7 +37,7 @@ namespace API
             services.AddTransient<ITagService, TagService>();
 
             // Domain services
-            services.AddTransient<IGalleryCustomizerService, GalleryCustomizerService>();
+            services.AddTransient<IGalleryGeneratorFactory, GalleryGeneratorFactory>();
 
             // Infrastructure
             // repos

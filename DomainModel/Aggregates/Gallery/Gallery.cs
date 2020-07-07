@@ -71,17 +71,18 @@ namespace DomainModel.Aggregates.Gallery
 
         public virtual void AddGalleryItem(string galleryItemId, int index, string tags = "")
         {
-            var galleryItem = GalleryItem.Create(galleryItemId, index);
+            GalleryItem galleryItem = _galleryItems.FirstOrDefault(i => i.Id == galleryItemId);
+            if (galleryItem == null)
+            {
+                galleryItem = GalleryItem.Create(galleryItemId, index);
+                _galleryItems.Add(galleryItem);
+            }
 
             if (!string.IsNullOrWhiteSpace(tags))
             {
                 foreach(var tag in tags.Split(','))
-                {
                     galleryItem.AddTag(tag);
-                }
             }
-            
-            _galleryItems.Add(galleryItem);
         }
     }
 }

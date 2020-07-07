@@ -1,7 +1,5 @@
 ﻿using DomainModel.Aggregates.Gallery;
 using DomainModel.Aggregates.GalleryDescriptor;
-using DomainModel.Aggregates.Picture.Interfaces;
-using DomainModel.Aggregates.Tag;
 using DomainModel.Generators.GalleryGenerators;
 using DomainModel.Generators.Interfaces;
 using System;
@@ -27,7 +25,7 @@ namespace DomainModel.Generators
                     if (gallery.GalleryItems.Count == galleryDescriptor.NumberOfItems)
                         break;
 
-                    gallery.AddGalleryItem(item.Id, item.Index);
+                    gallery.AddGalleryItem(item.Id, item.Index, tags: item.Tag);
                 }
             }
 

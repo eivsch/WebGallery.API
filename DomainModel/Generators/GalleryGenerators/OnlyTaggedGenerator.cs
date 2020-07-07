@@ -23,13 +23,14 @@ namespace DomainModel.Generators.GalleryGenerators
 
             var taggedImages = await _tagRepository.GetRandom(null, galleryDescriptor.NumberOfItems);
 
-            foreach (var image in taggedImages)
+            foreach (var taggedImage in taggedImages)
             {
-                var picture = await _pictureRepository.FindById(image.PictureId);
+                var picture = await _pictureRepository.FindById(taggedImage.PictureId);
                 list.Add(new GeneratedItem
                 {
                     Id = picture.Id,
-                    Index = picture.GlobalSortOrder
+                    Index = picture.GlobalSortOrder,
+                    Tag = taggedImage.TagName
                 });
             }
 

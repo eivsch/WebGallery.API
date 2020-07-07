@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Application.Galleries
 {
@@ -8,5 +6,6 @@ namespace Application.Galleries
     {
         public string Id { get; set; }
         public int Index { get; set; }
+        public IEnumerable<string> Tags { get; set; }
     }
 }

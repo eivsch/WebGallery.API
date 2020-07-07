@@ -96,7 +96,8 @@ namespace Application.Services
             return new GalleryPicture
             {
                 Id = item.Id,
-                Index = item.Index
+                Index = item.Index,
+                Tags = item.Tags
             };
         }
     }

@@ -156,6 +156,7 @@ namespace Infrastructure.Pictures
             return aggregate;
         }
 
+        // TODO: Refactor to use GET?
         public async Task<Picture> FindById(string id)
         {
             var searchResponse = await _client.SearchAsync<PictureDTO>(s => s

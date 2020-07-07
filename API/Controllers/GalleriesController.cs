@@ -41,6 +41,15 @@ namespace API.Controllers
             return Ok(galleryResponse);
         }
 
+        [HttpGet("customized-random")]
+        public async Task<IActionResult> GetCustomRandom(int itemsInEach = 12, string tags = "", string tagFilterMode = "undefined")
+        {
+            Log.Information("BEGIN - GalleryController|GET");
+            var galleryResponse = await _galleryService.GetCustomizedRandom(itemsInEach, tags, tagFilterMode);
+
+            return Ok(galleryResponse);
+        }
+
         [HttpGet("tags")]
         public async Task<IActionResult> GetTagged(string tag)
         {

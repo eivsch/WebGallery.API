@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DomainModel.Aggregates.Gallery.Interfaces;
 using System.Linq;
+using DomainModel.Services;
 
 namespace Application.Services
 {
@@ -14,11 +15,13 @@ namespace Application.Services
     {
         private readonly IGalleryRepository _galleryRepository;
         private readonly ITagService _tagService;
+        private readonly IGalleryCustomizerService _galleryCustomizerService;
 
-        public GalleryService(IGalleryRepository galleryRepository, ITagService tagService)
+        public GalleryService(IGalleryRepository galleryRepository, ITagService tagService, IGalleryCustomizerService galleryCustomizerService)
         {
             _galleryRepository = galleryRepository ?? throw new ArgumentNullException(nameof(galleryRepository));
             _tagService = tagService;
+            _galleryCustomizerService = galleryCustomizerService;
         }
 
         public Task<GalleryResponse> Get(GalleryRequest galleryRequest)
@@ -50,11 +53,14 @@ namespace Application.Services
             return Map(randomGallery);
         }
 
-        public async Task<GalleryResponse> GetRandom(int itemsInGallery, string tag)
+        public async Task<GalleryResponse> GetCustomizedRandom(int itemsInGallery, string tags, string tagFilteringMode)
         {
-            var tags = await _tagService.GetAll(tag);
+            Gallery aggregate = Gallery.Create(Guid.NewGuid().ToString(), itemsInGallery);
+            aggregate.AddTagFilter(tags, tagFilteringMode);
 
-            return null;
+            aggregate = await _galleryCustomizerService.GetCustomizedGallery(aggregate);
+
+            return Map(aggregate);
         }
 
         public async Task<GalleryResponse> Save(GalleryRequest request)

@@ -3,6 +3,7 @@ using Application.Services.Interfaces;
 using DomainModel.Aggregates.Gallery.Interfaces;
 using DomainModel.Aggregates.Picture.Interfaces;
 using DomainModel.Aggregates.Tag.Interfaces;
+using DomainModel.Services;
 using Infrastructure.Common;
 using Infrastructure.Galleries;
 using Infrastructure.Pictures;
@@ -30,11 +31,13 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Application 
-            // services
+            // Application services
             services.AddTransient<IGalleryService, GalleryService>();
             services.AddTransient<IPictureService, PictureService>();
             services.AddTransient<ITagService, TagService>();
+
+            // Domain services
+            services.AddTransient<IGalleryCustomizerService, GalleryCustomizerService>();
 
             // Infrastructure
             // repos

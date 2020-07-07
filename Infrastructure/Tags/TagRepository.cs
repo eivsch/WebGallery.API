@@ -37,7 +37,7 @@ namespace Infrastructure.Tags
         public Task<Tag> FindById(string id)
         {
             throw new NotImplementedException();
-        }
+        }        
 
         public Task<Tag> FindById(int id)
         {
@@ -48,9 +48,10 @@ namespace Infrastructure.Tags
         {
             var searchResponse = await _client.SearchAsync<TagDTO>(s => s
                 .Query(q => q
-                    .Match(m => m
-                        .Field(f => f.PictureId)
-                        .Query(pictureId)
+                    .Terms(c => c
+                        .Name("idsearch")
+                        .Field(f => f.PictureId.Suffix("keyword"))
+                        .Terms(pictureId)
                     )
                 )
                 .Size(1000)
@@ -136,6 +137,33 @@ namespace Infrastructure.Tags
             var tags = searchResponse.Documents;
 
             return tags.Select(s => BuildAggregateFromDto(s));
+        }
+
+        // TODO: Use .Term instead of .Match, as 4=44 with Match
+        public async Task<IEnumerable<Tag>> GetRandom(IEnumerable<string> tags, int items)
+        {
+            var searchResponse = await _client.SearchAsync<TagDTO>(s => s
+                .Query(q1 => q1
+                    .FunctionScore(f => f
+                        .Query(q2 => q2
+                            .Terms(c => c
+                                .Name("tagsearch")
+                                .Field(f => f.TagName.Suffix("keyword"))
+                                .Terms(tags)
+                            )
+                        )
+                        .Functions(fx => fx
+                            .RandomScore(rng => rng.Seed(DateTime.Now.Millisecond))
+                        )
+                    )
+                )
+                .Size(items)
+                .Index("tag")
+            );
+
+            var response = searchResponse.Documents;
+
+            return response.Select(s => BuildAggregateFromDto(s));
         }
     }
 }

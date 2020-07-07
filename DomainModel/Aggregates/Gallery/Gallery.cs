@@ -1,6 +1,7 @@
 ﻿using DomainModel.Common;
 using DomainModel.Common.Enumerators;
 using DomainModel.Common.Interfaces;
+using DomainModel.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,18 +15,17 @@ namespace DomainModel.Aggregates.Gallery
     public class Gallery : Entity, IAggregateRoot
     {
         private int _numberOfItems;
-        public virtual int NumberOfItems => _numberOfItems;
-
         private string _folderId;
-        public virtual string FolderId => _folderId;
-        
-        private readonly List<string> _tags = new List<string>();
-        public virtual IReadOnlyCollection<string> Tags => _tags.AsReadOnly();
-
+        private TagFilter _tagFilter;
+        private List<string> _tags = new List<string>();
         private readonly List<MediaType> _mediaTypes = new List<MediaType>();
-        public virtual IReadOnlyCollection<MediaType> MediaTypes => _mediaTypes.AsReadOnly();
-
         private readonly List<GalleryItem> _galleryItems = new List<GalleryItem>();
+
+        public virtual int NumberOfItems => _numberOfItems;
+        public virtual string FolderId => _folderId;
+        public virtual TagFilter TagFilter => _tagFilter;
+        public virtual IReadOnlyCollection<string> Tags => _tags.AsReadOnly();
+        public virtual IReadOnlyCollection<MediaType> MediaTypes => _mediaTypes.AsReadOnly();
         public virtual IReadOnlyCollection<GalleryItem> GalleryItems => _galleryItems.AsReadOnly();
 
         private Gallery(string id)
@@ -47,12 +47,26 @@ namespace DomainModel.Aggregates.Gallery
             return gallery;
         }
 
-        public virtual void AddTag(string tag)
+        public virtual void AddTagFilter(string tagsToFilter, string modeOfFiltering)
         {
-            if (string.IsNullOrWhiteSpace(tag))
-                throw new ArgumentNullException(nameof(tag));
-                
-            _tags.Add(tag);
+            TagFilterMode filterMode;
+            if (string.IsNullOrWhiteSpace(modeOfFiltering))
+                filterMode = TagFilterMode.Undefined;
+            else
+                filterMode = TagFilterMode.Get(modeOfFiltering);
+
+            if (filterMode == TagFilterMode.CustomInclusive || filterMode == TagFilterMode.CustomExclusive)
+            {
+                if (string.IsNullOrWhiteSpace(tagsToFilter))
+                    throw new ArgumentException($"Tag list cannot be null when filter mode is set to '{filterMode}'");
+            }
+
+            TagFilter tagFilter = TagFilter.Create(filterMode);
+
+            foreach(var tag in tagsToFilter.Split(','))
+                tagFilter.AddTag(tag);
+
+            _tagFilter = tagFilter;
         }
 
         public virtual void AddMediaType(string mediaTypeName)

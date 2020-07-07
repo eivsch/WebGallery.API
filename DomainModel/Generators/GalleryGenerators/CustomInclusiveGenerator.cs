@@ -22,9 +22,9 @@ namespace DomainModel.Generators.GalleryGenerators
         protected override async Task<List<GeneratedItem>> GenerateGalleryItems(GalleryDescriptor galleryDescriptor)
         {
             if (galleryDescriptor.TagFilter.Mode != TagFilterMode.CustomInclusive)
-                throw new NotSupportedException($"The '{nameof(AllRandomGenerator)}' does not support the current tag mode: {galleryDescriptor.TagFilter.Mode}");
+                throw new NotSupportedException($"The '{nameof(CustomInclusiveGenerator)}' does not support the current tag mode: {galleryDescriptor.TagFilter.Mode}");
             if (galleryDescriptor.GifMode == GifMode.OnlyGifs)
-                throw new NotSupportedException($"The '{nameof(AllRandomGenerator)}' does not support the current gif mode '{GifMode.OnlyGifs.Name}'.");
+                throw new NotSupportedException($"The '{nameof(CustomInclusiveGenerator)}' does not support the current gif mode '{GifMode.OnlyGifs.Name}'.");
 
             var list = new List<GeneratedItem>();
             var taggedImages = await _tagRepository.GetRandom(galleryDescriptor.TagFilter.Tags, galleryDescriptor.NumberOfItems);

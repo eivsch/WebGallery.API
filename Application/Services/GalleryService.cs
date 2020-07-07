@@ -49,7 +49,7 @@ namespace Application.Services
             GalleryDescriptor descriptor = GalleryDescriptor.Create(itemsInGallery, gifMode);
             descriptor.AddTagFilter(tags, tagFilteringMode);
 
-            var galleryGenerator = _galleryGeneratorFactory.GetGalleryGenerator(descriptor.TagFilter.Mode);
+            var galleryGenerator = _galleryGeneratorFactory.GetGalleryGenerator(descriptor);
 
             var aggregate = await galleryGenerator.GenerateGallery(descriptor);
 

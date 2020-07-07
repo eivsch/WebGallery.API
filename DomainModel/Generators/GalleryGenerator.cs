@@ -10,6 +10,8 @@ namespace DomainModel.Generators
 {
     public abstract class GalleryGenerator : IGalleryGenerator
     {
+        private const int MAX_ITERATIONS = 20;
+
         public async Task<Gallery> GenerateGallery(GalleryDescriptor galleryDescriptor)
         {
             if (galleryDescriptor.TagFilter == null)
@@ -17,7 +19,8 @@ namespace DomainModel.Generators
 
             var gallery = Gallery.Create(Guid.NewGuid().ToString(), galleryDescriptor.NumberOfItems);
 
-            while (gallery.GalleryItems.Count < galleryDescriptor.NumberOfItems)
+            int counter = 0;
+            while (gallery.GalleryItems.Count < galleryDescriptor.NumberOfItems && counter < MAX_ITERATIONS)
             {
                 var items = await GenerateGalleryItems(galleryDescriptor);
                 foreach (var item in items)
@@ -32,6 +35,8 @@ namespace DomainModel.Generators
                         tags: item.Tag
                     );
                 }
+
+                counter++;
             }
 
             return gallery;

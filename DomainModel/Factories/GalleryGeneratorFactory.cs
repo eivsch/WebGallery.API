@@ -1,4 +1,5 @@
 ﻿using DomainModel.Aggregates.Gallery.Interfaces;
+using DomainModel.Aggregates.GalleryDescriptor;
 using DomainModel.Aggregates.Picture.Interfaces;
 using DomainModel.Aggregates.Tag.Interfaces;
 using DomainModel.Common.Enumerators;
@@ -20,25 +21,38 @@ namespace DomainModel.Factories
             _pictureRepository = pictureRepository;
         }
 
-        public IGalleryGenerator GetGalleryGenerator(TagFilterMode mode)
+        public IGalleryGenerator GetGalleryGenerator(GalleryDescriptor galleryDescriptor)
         {
-            if (mode == TagFilterMode.CustomExclusive)
+            var gifMode = galleryDescriptor.GifMode;
+            var tagMode = galleryDescriptor.TagFilter.Mode;
+            
+            if (gifMode == GifMode.OnlyGifs)
             {
-                return new CustomExclusiveGenerator(_galleryRepository, _tagRepository);
+                if (tagMode == TagFilterMode.CustomInclusive || tagMode == TagFilterMode.OnlyTagged)
+                    return new OnlyTaggedGifsGenerator(_tagRepository, _pictureRepository);
+                
+                return new OnlyGifsGenerator(_galleryRepository);
             }
-            else if (mode == TagFilterMode.CustomInclusive)
+            else
             {
-                return new CustomInclusiveGenerator(_tagRepository, _pictureRepository);
+                if (tagMode == TagFilterMode.CustomExclusive)
+                {
+                    return new CustomExclusiveGenerator(_galleryRepository, _tagRepository);
+                }
+                else if (tagMode == TagFilterMode.CustomInclusive)
+                {
+                    return new CustomInclusiveGenerator(_tagRepository, _pictureRepository);
+                }
+                else if (tagMode == TagFilterMode.OnlyTagged)
+                {
+                    return new OnlyTaggedGenerator(_tagRepository, _pictureRepository);
+                }
+                else if (tagMode == TagFilterMode.OnlyUntagged)
+                {
+                    return new OnlyUntaggedGenerator(_galleryRepository, _tagRepository);
+                }
             }
-            else if (mode == TagFilterMode.OnlyTagged)
-            {
-                return new OnlyTaggedGenerator(_tagRepository, _pictureRepository);
-            }
-            else if (mode == TagFilterMode.OnlyUntagged)
-            {
-                return new OnlyUntaggedGenerator(_galleryRepository, _tagRepository);
-            }
-             
+            
             return new AllRandomGenerator(_galleryRepository);
         }
     }

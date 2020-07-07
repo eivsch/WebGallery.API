@@ -1,5 +1,4 @@
 ﻿using DomainModel.Aggregates.Gallery.Interfaces;
-using DomainModel.Aggregates.GalleryDescriptor;
 using DomainModel.Aggregates.Picture.Interfaces;
 using DomainModel.Aggregates.Tag.Interfaces;
 using DomainModel.Common.Enumerators;
@@ -21,26 +20,26 @@ namespace DomainModel.Factories
             _pictureRepository = pictureRepository;
         }
 
-        public IGalleryGenerator GetGalleryGenerator(GalleryDescriptor galleryDescriptor)
+        public IGalleryGenerator GetGalleryGenerator(TagFilterMode mode)
         {
-            if (galleryDescriptor.TagFilter.Mode == TagFilterMode.CustomExclusive)
+            if (mode == TagFilterMode.CustomExclusive)
             {
-                return new CustomExclusiveGenerator(_galleryRepository, _tagRepository, _pictureRepository);
+                return new CustomExclusiveGenerator(_galleryRepository, _tagRepository);
             }
-            else if (galleryDescriptor.TagFilter.Mode == TagFilterMode.CustomInclusive)
+            else if (mode == TagFilterMode.CustomInclusive)
             {
                 return new CustomInclusiveGenerator(_tagRepository, _pictureRepository);
             }
-            else if (galleryDescriptor.TagFilter.Mode == TagFilterMode.OnlyTagged)
+            else if (mode == TagFilterMode.OnlyTagged)
             {
                 return new OnlyTaggedGenerator(_tagRepository, _pictureRepository);
             }
-            else if (galleryDescriptor.TagFilter.Mode == TagFilterMode.OnlyUntagged)
+            else if (mode == TagFilterMode.OnlyUntagged)
             {
-                return new OnlyUntaggedGenerator(_galleryRepository, _tagRepository, _pictureRepository);
+                return new OnlyUntaggedGenerator(_galleryRepository, _tagRepository);
             }
              
-            return new AllRandomGenerator(_pictureRepository, _galleryRepository);
+            return new AllRandomGenerator(_galleryRepository);
         }
     }
 }

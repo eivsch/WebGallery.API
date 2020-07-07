@@ -1,6 +1,6 @@
 ﻿using DomainModel.Aggregates.Gallery.Interfaces;
 using DomainModel.Aggregates.GalleryDescriptor;
-using DomainModel.Aggregates.Picture.Interfaces;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DomainModel.Generators.GalleryGenerators
@@ -9,15 +9,26 @@ namespace DomainModel.Generators.GalleryGenerators
     {
         private readonly IGalleryRepository _galleryRepository;
 
-        public AllRandomGenerator(IPictureRepository pictureRepository, IGalleryRepository galleryRepository)
-            : base(pictureRepository)
+        public AllRandomGenerator(IGalleryRepository galleryRepository)
         {
             _galleryRepository = galleryRepository;
         }
 
-        protected override async Task AddGalleryItems(GalleryDescriptor galleryDescriptor)
+        protected override async Task<List<GeneratedItem>> GenerateGalleryItems(GalleryDescriptor galleryDescriptor)
         {
-            gallery = await _galleryRepository.GetRandom(galleryDescriptor.NumberOfItems);
+            List<GeneratedItem> list = new List<GeneratedItem>();
+            var batch = await _galleryRepository.GetRandom(galleryDescriptor.NumberOfItems);
+
+            foreach (var item in batch.GalleryItems)
+            {
+                list.Add(new GeneratedItem
+                {
+                    Id = item.Id,
+                    Index = item.Index
+                });
+            }
+
+            return list;
         }
     }
 }

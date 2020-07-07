@@ -56,7 +56,7 @@ namespace Application.Services
             GalleryDescriptor descriptor = GalleryDescriptor.Create(itemsInGallery);
             descriptor.AddTagFilter(tags, tagFilteringMode);
 
-            var galleryGenerator = _galleryGeneratorFactory.GetGalleryGenerator(descriptor);
+            var galleryGenerator = _galleryGeneratorFactory.GetGalleryGenerator(descriptor.TagFilter.Mode);
 
             var aggregate = await galleryGenerator.GenerateGallery(descriptor);
 

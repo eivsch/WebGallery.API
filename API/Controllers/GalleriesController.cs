@@ -42,9 +42,20 @@ namespace API.Controllers
         }
 
         [HttpGet("customized-random")]
-        public async Task<IActionResult> GetCustomRandom(int itemsInEach = 12, string tags = "", string tagFilterMode = "undefined")
+        public async Task<IActionResult> GetCustomRandom(int itemsInEach = 12, string tags = "", string tagFilterMode = "")
         {
             Log.Information("BEGIN - GalleryController|GET");
+
+            if (string.IsNullOrWhiteSpace(tags))
+            {
+                if (string.IsNullOrWhiteSpace(tagFilterMode))
+                    tagFilterMode = "undefined";
+                else if (tagFilterMode == "custominclusive" || tagFilterMode == "customexclusive")
+                    return BadRequest("Illegal tag filter mode - Need to provide tags to filter");
+            }
+            else if (string.IsNullOrWhiteSpace(tagFilterMode))
+                    tagFilterMode = "custominclusive";
+
             var galleryResponse = await _galleryService.GetCustomizedRandom(itemsInEach, tags, tagFilterMode);
 
             return Ok(galleryResponse);

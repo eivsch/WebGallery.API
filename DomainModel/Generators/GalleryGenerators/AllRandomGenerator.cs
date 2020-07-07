@@ -3,9 +3,9 @@ using DomainModel.Aggregates.GalleryDescriptor;
 using DomainModel.Aggregates.Picture.Interfaces;
 using System.Threading.Tasks;
 
-namespace DomainModel.Services
+namespace DomainModel.Generators.GalleryGenerators
 {
-    class AllRandomGenerator : GalleryGeneratorBase
+    class AllRandomGenerator : GalleryGenerator
     {
         private readonly IGalleryRepository _galleryRepository;
 

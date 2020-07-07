@@ -2,19 +2,20 @@
 using DomainModel.Aggregates.GalleryDescriptor;
 using DomainModel.Aggregates.Picture.Interfaces;
 using DomainModel.Aggregates.Tag;
+using DomainModel.Generators.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DomainModel.Services
+namespace DomainModel.Generators
 {
-    public abstract class GalleryGeneratorBase : IGalleryGenerator
+    public abstract class GalleryGenerator : IGalleryGenerator
     {
         protected readonly IPictureRepository _pictureRepository;
 
         protected Gallery gallery;
 
-        public GalleryGeneratorBase(IPictureRepository pictureRepository)
+        public GalleryGenerator(IPictureRepository pictureRepository)
         {
             _pictureRepository = pictureRepository;
         }

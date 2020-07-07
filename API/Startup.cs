@@ -3,7 +3,7 @@ using Application.Services.Interfaces;
 using DomainModel.Aggregates.Gallery.Interfaces;
 using DomainModel.Aggregates.Picture.Interfaces;
 using DomainModel.Aggregates.Tag.Interfaces;
-using DomainModel.Services;
+using DomainModel.Factories;
 using Infrastructure.Common;
 using Infrastructure.Galleries;
 using Infrastructure.Pictures;

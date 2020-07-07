@@ -2,7 +2,7 @@
 using DomainModel.Aggregates.GalleryDescriptor;
 using System.Threading.Tasks;
 
-namespace DomainModel.Services
+namespace DomainModel.Generators.Interfaces
 {
     public interface IGalleryGenerator
     {

@@ -3,8 +3,10 @@ using DomainModel.Aggregates.GalleryDescriptor;
 using DomainModel.Aggregates.Picture.Interfaces;
 using DomainModel.Aggregates.Tag.Interfaces;
 using DomainModel.Common.Enumerators;
+using DomainModel.Generators.GalleryGenerators;
+using DomainModel.Generators.Interfaces;
 
-namespace DomainModel.Services
+namespace DomainModel.Factories
 {
     public class GalleryGeneratorFactory : IGalleryGeneratorFactory
     {

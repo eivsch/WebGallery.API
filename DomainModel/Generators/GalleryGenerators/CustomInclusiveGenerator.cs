@@ -3,9 +3,9 @@ using DomainModel.Aggregates.Picture.Interfaces;
 using DomainModel.Aggregates.Tag.Interfaces;
 using System.Threading.Tasks;
 
-namespace DomainModel.Services
+namespace DomainModel.Generators.GalleryGenerators
 {
-    class CustomInclusiveGenerator : GalleryGeneratorBase
+    class CustomInclusiveGenerator : GalleryGenerator
     {
         private readonly ITagRepository _tagRepository;
 

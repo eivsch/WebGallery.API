@@ -1,6 +1,7 @@
 ﻿using DomainModel.Aggregates.GalleryDescriptor;
+using DomainModel.Generators.Interfaces;
 
-namespace DomainModel.Services
+namespace DomainModel.Factories
 {
     public interface IGalleryGeneratorFactory
     {

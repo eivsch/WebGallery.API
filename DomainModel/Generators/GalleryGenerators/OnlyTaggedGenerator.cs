@@ -1,12 +1,11 @@
 ﻿using DomainModel.Aggregates.GalleryDescriptor;
 using DomainModel.Aggregates.Picture.Interfaces;
 using DomainModel.Aggregates.Tag.Interfaces;
-using System;
 using System.Threading.Tasks;
 
-namespace DomainModel.Services
+namespace DomainModel.Generators.GalleryGenerators
 {
-    class OnlyTaggedGenerator : GalleryGeneratorBase
+    class OnlyTaggedGenerator : GalleryGenerator
     {
         private readonly ITagRepository _tagRepository;
 

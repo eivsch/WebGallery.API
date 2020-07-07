@@ -3,12 +3,11 @@ using DomainModel.Aggregates.Gallery;
 using Application.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using DomainModel.Aggregates.Gallery.Interfaces;
 using System.Linq;
-using DomainModel.Services;
 using DomainModel.Aggregates.GalleryDescriptor;
+using DomainModel.Factories;
 
 namespace Application.Services
 {

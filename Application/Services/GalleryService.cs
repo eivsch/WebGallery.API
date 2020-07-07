@@ -44,13 +44,6 @@ namespace Application.Services
             return list;
         }
 
-        public async Task<GalleryResponse> GetRandom(int itemsInGallery)
-        {
-            var randomGallery = await _galleryRepository.GetRandom(itemsInGallery);
-
-            return Map(randomGallery);
-        }
-
         public async Task<GalleryResponse> GetCustomizedRandom(int itemsInGallery, string tags, string tagFilteringMode)
         {
             GalleryDescriptor descriptor = GalleryDescriptor.Create(itemsInGallery);

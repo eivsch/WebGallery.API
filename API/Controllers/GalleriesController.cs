@@ -32,15 +32,6 @@ namespace API.Controllers
             return Ok(galleryResponse);
         }
 
-        [HttpGet("random")]
-        public async Task<IActionResult> GetRandom(int itemsInEach = 24)
-        {
-            Log.Information("BEGIN - GalleryController|GET");
-            var galleryResponse = await _galleryService.GetRandom(itemsInEach);
-
-            return Ok(galleryResponse);
-        }
-
         [HttpGet("customized-random")]
         public async Task<IActionResult> GetCustomRandom(int itemsInEach = 12, string tags = "", string tagFilterMode = "")
         {

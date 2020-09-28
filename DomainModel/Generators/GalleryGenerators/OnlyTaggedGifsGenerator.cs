@@ -40,7 +40,7 @@ namespace DomainModel.Generators.GalleryGenerators
                         Id = picture.Id,
                         Index = picture.GlobalSortOrder,
                         Name = picture.Name,
-                        Tag = taggedImage.TagName
+                        Tags = taggedImage.TagName
                     });
                 }
             }

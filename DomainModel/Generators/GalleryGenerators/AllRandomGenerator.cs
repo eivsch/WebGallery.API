@@ -35,7 +35,8 @@ namespace DomainModel.Generators.GalleryGenerators
                 {
                     Id = item.Id,
                     Index = item.Index,
-                    Name = item.Name
+                    Name = item.Name,
+                    Tags = string.Join(",", item.Tags)
                 });
             }
 

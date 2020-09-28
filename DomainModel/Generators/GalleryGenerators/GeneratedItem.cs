@@ -5,6 +5,6 @@
         public string Id { get; set; }
         public int Index { get; set; }
         public string Name { get; set; }
-        public string Tag { get; set; }
+        public string Tags { get; set; }
     }
 }

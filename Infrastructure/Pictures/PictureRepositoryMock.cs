@@ -76,14 +76,14 @@ namespace Infrastructure.Pictures
             throw new NotImplementedException();
         }
 
-        public Task<Picture> Save(Picture aggregate)
+        public async Task<Picture> Save(Picture aggregate)
         {
-            throw new NotImplementedException();
+            return aggregate;
         }
 
-        Task<Picture> IPictureRepository.FindByIndex(int i)
+        async Task<Picture> IPictureRepository.FindByIndex(int i)
         {
-            throw new NotImplementedException();
+            return Picture.Create("app\\path", "orig\\path", "name", "folderName", "folderAppPath", 365, 39943, i, DateTime.Now);
         }
 
         Task<Picture> IPictureRepository.FindByGalleryIndex(string galleryId, int index)

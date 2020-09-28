@@ -32,7 +32,7 @@ namespace DomainModel.Generators
                         galleryItemId: item.Id, 
                         index: item.Index, 
                         name: item.Name, 
-                        tags: item.Tag
+                        tags: item.Tags
                     );
                 }
 

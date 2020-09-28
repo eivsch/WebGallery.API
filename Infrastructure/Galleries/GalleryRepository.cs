@@ -89,7 +89,6 @@ namespace Infrastructure.Galleries
             var dto = new GalleryDTO
             {
                 Id = aggregate.Id,
-                FolderId = aggregate.FolderId,
                 GalleryPictures = aggregate.GalleryItems.ToList().Select(i => Map(i))
             };
 

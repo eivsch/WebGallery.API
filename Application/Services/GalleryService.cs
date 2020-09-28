@@ -8,6 +8,7 @@ using DomainModel.Aggregates.Gallery.Interfaces;
 using System.Linq;
 using DomainModel.Aggregates.GalleryDescriptor;
 using DomainModel.Factories;
+using AutoMapper;
 
 namespace Application.Services
 {
@@ -15,11 +16,13 @@ namespace Application.Services
     {
         private readonly IGalleryRepository _galleryRepository;
         private readonly IGalleryGeneratorFactory _galleryGeneratorFactory;
+        private readonly IMapper _mapper;
 
-        public GalleryService(IGalleryRepository galleryRepository, IGalleryGeneratorFactory galleryGeneratorFactory)
+        public GalleryService(IGalleryRepository galleryRepository, IGalleryGeneratorFactory galleryGeneratorFactory, IMapper mapper)
         {
             _galleryRepository = galleryRepository ?? throw new ArgumentNullException(nameof(galleryRepository));
             _galleryGeneratorFactory = galleryGeneratorFactory;
+            _mapper = mapper;
         }
 
         public Task<GalleryResponse> Get(GalleryRequest galleryRequest)
@@ -34,11 +37,8 @@ namespace Application.Services
             List<GalleryResponse> list = new List<GalleryResponse>();
             foreach(var gal in allGalleries)
             {
-                list.Add(new GalleryResponse
-                {
-                    Id = gal.Id,
-                    ImageCount = gal.NumberOfItems
-                });
+                var galleryRespone = _mapper.Map<GalleryResponse>(gal);
+                list.Add(galleryRespone);
             }
 
             return list;
@@ -53,15 +53,14 @@ namespace Application.Services
 
             var aggregate = await galleryGenerator.GenerateGallery(descriptor);
 
-            return Map(aggregate);
+            return _mapper.Map<GalleryResponse>(aggregate);
         }
 
         public async Task<GalleryResponse> Save(GalleryRequest request)
         {
             var aggregate = Gallery.Create(
                 id: request.Id, 
-                numberOfItems: request.GalleryPictures?.Count() ?? -1, 
-                folderId: request.FolderId
+                numberOfItems: request.GalleryPictures?.Count() ?? -1
             );
 
             foreach(var item in request.GalleryPictures)
@@ -71,27 +70,7 @@ namespace Application.Services
 
             aggregate = await _galleryRepository.Save(aggregate);
 
-            return Map(aggregate);
-        }
-
-        private GalleryResponse Map(Gallery aggregate)
-        {
-            return new GalleryResponse
-            {
-                Id = aggregate.Id,
-                ImageCount = aggregate.NumberOfItems,
-                GalleryPictures = aggregate.GalleryItems.ToList().Select(i => Map(i)),
-            };
-        }
-
-        private GalleryPicture Map(GalleryItem item)
-        {
-            return new GalleryPicture
-            {
-                Id = item.Id,
-                Index = item.Index,
-                Tags = item.Tags
-            };
+            return _mapper.Map<GalleryResponse>(aggregate);
         }
     }
 }

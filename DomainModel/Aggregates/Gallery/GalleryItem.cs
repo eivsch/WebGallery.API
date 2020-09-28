@@ -8,18 +8,15 @@ namespace DomainModel.Aggregates.Gallery
     public class GalleryItem : Entity
     {
         private int _index;
-        public virtual int Index => _index;
-
         private string _fileSystemPath;
-        public virtual string FileSystemPath => _fileSystemPath;
-
         private string _name;
-        public virtual string Name => _name;
-
         private MediaType _mediaType;
-        public virtual MediaType MediaType => _mediaType;
-
         private readonly List<string>  _tags;
+
+        public virtual int Index => _index;
+        public virtual string FileSystemPath => _fileSystemPath;
+        public virtual string Name => _name;
+        public virtual MediaType MediaType => _mediaType;
         public virtual IReadOnlyCollection<string> Tags => _tags;
 
         private GalleryItem(string id)

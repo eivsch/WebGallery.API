@@ -1,5 +1,6 @@
 using Application.Services;
 using Application.Services.Interfaces;
+using AutoMapper;
 using DomainModel.Aggregates.Gallery.Interfaces;
 using DomainModel.Aggregates.Picture.Interfaces;
 using DomainModel.Aggregates.Tag.Interfaces;
@@ -59,6 +60,13 @@ namespace API
 
                 return new ElasticClient(connectionSettings);
             });
+
+            // Mappings
+            var mapperConfig = new MapperConfiguration(mc => 
+            { 
+                mc.AddProfile(new Application.Mappings.AutoMapperGalleryProfile()); 
+            });
+            services.AddSingleton(mapperConfig.CreateMapper());
 
             services.AddControllers();
         }

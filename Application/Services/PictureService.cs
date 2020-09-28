@@ -1,5 +1,6 @@
 ﻿using Application.Pictures;
 using Application.Services.Interfaces;
+using AutoMapper;
 using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
 using DomainModel.Aggregates.Tag;
@@ -15,16 +16,18 @@ namespace Application.Services
     {
         private readonly IPictureRepository _pictureRepository;
         private readonly ITagRepository _tagRepository;
+        private readonly IMapper _mapper;
 
-        public PictureService(IPictureRepository pictureRepository, ITagRepository tagRepository)
+        public PictureService(IPictureRepository pictureRepository, ITagRepository tagRepository, IMapper mapper)
         {
             _pictureRepository = pictureRepository;
             _tagRepository = tagRepository;
+            _mapper = mapper;
         }
 
         public async Task<PictureResponse> Add(PictureRequest pictureRequest)
         {
-            Picture pic = Picture.Create
+            Picture aggregate = Picture.Create
                 (
                     appPath: pictureRequest.AppPath,
                     originalPath: pictureRequest.OriginalPath,
@@ -37,15 +40,17 @@ namespace Application.Services
                     created: pictureRequest.Created
                 );
 
+            aggregate = await _pictureRepository.Save(aggregate);
             foreach (var tag in pictureRequest.Tags)
             {
-                var tagAggregate = Tag.Create(tag, pic.Id);
+                var tagAggregate = Tag.Create(tag, aggregate.Id);
                 await _tagRepository.Save(tagAggregate);
             }
 
-            pic = await _pictureRepository.Save(pic);
+            var response = _mapper.Map<PictureResponse>(aggregate);
+            response.Tags = pictureRequest.Tags;
 
-            return Map(pic);
+            return response;
         }
 
         public async Task<PictureResponse> Get(string pictureId)

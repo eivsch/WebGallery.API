@@ -24,9 +24,14 @@ namespace Infrastructure.Tags
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Tag>> FindAllTagsForPicture(string pictureId)
+        public async Task<IEnumerable<Tag>> FindAllTagsForPicture(string pictureId)
         {
-            throw new NotImplementedException();
+            return new List<Tag>
+            {
+                Tag.Create( "Tag1", pictureId),
+                Tag.Create( "Tag2", pictureId),
+                Tag.Create( "Tag3", pictureId),
+            };
         }
 
         public Task<Tag> FindById(Guid id)

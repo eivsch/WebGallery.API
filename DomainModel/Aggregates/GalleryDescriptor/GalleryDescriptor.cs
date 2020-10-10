@@ -47,8 +47,11 @@ namespace DomainModel.Aggregates.GalleryDescriptor
 
             TagFilter tagFilter = TagFilter.Create(filterMode);
 
-            foreach (var tag in tagsToFilter.Split(','))
-                tagFilter.AddTag(tag);
+            if (!string.IsNullOrWhiteSpace(tagsToFilter))
+            {
+                foreach (var tag in tagsToFilter.Split(','))
+                    tagFilter.AddTag(tag);
+            }
 
             _tagFilter = tagFilter;
         }

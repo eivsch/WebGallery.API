@@ -7,6 +7,5 @@ namespace DomainModel.Generators.Interfaces
     public interface IGalleryGenerator
     {
         Task<Gallery> GenerateGallery();
-        Task<Gallery> GenerateGallery(GalleryDescriptor galleryDescriptor);
     }
 }

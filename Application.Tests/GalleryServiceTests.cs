@@ -41,5 +41,23 @@ namespace Application.Tests
 
             Assert.IsTrue(galleryResponse.GalleryPictures.Count() > 0);
         }
+
+        [TestMethod]
+        public async Task Test_GetCustomizedRandom_OnlyVideos()
+        {
+            var galleryService = SetupGalleryService();
+            var galleryResponse = await galleryService.GetCustomizedRandom(1, "", "", "onlyvideos");
+
+            Assert.IsTrue(galleryResponse.GalleryPictures.Count() > 0);
+        }
+
+        [TestMethod]
+        public async Task Test_GetCustomizedRandom_AllRandom()
+        {
+            var galleryService = SetupGalleryService();
+            var galleryResponse = await galleryService.GetCustomizedRandom(10, "", "", "");
+
+            Assert.IsTrue(galleryResponse.GalleryPictures.Count() == 10);
+        }
     }
 }

@@ -14,25 +14,26 @@ namespace DomainModel.Generators.GalleryGenerators
         private readonly IGalleryRepository _galleryRepository;
         private readonly ITagRepository _tagRepository;
 
-        public CustomExclusiveGenerator(IGalleryRepository galleryRepository, ITagRepository tagRepository)
-        {
-            _galleryRepository = galleryRepository;
-            _tagRepository = tagRepository;
-        }
-
-        protected override async Task<List<GeneratedItem>> GenerateGalleryItems(GalleryDescriptor galleryDescriptor)
+        public CustomExclusiveGenerator(GalleryDescriptor galleryDescriptor, IGalleryRepository galleryRepository, ITagRepository tagRepository)
+            : base(galleryDescriptor)
         {
             if (galleryDescriptor.TagFilter.Mode != TagFilterMode.CustomExclusive)
                 throw new NotSupportedException($"The '{nameof(CustomExclusiveGenerator)}' does not support the current tag mode: {galleryDescriptor.TagFilter.Mode}");
             if (galleryDescriptor.MediaFilterMode == MediaFilterMode.OnlyGifs)
                 throw new NotSupportedException($"The '{nameof(CustomExclusiveGenerator)}' does not support the current gif mode '{MediaFilterMode.OnlyGifs.Name}'.");
 
+            _galleryRepository = galleryRepository;
+            _tagRepository = tagRepository;
+        }
+
+        protected override async Task<List<GeneratedItem>> GenerateGalleryItems()
+        {
             var list = new List<GeneratedItem>();
-            var batch = await _galleryRepository.GetRandom(galleryDescriptor.NumberOfItems);
+            var batch = await _galleryRepository.GetRandom(_galleryDescriptor.NumberOfItems);
 
             foreach (var item in batch.GalleryItems)
             {
-                if (item.MediaType == MediaType.Gif && galleryDescriptor.MediaFilterMode == MediaFilterMode.Exclude)
+                if (item.MediaType == MediaType.Gif && _galleryDescriptor.MediaFilterMode == MediaFilterMode.ExcludeGifs)
                     continue;
 
                 var tags = await _tagRepository.FindAllTagsForPicture(item.Id);
@@ -47,7 +48,7 @@ namespace DomainModel.Generators.GalleryGenerators
                 }
                 else
                 {
-                    var matches = tags.Select(t => t.TagName).Intersect(galleryDescriptor.TagFilter.Tags);
+                    var matches = tags.Select(t => t.TagName).Intersect(_galleryDescriptor.TagFilter.Tags);
                     if (matches.Count() == 0)
                     {
                         list.Add(new GeneratedItem
@@ -61,11 +62,6 @@ namespace DomainModel.Generators.GalleryGenerators
             }
 
             return list;
-        }
-
-        protected override Task<List<GeneratedItem>> GenerateGalleryItems()
-        {
-            throw new NotImplementedException();
         }
     }
 }

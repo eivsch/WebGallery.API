@@ -29,9 +29,9 @@ namespace DomainModel.Factories
             if (mediaFilterMode == MediaFilterMode.OnlyGifs)
             {
                 if (tagMode == TagFilterMode.CustomInclusive || tagMode == TagFilterMode.OnlyTagged)
-                    return new OnlyTaggedGifsGenerator(_tagRepository, _pictureRepository);
+                    return new OnlyTaggedGifsGenerator(galleryDescriptor, _tagRepository, _pictureRepository);
                 
-                return new OnlyGifsGenerator(_galleryRepository);
+                return new OnlyGifsGenerator(galleryDescriptor, _galleryRepository);
             }
             else if (mediaFilterMode == MediaFilterMode.OnlyVideos)
             {
@@ -41,23 +41,23 @@ namespace DomainModel.Factories
             {
                 if (tagMode == TagFilterMode.CustomExclusive)
                 {
-                    return new CustomExclusiveGenerator(_galleryRepository, _tagRepository);
+                    return new CustomExclusiveGenerator(galleryDescriptor, _galleryRepository, _tagRepository);
                 }
                 else if (tagMode == TagFilterMode.CustomInclusive)
                 {
-                    return new CustomInclusiveGenerator(_tagRepository, _pictureRepository);
+                    return new CustomInclusiveGenerator(galleryDescriptor, _tagRepository, _pictureRepository);
                 }
                 else if (tagMode == TagFilterMode.OnlyTagged)
                 {
-                    return new OnlyTaggedGenerator(_tagRepository, _pictureRepository);
+                    return new OnlyTaggedGenerator(galleryDescriptor, _tagRepository, _pictureRepository);
                 }
                 else if (tagMode == TagFilterMode.OnlyUntagged)
                 {
-                    return new OnlyUntaggedGenerator(_galleryRepository, _tagRepository);
+                    return new OnlyUntaggedGenerator(galleryDescriptor, _galleryRepository, _tagRepository);
                 }
             }
             
-            return new AllRandomGenerator(_galleryRepository);
+            return new AllRandomGenerator(galleryDescriptor, _galleryRepository);
         }
     }
 }

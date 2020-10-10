@@ -21,7 +21,7 @@ namespace DomainModel.Aggregates.GalleryDescriptor
         public static GalleryDescriptor Create(int numberOfItems, string mediaFilterMode = "")
         {
             if (string.IsNullOrWhiteSpace(mediaFilterMode))
-                mediaFilterMode = MediaFilterMode.Include.Name;
+                mediaFilterMode = MediaFilterMode.IncludeGifs.Name;
 
             return new GalleryDescriptor
             {

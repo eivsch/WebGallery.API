@@ -36,5 +36,18 @@ namespace Domain.Tests
 
             Assert.IsTrue(gallery.GalleryItems.Count > 0);
         }
+
+        [TestMethod]
+        public async Task Test_AllRandom()
+        {
+            var generatorFactory = new GalleryGeneratorFactory(new TagRepositoryMock(), new PictureRepositoryMock(), new GalleryRepositoryMock());
+
+            var galleryDescriptor = GalleryDescriptor.Create(10);
+
+            var generator = generatorFactory.GetGalleryGenerator(galleryDescriptor);
+            var gallery = await generator.GenerateGallery();
+
+            Assert.IsTrue(gallery.GalleryItems.Count == 10);
+        }
     }
 }

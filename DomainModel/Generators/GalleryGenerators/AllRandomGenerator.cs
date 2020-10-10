@@ -11,24 +11,25 @@ namespace DomainModel.Generators.GalleryGenerators
     {
         private readonly IGalleryRepository _galleryRepository;
 
-        public AllRandomGenerator(IGalleryRepository galleryRepository)
-        {
-            _galleryRepository = galleryRepository;
-        }
-
-        protected override async Task<List<GeneratedItem>> GenerateGalleryItems(GalleryDescriptor galleryDescriptor)
+        public AllRandomGenerator(GalleryDescriptor galleryDescriptor, IGalleryRepository galleryRepository)
+            : base(galleryDescriptor)
         {
             if (galleryDescriptor.TagFilter.Mode != TagFilterMode.Undefined)
                 throw new NotSupportedException($"The '{nameof(AllRandomGenerator)}' does not support the current tag mode: {galleryDescriptor.TagFilter.Mode}");
-            if (galleryDescriptor.MediaFilterMode == MediaFilterMode.OnlyGifs)
-                throw new NotSupportedException($"The '{nameof(AllRandomGenerator)}' does not support the current gif mode '{MediaFilterMode.OnlyGifs.Name}'.");
+            if (galleryDescriptor.MediaFilterMode == MediaFilterMode.OnlyGifs || galleryDescriptor.MediaFilterMode == MediaFilterMode.OnlyVideos)
+                throw new NotSupportedException($"The '{nameof(AllRandomGenerator)}' does not support the current media filter mode '{galleryDescriptor.MediaFilterMode}'.");
 
+            _galleryRepository = galleryRepository;
+        }
+
+        protected override async Task<List<GeneratedItem>> GenerateGalleryItems()
+        {
             List<GeneratedItem> list = new List<GeneratedItem>();
-            var batch = await _galleryRepository.GetRandom(galleryDescriptor.NumberOfItems);
+            var batch = await _galleryRepository.GetRandom(_galleryDescriptor.NumberOfItems);
 
             foreach (var item in batch.GalleryItems)
             {
-                if (item.MediaType == MediaType.Gif && galleryDescriptor.MediaFilterMode == MediaFilterMode.Exclude)
+                if (item.MediaType == MediaType.Gif && _galleryDescriptor.MediaFilterMode == MediaFilterMode.ExcludeGifs)
                     continue;
 
                 list.Add(new GeneratedItem
@@ -41,11 +42,6 @@ namespace DomainModel.Generators.GalleryGenerators
             }
 
             return list;
-        }
-
-        protected override Task<List<GeneratedItem>> GenerateGalleryItems()
-        {
-            throw new NotImplementedException();
         }
     }
 }

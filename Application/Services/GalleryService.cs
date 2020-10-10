@@ -52,7 +52,7 @@ namespace Application.Services
 
             var galleryGenerator = _galleryGeneratorFactory.GetGalleryGenerator(descriptor);
 
-            var aggregate = await galleryGenerator.GenerateGallery(descriptor);
+            var aggregate = await galleryGenerator.GenerateGallery();
 
             return _mapper.Map<GalleryResponse>(aggregate);
         }

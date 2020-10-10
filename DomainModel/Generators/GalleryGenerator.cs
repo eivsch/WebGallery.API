@@ -14,11 +14,6 @@ namespace DomainModel.Generators
 
         protected readonly GalleryDescriptor _galleryDescriptor;
 
-        public GalleryGenerator()
-        {
-
-        }
-
         public GalleryGenerator(GalleryDescriptor galleryDescriptor)
         {
             _galleryDescriptor = galleryDescriptor;
@@ -53,38 +48,7 @@ namespace DomainModel.Generators
 
             return gallery;
         }
-
-        public async Task<Gallery> GenerateGallery(GalleryDescriptor galleryDescriptor)
-        {
-            if (galleryDescriptor.TagFilter == null)
-                throw new ArgumentException("Descriptor object is not valid - TagFilter is null");
-
-            var gallery = Gallery.Create(Guid.NewGuid().ToString(), galleryDescriptor.NumberOfItems);
-
-            int counter = 0;
-            while (gallery.GalleryItems.Count < galleryDescriptor.NumberOfItems && counter < MAX_ITERATIONS)
-            {
-                var items = await GenerateGalleryItems(galleryDescriptor);
-                foreach (var item in items)
-                {
-                    if (gallery.GalleryItems.Count == galleryDescriptor.NumberOfItems)
-                        break;
-
-                    gallery.AddGalleryItem(
-                        galleryItemId: item.Id, 
-                        index: item.Index, 
-                        name: item.Name, 
-                        tags: item.Tags
-                    );
-                }
-
-                counter++;
-            }
-
-            return gallery;
-        }
         
         protected abstract Task<List<GeneratedItem>> GenerateGalleryItems();
-        protected abstract Task<List<GeneratedItem>> GenerateGalleryItems(GalleryDescriptor galleryDescriptor);
     }
 }

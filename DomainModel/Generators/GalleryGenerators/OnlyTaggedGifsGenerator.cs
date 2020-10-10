@@ -13,21 +13,22 @@ namespace DomainModel.Generators.GalleryGenerators
         private readonly ITagRepository _tagRepository;
         private readonly IPictureRepository _pictureRepository;
 
-        public OnlyTaggedGifsGenerator(ITagRepository tagRepository, IPictureRepository pictureRepository)
+        public OnlyTaggedGifsGenerator( GalleryDescriptor galleryDescriptor, ITagRepository tagRepository, IPictureRepository pictureRepository)
+            : base(galleryDescriptor)
         {
+            if (galleryDescriptor.TagFilter.Mode != TagFilterMode.OnlyTagged && galleryDescriptor.TagFilter.Mode != TagFilterMode.CustomInclusive)
+                throw new NotSupportedException($"The '{nameof(OnlyTaggedGifsGenerator)}' does not support the current tag mode: {galleryDescriptor.TagFilter.Mode}");
+            if (galleryDescriptor.MediaFilterMode == MediaFilterMode.ExcludeGifs)
+                throw new NotSupportedException($"The '{nameof(OnlyTaggedGifsGenerator)}' does not support the gif mode '{MediaFilterMode.ExcludeGifs}'.");
+
             _tagRepository = tagRepository;
             _pictureRepository = pictureRepository;
         }
 
-        protected override async Task<List<GeneratedItem>> GenerateGalleryItems(GalleryDescriptor galleryDescriptor)
+        protected override async Task<List<GeneratedItem>> GenerateGalleryItems()
         {
-            if (galleryDescriptor.TagFilter.Mode != TagFilterMode.OnlyTagged && galleryDescriptor.TagFilter.Mode != TagFilterMode.CustomInclusive)
-                throw new NotSupportedException($"The '{nameof(OnlyTaggedGifsGenerator)}' does not support the current tag mode: {galleryDescriptor.TagFilter.Mode}");
-            if (galleryDescriptor.MediaFilterMode == MediaFilterMode.Exclude)
-                throw new NotSupportedException($"The '{nameof(OnlyTaggedGifsGenerator)}' does not support the gif mode '{MediaFilterMode.Exclude}'.");
-
             var list = new List<GeneratedItem>();
-            var taggedImages = await _tagRepository.GetRandom(galleryDescriptor.TagFilter.Tags, 200);
+            var taggedImages = await _tagRepository.GetRandom(_galleryDescriptor.TagFilter.Tags, 200);
 
             foreach (var taggedImage in taggedImages)
             {
@@ -46,11 +47,6 @@ namespace DomainModel.Generators.GalleryGenerators
             }
 
             return list;
-        }
-
-        protected override Task<List<GeneratedItem>> GenerateGalleryItems()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -14,25 +14,26 @@ namespace DomainModel.Generators.GalleryGenerators
         private readonly IGalleryRepository _galleryRepository;
         private readonly ITagRepository _tagRepository;
 
-        public OnlyUntaggedGenerator(IGalleryRepository galleryRepository, ITagRepository tagRepository)
-        {
-            _galleryRepository = galleryRepository;
-            _tagRepository = tagRepository;
-        }
-
-        protected override async Task<List<GeneratedItem>> GenerateGalleryItems(GalleryDescriptor galleryDescriptor)
+        public OnlyUntaggedGenerator(GalleryDescriptor galleryDescriptor, IGalleryRepository galleryRepository, ITagRepository tagRepository)
+            : base(galleryDescriptor)
         {
             if (galleryDescriptor.TagFilter.Mode != TagFilterMode.OnlyUntagged)
                 throw new NotSupportedException($"The '{nameof(OnlyUntaggedGenerator)}' does not support the current tag mode: {galleryDescriptor.TagFilter.Mode}");
             if (galleryDescriptor.MediaFilterMode == MediaFilterMode.OnlyGifs)
                 throw new NotSupportedException($"The '{nameof(OnlyUntaggedGenerator)}' does not support the current gif mode '{MediaFilterMode.OnlyGifs.Name}'.");
 
+            _galleryRepository = galleryRepository;
+            _tagRepository = tagRepository;
+        }
+
+        protected override async Task<List<GeneratedItem>> GenerateGalleryItems()
+        {
             var list = new List<GeneratedItem>();
-            var batch = await _galleryRepository.GetRandom(galleryDescriptor.NumberOfItems);
+            var batch = await _galleryRepository.GetRandom(_galleryDescriptor.NumberOfItems);
             
             foreach (var item in batch.GalleryItems)
             {
-                if (item.MediaType == MediaType.Gif && galleryDescriptor.MediaFilterMode == MediaFilterMode.Exclude)
+                if (item.MediaType == MediaType.Gif && _galleryDescriptor.MediaFilterMode == MediaFilterMode.ExcludeGifs)
                     continue;
 
                 var tags = await _tagRepository.FindAllTagsForPicture(item.Id);
@@ -48,11 +49,6 @@ namespace DomainModel.Generators.GalleryGenerators
             }
 
             return list;
-        }
-
-        protected override Task<List<GeneratedItem>> GenerateGalleryItems()
-        {
-            throw new NotImplementedException();
         }
     }
 }

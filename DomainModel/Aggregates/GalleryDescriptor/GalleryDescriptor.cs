@@ -27,10 +27,11 @@ namespace DomainModel.Aggregates.GalleryDescriptor
             {
                 _numberOfItems = numberOfItems,
                 _mediaFilterMode = MediaFilterMode.Get(mediaFilterMode),
+                _tagFilter = TagFilter.Create(TagFilterMode.Undefined),
             };
         }
 
-        public virtual void AddTagFilter(string tagsToFilter, string modeOfFiltering)
+        public virtual void SetTagFilter(string tagsToFilter, string modeOfFiltering)
         {
             TagFilterMode filterMode;
             if (string.IsNullOrWhiteSpace(modeOfFiltering))

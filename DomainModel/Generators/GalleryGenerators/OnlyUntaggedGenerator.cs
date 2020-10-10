@@ -49,5 +49,10 @@ namespace DomainModel.Generators.GalleryGenerators
 
             return list;
         }
+
+        protected override Task<List<GeneratedItem>> GenerateGalleryItems()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

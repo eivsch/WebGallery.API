@@ -11,18 +11,19 @@ namespace DomainModel.Generators.GalleryGenerators
     {
         private readonly IGalleryRepository _galleryRepository;
 
-        public OnlyVideoGenerator(IGalleryRepository galleryRepository)
-        {
-            _galleryRepository = galleryRepository;
-        }
-
-        protected override async Task<List<GeneratedItem>> GenerateGalleryItems(GalleryDescriptor galleryDescriptor)
+        public OnlyVideoGenerator(GalleryDescriptor galleryDescriptor, IGalleryRepository galleryRepository)
+            : base(galleryDescriptor)
         {
             if (galleryDescriptor.TagFilter.Mode != TagFilterMode.Undefined)
                 throw new NotSupportedException($"The '{nameof(OnlyVideoGenerator)}' does not support the current tag filter mode: {galleryDescriptor.TagFilter.Mode}");
             if (galleryDescriptor.MediaFilterMode != MediaFilterMode.OnlyVideos)
                 throw new NotSupportedException($"The '{nameof(OnlyVideoGenerator)}' does not support the current media filter mode '{galleryDescriptor.MediaFilterMode.Name}'.");
 
+            _galleryRepository = galleryRepository;
+        }
+
+        protected override async Task<List<GeneratedItem>> GenerateGalleryItems()
+        {
             var list = new List<GeneratedItem>();
             var batch = await _galleryRepository.GetRandom(200);
 
@@ -40,6 +41,11 @@ namespace DomainModel.Generators.GalleryGenerators
             }
 
             return list;
+        }
+
+        protected override Task<List<GeneratedItem>> GenerateGalleryItems(GalleryDescriptor galleryDescriptor)
+        {
+            throw new NotImplementedException();
         }
     }
 }

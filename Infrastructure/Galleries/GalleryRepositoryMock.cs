@@ -59,9 +59,9 @@ namespace Infrastructure.Galleries
             aggregate.AddGalleryItem("4", 4, "pic4", "tag1, tag2, tag3");
             aggregate.AddGalleryItem("5", 5, "pic5", "tag1, tag2, tag3");
             aggregate.AddGalleryItem("6", 6, "pic6", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("7", 7, "pic7", "tag1, tag2, tag3");
+            aggregate.AddGalleryItem("7", 7, "vid7.mp4", "tag1, tag2, tag3");
             aggregate.AddGalleryItem("8", 8, "pic8", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("9", 9, "pic9", "tag1, tag2, tag3");
+            aggregate.AddGalleryItem("9", 9, "gif9.gif", "tag1, tag2, tag3");
             aggregate.AddGalleryItem("10", 10, "pic10", "tag1, tag2, tag3");
             aggregate.AddGalleryItem("11", 11, "pic11", "tag1, tag2, tag3");
             aggregate.AddGalleryItem("12", 12, "pic12", "tag1, tag2, tag3");

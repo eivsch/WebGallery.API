@@ -35,7 +35,7 @@ namespace DomainModel.Factories
             }
             else if (mediaFilterMode == MediaFilterMode.OnlyVideos)
             {
-                return new OnlyVideoGenerator(_galleryRepository);
+                return new OnlyVideoGenerator(galleryDescriptor, _galleryRepository);
             }
             else
             {

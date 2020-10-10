@@ -37,17 +37,22 @@ namespace Infrastructure.Pictures
             throw new NotImplementedException();
         }
 
-        public Task<Picture> FindById(string id)
+        public async Task<Picture> FindById(string id)
         {
-            throw new NotImplementedException();
+            return Picture.Create(
+                id: id,
+                name: "name",
+                appPath: "app\\path",
+                originalPath: "orig\\path",
+                folderName: "folderName",
+                folderId: "folderAppPath",
+                folderSortOrder: 24,
+                globalSortOrder: 2465,
+                size: 34221,
+                created: DateTime.Now);
         }
 
         public Task<Picture> FindById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> FindByIndex(int i)
         {
             throw new NotImplementedException();
         }
@@ -56,18 +61,30 @@ namespace Infrastructure.Pictures
         {
             return new List<Picture>
             {
-                //Picture.Create(
-                //    id: "dfgdsfgg",
-                //    name: "2017-NSX-3-1-1024x576.jpg",
-                //    globalSortOrder: 1,
-                //    folderSortOrder: 1
-                //),
-                //Picture.Create(
-                //    id: "lkjjhg",
-                //    name: "b.jpg",
-                //    globalSortOrder: 2,
-                //    folderSortOrder: 2
-                //),
+                Picture.Create(
+                    id: "1",
+                    name: "name",
+                    appPath: "app\\path",
+                    originalPath: "orig\\path",
+                    folderName: "folderName",
+                    folderId: galleryId,
+                    folderSortOrder: 24,
+                    globalSortOrder: 2465,
+                    size: 34221,
+                    created: DateTime.Now
+                ),
+                Picture.Create(
+                    id: "2",
+                    name: "name",
+                    appPath: "app\\path",
+                    originalPath: "orig\\path",
+                    folderName: "folderName",
+                    folderId: galleryId,
+                    folderSortOrder: 24,
+                    globalSortOrder: 2465,
+                    size: 34221,
+                    created: DateTime.Now
+                ),
             };
         }
 
@@ -86,14 +103,34 @@ namespace Infrastructure.Pictures
             return Picture.Create("app\\path", "orig\\path", "name", "folderName", "folderAppPath", 365, 39943, i, DateTime.Now);
         }
 
-        Task<Picture> IPictureRepository.FindByGalleryIndex(string galleryId, int index)
+        async Task<Picture> IPictureRepository.FindByGalleryIndex(string galleryId, int index)
         {
-            throw new NotImplementedException();
+            return Picture.Create(
+                id: "123123",
+                name: "name",
+                appPath: "app\\path",
+                originalPath: "orig\\path",
+                folderName: "folderName",
+                folderId: galleryId,
+                folderSortOrder: 24,
+                globalSortOrder: index,
+                size: 34221,
+                created: DateTime.Now);
         }
 
-        public Task<Picture> FindByAppPath(string appPath)
+        public async Task<Picture> FindByAppPath(string appPath)
         {
-            throw new NotImplementedException();
+            return Picture.Create(
+                id: "123123",
+                name: "name",
+                appPath: appPath,
+                originalPath: "orig\\path",
+                folderName: "folderName",
+                folderId: "hash1234",
+                folderSortOrder: 24,
+                globalSortOrder: 123,
+                size: 34221,
+                created: DateTime.Now);
         }
     }
 }

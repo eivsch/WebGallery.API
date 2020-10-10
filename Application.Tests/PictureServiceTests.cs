@@ -6,6 +6,7 @@ using Infrastructure.Tags;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Tests
@@ -68,16 +69,92 @@ namespace Application.Tests
             var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
             var response = await service.Add(request);
 
+            AssertAllPropertiesHaveValues(response);
+        }
+
+        [TestMethod]
+        public async Task Test_GetById()
+        {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new Mappings.AutoMapperPictureProfile());
+            });
+
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
+            var response = await service.Get("1");
+
+            AssertAllPropertiesHaveValues(response);
+        }
+
+        [TestMethod]
+        public async Task Test_GetByIndex()
+        {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new Mappings.AutoMapperPictureProfile());
+            });
+
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
+            var response = await service.Get(1);
+
+            AssertAllPropertiesHaveValues(response);
+        }
+
+        [TestMethod]
+        public async Task Test_GetByGalleryAndPictureIds()
+        {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new Mappings.AutoMapperPictureProfile());
+            });
+
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
+            var response = await service.Get("1", 1);
+
+            AssertAllPropertiesHaveValues(response);
+        }
+
+        [TestMethod]
+        public async Task Test_GetByAppPath()
+        {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new Mappings.AutoMapperPictureProfile());
+            });
+
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
+            var response = await service.GetByAppPath("app\\path");
+
+            AssertAllPropertiesHaveValues(response);
+        }
+
+        [TestMethod]
+        public async Task Test_GetPictures()
+        {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new Mappings.AutoMapperPictureProfile());
+            });
+
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
+            var response = await service.GetPictures("fhjsh#432434");
+
+            foreach (var e in response) AssertAllPropertiesHaveValues(e);
+        }
+
+        private void AssertAllPropertiesHaveValues(PictureResponse response)
+        {
             Assert.IsFalse(string.IsNullOrWhiteSpace(response.Id));
             Assert.IsFalse(string.IsNullOrWhiteSpace(response.Name));
             Assert.IsFalse(string.IsNullOrWhiteSpace(response.AppPath));
             Assert.IsFalse(string.IsNullOrWhiteSpace(response.OriginalPath));
             Assert.IsFalse(string.IsNullOrWhiteSpace(response.FolderName));
             Assert.IsFalse(string.IsNullOrWhiteSpace(response.FolderId));
-            Assert.AreEqual(365, response.FolderSortOrder);
-            Assert.AreEqual(39943, response.Size);
-            Assert.AreEqual(33324, response.GlobalSortOrder);
+            Assert.IsTrue(response.FolderSortOrder > 0);
+            Assert.IsTrue(response.Size > 0);
+            Assert.IsTrue(response.GlobalSortOrder > 0);
             Assert.IsNotNull(response.Tags);
+            Assert.IsTrue(response.Tags.Count() > 0);
             Assert.IsNotNull(response.CreateTimestamp);
         }
     }

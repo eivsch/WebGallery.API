@@ -55,51 +55,55 @@ namespace Application.Services
 
         public async Task<PictureResponse> Get(string pictureId)
         {
-            var pic = await _pictureRepository.FindById(pictureId);
+            var aggregate = await _pictureRepository.FindById(pictureId);
 
-            await GetTagsFromPersistenceAndAdd(pic);
+            await GetTagsFromPersistenceAndAdd(aggregate);
 
-            return Map(pic);
+            return _mapper.Map<PictureResponse>(aggregate);
         }
 
         public async Task<PictureResponse> Get(int index)
         {
-            var pic = await _pictureRepository.FindByIndex(index);
+            var aggregate = await _pictureRepository.FindByIndex(index);
 
-            await GetTagsFromPersistenceAndAdd(pic);
+            await GetTagsFromPersistenceAndAdd(aggregate);
 
-            return Map(pic);
+            return _mapper.Map<PictureResponse>(aggregate);
         }
 
         public async Task<PictureResponse> Get(string galleryId, int pictureId)
         {
-            var pic = await _pictureRepository.FindByGalleryIndex(galleryId, pictureId);
+            var aggregate = await _pictureRepository.FindByGalleryIndex(galleryId, pictureId);
 
-            await GetTagsFromPersistenceAndAdd(pic);
+            await GetTagsFromPersistenceAndAdd(aggregate);
 
-            return Map(pic);
+            return _mapper.Map<PictureResponse>(aggregate);
         }
 
         public async Task<PictureResponse> GetByAppPath(string appPath)
         {
-            var pic = await _pictureRepository.FindByAppPath(appPath);
+            var aggregate = await _pictureRepository.FindByAppPath(appPath);
 
-            if (pic is null)
+            if (aggregate is null)
                 return null;
 
-            await GetTagsFromPersistenceAndAdd(pic);
+            await GetTagsFromPersistenceAndAdd(aggregate);
 
-            return Map(pic);
+            return _mapper.Map<PictureResponse>(aggregate);
         }
 
         public async Task<IEnumerable<PictureResponse>> GetPictures(string galleryId, int offset = 0)
         {
-            var pics = await _pictureRepository.FindAll(galleryId, offset);
-
-            // TODO: Add tags
+            var pictureAggregates = await _pictureRepository.FindAll(galleryId, offset);
 
             var list = new List<PictureResponse>();
-            pics.ToList().ForEach(p => list.Add(Map(p)));
+            foreach (var aggregate in pictureAggregates)
+            {
+                await GetTagsFromPersistenceAndAdd(aggregate);
+                var pictureResponse = _mapper.Map<PictureResponse>(aggregate);
+
+                list.Add(pictureResponse);
+            }
 
             return list;
         }
@@ -109,24 +113,6 @@ namespace Application.Services
             var tags = await _tagRepository.FindAllTagsForPicture(aggregate.Id);
             foreach (var tag in tags)
                 aggregate.AddTag(tag.TagName);
-        }
-
-        private PictureResponse Map(Picture pic)
-        {
-            return new PictureResponse
-            {
-                Id = pic.Id,
-                Name = pic.Name,
-                AppPath = pic.AppPath,
-                OriginalPath = pic.OriginalPath,
-                FolderName = pic.FolderName,
-                FolderId = pic.FolderId,
-                FolderSortOrder = pic.FolderSortOrder,
-                GlobalSortOrder = pic.GlobalSortOrder,
-                Size = pic.Size,
-                CreateTimestamp = pic.CreateTimestamp,
-                Tags = pic.Tags
-            };
         }
     }
 }

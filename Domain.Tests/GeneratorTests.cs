@@ -23,5 +23,18 @@ namespace Domain.Tests
 
             Assert.IsTrue(gallery.GalleryItems.Count > 0);
         }
+
+        [TestMethod]
+        public async Task TestOnlyGifs()
+        {
+            var generatorFactory = new GalleryGeneratorFactory(new TagRepositoryMock(), new PictureRepositoryMock(), new GalleryRepositoryMock());
+
+            var galleryDescriptor = GalleryDescriptor.Create(1, "onlygifs");
+
+            var generator = generatorFactory.GetGalleryGenerator(galleryDescriptor);
+            var gallery = await generator.GenerateGallery();
+
+            Assert.IsTrue(gallery.GalleryItems.Count > 0);
+        }
     }
 }

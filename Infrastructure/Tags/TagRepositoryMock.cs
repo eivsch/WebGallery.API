@@ -54,9 +54,14 @@ namespace Infrastructure.Tags
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Tag>> GetRandom(IEnumerable<string> tags, int items)
+        public async Task<IEnumerable<Tag>> GetRandom(IEnumerable<string> tags, int items)
         {
-            throw new NotImplementedException();
+            return new List<Tag>
+            {
+                Tag.Create( "favorite", "3"),
+                Tag.Create( "tag1", "7"),
+                Tag.Create( "tag1", "9"),
+            };
         }
 
         public void Remove(Tag aggregate)

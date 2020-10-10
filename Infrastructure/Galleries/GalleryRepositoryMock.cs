@@ -54,15 +54,15 @@ namespace Infrastructure.Galleries
         {
             var aggregate = Gallery.Create("abc", 1);
             aggregate.AddGalleryItem("1", 1, "pic1", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("2", 2, "pic2", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("3", 3, "pic3", "tag1, tag2, tag3");
+            aggregate.AddGalleryItem("2", 2, "untaggedPic");
+            aggregate.AddGalleryItem("3", 3, "favoritePic", "favorite");
             aggregate.AddGalleryItem("4", 4, "pic4", "tag1, tag2, tag3");
             aggregate.AddGalleryItem("5", 5, "pic5", "tag1, tag2, tag3");
             aggregate.AddGalleryItem("6", 6, "pic6", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("7", 7, "vid7.mp4", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("8", 8, "pic8", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("9", 9, "gif9.gif", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("10", 10, "pic10", "tag1, tag2, tag3");
+            aggregate.AddGalleryItem("7", 7, "taggedVid.mp4", "tag1");
+            aggregate.AddGalleryItem("8", 8, "untaggedVid.mp4");
+            aggregate.AddGalleryItem("9", 9, "taggedGif.gif", "tag1");
+            aggregate.AddGalleryItem("10", 10, "untaggedGif.gif");
             aggregate.AddGalleryItem("11", 11, "pic11", "tag1, tag2, tag3");
             aggregate.AddGalleryItem("12", 12, "pic12", "tag1, tag2, tag3");
 

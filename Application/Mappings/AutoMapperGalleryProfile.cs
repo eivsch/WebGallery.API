@@ -14,7 +14,8 @@ namespace Application.Mappings
                 .ForMember(dest => dest.ImageCount, opt => opt.MapFrom(src => src.NumberOfItems))
                 .ForMember(dest => dest.GalleryPictures, opt => opt.MapFrom(serc => serc.GalleryItems));
 
-            CreateMap<DomainModel.Aggregates.Gallery.GalleryItem, Galleries.GalleryPicture>();
+            CreateMap<DomainModel.Aggregates.Gallery.GalleryItem, Galleries.GalleryPicture>()
+                .ForMember(dest => dest.MediaType, opt => opt.MapFrom(src => src.MediaType));
         }
     }
 }

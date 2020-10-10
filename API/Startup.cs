@@ -64,7 +64,8 @@ namespace API
             // Mappings
             var mapperConfig = new MapperConfiguration(mc => 
             { 
-                mc.AddProfile(new Application.Mappings.AutoMapperGalleryProfile()); 
+                mc.AddProfile(new Application.Mappings.AutoMapperGalleryProfile());
+                mc.AddProfile(new Application.Mappings.AutoMapperPictureProfile());
             });
             services.AddSingleton(mapperConfig.CreateMapper());
 

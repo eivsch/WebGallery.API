@@ -20,15 +20,15 @@ namespace DomainModel.Generators.GalleryGenerators
         {
             if (galleryDescriptor.TagFilter.Mode != TagFilterMode.Undefined)
                 throw new NotSupportedException($"The '{nameof(AllRandomGenerator)}' does not support the current tag mode: {galleryDescriptor.TagFilter.Mode}");
-            if (galleryDescriptor.GifMode == GifMode.OnlyGifs)
-                throw new NotSupportedException($"The '{nameof(AllRandomGenerator)}' does not support the current gif mode '{GifMode.OnlyGifs.Name}'.");
+            if (galleryDescriptor.MediaFilterMode == MediaFilterMode.OnlyGifs)
+                throw new NotSupportedException($"The '{nameof(AllRandomGenerator)}' does not support the current gif mode '{MediaFilterMode.OnlyGifs.Name}'.");
 
             List<GeneratedItem> list = new List<GeneratedItem>();
             var batch = await _galleryRepository.GetRandom(galleryDescriptor.NumberOfItems);
 
             foreach (var item in batch.GalleryItems)
             {
-                if (item.MediaType == MediaType.Gif && galleryDescriptor.GifMode == GifMode.Exclude)
+                if (item.MediaType == MediaType.Gif && galleryDescriptor.MediaFilterMode == MediaFilterMode.Exclude)
                     continue;
 
                 list.Add(new GeneratedItem

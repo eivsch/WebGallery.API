@@ -33,7 +33,7 @@ namespace API.Controllers
         }
 
         [HttpGet("customized-random")]
-        public async Task<IActionResult> GetCustomRandom(int itemsInEach = 12, string tags = "", string tagFilterMode = "", string gifMode = "include")
+        public async Task<IActionResult> GetCustomRandom(int itemsInEach = 12, string tags = "", string tagFilterMode = "", string mediaFilterMode = "include")
         {
             Log.Information("BEGIN - GalleryController|GET");
 
@@ -47,7 +47,7 @@ namespace API.Controllers
             else if (string.IsNullOrWhiteSpace(tagFilterMode))
                     tagFilterMode = "custominclusive";
 
-            var galleryResponse = await _galleryService.GetCustomizedRandom(itemsInEach, tags, tagFilterMode, gifMode);
+            var galleryResponse = await _galleryService.GetCustomizedRandom(itemsInEach, tags, tagFilterMode, mediaFilterMode);
 
             return Ok(galleryResponse);
         }

@@ -52,9 +52,6 @@ namespace Infrastructure.Galleries
 
         public async Task<Gallery> GetRandom(int itemsInGallery)
         {
-            if (itemsInGallery > 12)
-                throw new NotImplementedException($"{nameof(GalleryRepositoryMock)} does currently not support more than 10 gallery items");
-
             var aggregate = Gallery.Create("abc", 1);
             aggregate.AddGalleryItem("1", 1, "pic1", "tag1, tag2, tag3");
             aggregate.AddGalleryItem("2", 2, "pic2", "tag1, tag2, tag3");

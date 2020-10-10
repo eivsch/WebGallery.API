@@ -44,9 +44,9 @@ namespace Application.Services
             return list;
         }
 
-        public async Task<GalleryResponse> GetCustomizedRandom(int itemsInGallery, string tags, string tagFilteringMode, string gifMode)
+        public async Task<GalleryResponse> GetCustomizedRandom(int itemsInGallery, string tags, string tagFilteringMode, string mediaFilterMode)
         {
-            GalleryDescriptor descriptor = GalleryDescriptor.Create(itemsInGallery, gifMode);
+            GalleryDescriptor descriptor = GalleryDescriptor.Create(itemsInGallery, mediaFilterMode);
             descriptor.AddTagFilter(tags, tagFilteringMode);
 
             var galleryGenerator = _galleryGeneratorFactory.GetGalleryGenerator(descriptor);

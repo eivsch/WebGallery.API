@@ -8,25 +8,25 @@ namespace DomainModel.Aggregates.GalleryDescriptor
     {
         private int _numberOfItems;
         private TagFilter _tagFilter;
-        private GifMode _gifMode;
+        private MediaFilterMode _mediaFilterMode;
 
         public virtual int NumberOfItems => _numberOfItems;
         public virtual TagFilter TagFilter => _tagFilter;
-        public virtual GifMode GifMode => _gifMode;
+        public virtual MediaFilterMode MediaFilterMode => _mediaFilterMode;
 
         private GalleryDescriptor()
         {
         }
 
-        public static GalleryDescriptor Create(int numberOfItems, string gifMode = "")
+        public static GalleryDescriptor Create(int numberOfItems, string mediaFilterMode = "")
         {
-            if (string.IsNullOrWhiteSpace(gifMode))
-                gifMode = GifMode.Include.Name;
+            if (string.IsNullOrWhiteSpace(mediaFilterMode))
+                mediaFilterMode = MediaFilterMode.Include.Name;
 
-            return new GalleryDescriptor 
-            { 
-                _numberOfItems = numberOfItems, 
-                _gifMode = GifMode.Get(gifMode) 
+            return new GalleryDescriptor
+            {
+                _numberOfItems = numberOfItems,
+                _mediaFilterMode = MediaFilterMode.Get(mediaFilterMode),
             };
         }
 

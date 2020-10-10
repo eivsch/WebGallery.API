@@ -24,15 +24,15 @@ namespace DomainModel.Generators.GalleryGenerators
         {
             if (galleryDescriptor.TagFilter.Mode != TagFilterMode.OnlyUntagged)
                 throw new NotSupportedException($"The '{nameof(OnlyUntaggedGenerator)}' does not support the current tag mode: {galleryDescriptor.TagFilter.Mode}");
-            if (galleryDescriptor.GifMode == GifMode.OnlyGifs)
-                throw new NotSupportedException($"The '{nameof(OnlyUntaggedGenerator)}' does not support the current gif mode '{GifMode.OnlyGifs.Name}'.");
+            if (galleryDescriptor.MediaFilterMode == MediaFilterMode.OnlyGifs)
+                throw new NotSupportedException($"The '{nameof(OnlyUntaggedGenerator)}' does not support the current gif mode '{MediaFilterMode.OnlyGifs.Name}'.");
 
             var list = new List<GeneratedItem>();
             var batch = await _galleryRepository.GetRandom(galleryDescriptor.NumberOfItems);
             
             foreach (var item in batch.GalleryItems)
             {
-                if (item.MediaType == MediaType.Gif && galleryDescriptor.GifMode == GifMode.Exclude)
+                if (item.MediaType == MediaType.Gif && galleryDescriptor.MediaFilterMode == MediaFilterMode.Exclude)
                     continue;
 
                 var tags = await _tagRepository.FindAllTagsForPicture(item.Id);

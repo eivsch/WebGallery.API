@@ -23,8 +23,8 @@ namespace DomainModel.Generators.GalleryGenerators
         {
             if (galleryDescriptor.TagFilter.Mode != TagFilterMode.OnlyTagged && galleryDescriptor.TagFilter.Mode != TagFilterMode.CustomInclusive)
                 throw new NotSupportedException($"The '{nameof(OnlyTaggedGifsGenerator)}' does not support the current tag mode: {galleryDescriptor.TagFilter.Mode}");
-            if (galleryDescriptor.GifMode == GifMode.Exclude)
-                throw new NotSupportedException($"The '{nameof(OnlyTaggedGifsGenerator)}' does not support the gif mode '{GifMode.Exclude}'.");
+            if (galleryDescriptor.MediaFilterMode == MediaFilterMode.Exclude)
+                throw new NotSupportedException($"The '{nameof(OnlyTaggedGifsGenerator)}' does not support the gif mode '{MediaFilterMode.Exclude}'.");
 
             var list = new List<GeneratedItem>();
             var taggedImages = await _tagRepository.GetRandom(galleryDescriptor.TagFilter.Tags, 200);

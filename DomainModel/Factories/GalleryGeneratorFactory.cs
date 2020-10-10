@@ -23,15 +23,19 @@ namespace DomainModel.Factories
 
         public IGalleryGenerator GetGalleryGenerator(GalleryDescriptor galleryDescriptor)
         {
-            var gifMode = galleryDescriptor.GifMode;
+            var mediaFilterMode = galleryDescriptor.MediaFilterMode;
             var tagMode = galleryDescriptor.TagFilter.Mode;
             
-            if (gifMode == GifMode.OnlyGifs)
+            if (mediaFilterMode == MediaFilterMode.OnlyGifs)
             {
                 if (tagMode == TagFilterMode.CustomInclusive || tagMode == TagFilterMode.OnlyTagged)
                     return new OnlyTaggedGifsGenerator(_tagRepository, _pictureRepository);
                 
                 return new OnlyGifsGenerator(_galleryRepository);
+            }
+            else if (mediaFilterMode == MediaFilterMode.OnlyVideos)
+            {
+                return new OnlyVideoGenerator(_galleryRepository);
             }
             else
             {

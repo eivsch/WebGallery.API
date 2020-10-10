@@ -23,8 +23,8 @@ namespace DomainModel.Generators.GalleryGenerators
         {
             if (galleryDescriptor.TagFilter.Mode != TagFilterMode.CustomInclusive)
                 throw new NotSupportedException($"The '{nameof(CustomInclusiveGenerator)}' does not support the current tag mode: {galleryDescriptor.TagFilter.Mode}");
-            if (galleryDescriptor.GifMode == GifMode.OnlyGifs)
-                throw new NotSupportedException($"The '{nameof(CustomInclusiveGenerator)}' does not support the current gif mode '{GifMode.OnlyGifs.Name}'.");
+            if (galleryDescriptor.MediaFilterMode == MediaFilterMode.OnlyGifs)
+                throw new NotSupportedException($"The '{nameof(CustomInclusiveGenerator)}' does not support the current gif mode '{MediaFilterMode.OnlyGifs.Name}'.");
 
             var list = new List<GeneratedItem>();
             var taggedImages = await _tagRepository.GetRandom(galleryDescriptor.TagFilter.Tags, galleryDescriptor.NumberOfItems);
@@ -33,7 +33,7 @@ namespace DomainModel.Generators.GalleryGenerators
             {
                 var picture = await _pictureRepository.FindById(taggedImage.PictureId);
 
-                if (picture.Name.ToLower().EndsWith(".gif") && galleryDescriptor.GifMode == GifMode.Exclude)
+                if (picture.Name.ToLower().EndsWith(".gif") && galleryDescriptor.MediaFilterMode == MediaFilterMode.Exclude)
                     continue;
 
                 list.Add(new GeneratedItem

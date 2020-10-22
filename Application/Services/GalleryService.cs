@@ -25,9 +25,13 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public Task<GalleryResponse> Get(GalleryRequest galleryRequest)
+        public async Task<GalleryResponse> Get(string id, int itemIndexStart, int numberOfItems)
         {
-            throw new NotImplementedException();
+            // TODO: Use GalleryDescriptor for this?
+            Gallery aggregate = Gallery.Create(id, numberOfItems, itemIndexStart);
+            aggregate = await _galleryRepository.FillEmptyGalleryWithItems(aggregate);
+
+            return _mapper.Map<GalleryResponse>(aggregate);
         }
 
         public async Task<IEnumerable<GalleryResponse>> GetAll()

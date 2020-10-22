@@ -44,9 +44,37 @@ namespace Infrastructure.Galleries
             throw new NotImplementedException();
         }
 
-        public async Task<Gallery> GetItems(Gallery gallery)
+        public async Task<Gallery> FillEmptyGalleryWithItems(Gallery gallery)
         {
-            throw new NotImplementedException();
+            if (gallery.GalleryItems.Count != 0)
+                throw new ArgumentException("The gallery must be empty, meaning it has no items.");
+
+            var searchResponse = await _client.SearchAsync<GalleryPictureDTO>(s => s
+                .Query(q => q
+                    .Match(m => m
+                        .Field(f => f.FolderId)
+                        .Query(gallery.Id)
+                    ) && q
+                    .Range(r => r
+                        .Field(f => f.FolderSortOrder)
+                        .GreaterThanOrEquals(gallery.ItemIndexStart)
+                        .LessThan(gallery.ItemIndexStart + gallery.NumberOfItems)
+                    )
+                )
+                .Size(gallery.NumberOfItems)
+                .Index("picture")
+            );
+
+            foreach (var dto in searchResponse.Documents)
+            {
+                gallery.AddGalleryItem(
+                    galleryItemId: dto.Id,
+                    index: dto.GlobalSortOrder,
+                    name: dto.Name
+                );
+            }
+
+            return gallery;
         }
 
         public async Task<List<Gallery>> GetAll()

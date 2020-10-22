@@ -128,7 +128,7 @@ namespace Infrastructure.Galleries
                 .Index("picture")
             );
 
-            gallery = Gallery.Create("", itemsInGallery);
+            gallery = Gallery.Create($"random-{Guid.NewGuid()}".Substring(0, 15).ToLower(), itemsInGallery);
             foreach (var pic in searchResponse.Documents)
             {
                 gallery.AddGalleryItem(

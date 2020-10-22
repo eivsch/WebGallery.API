@@ -12,12 +12,14 @@ namespace API.Controllers
     {
         private readonly IPictureService _pictureService;
         private readonly IConfiguration _configuration;
+        private readonly IImageService _imageService;
         private readonly string _root;
 
-        public ImagesController(IPictureService pictureService, IConfiguration configuration)
+        public ImagesController(IPictureService pictureService, IConfiguration configuration, IImageService imageService)
         {
             _pictureService = pictureService;
             _configuration = configuration;
+            _imageService = imageService;
 
             _root = _configuration.GetValue($"RootFolder", "");
         }
@@ -25,9 +27,8 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var pic = await _pictureService.Get(id);
-
-            var path = GetAbsolutePath(pic.AppPath);
+            string appPath = await _imageService.Get(id);
+            var path = GetAbsolutePath(appPath);
 
             return PhysicalFile(path, "image/jpeg");
         }
@@ -38,16 +39,6 @@ namespace API.Controllers
             var pictureResponse = await _pictureService.Get(id);
 
             return Ok(pictureResponse);
-        }
-
-        [HttpGet("{galleryId}/{pictureId}")]
-        public async Task<IActionResult> GetByGallery(string galleryId, int pictureId)
-        {
-            var pic = await _pictureService.Get(galleryId, pictureId);
-
-            var path = GetAbsolutePath(pic.AppPath);
-
-            return PhysicalFile(path, "image/jpeg");
         }
 
         private string GetAbsolutePath(string appPath)

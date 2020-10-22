@@ -33,12 +33,15 @@ namespace API.Controllers
             return Ok(pictureResponse);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get(string galleryId, int offset)
+        [HttpGet("{galleryId}/{index}")]
+        public async Task<IActionResult> Get(string galleryId, int index)
         {
-            var pics = await _pictureService.GetPictures(galleryId, offset);
+            var pic = await _pictureService.Get(galleryId, index);
 
-            return Ok(pics);
+            if (pic is null)
+                return NotFound();
+
+            return Ok(pic);
         }
 
         [HttpGet("single")]
@@ -51,22 +54,6 @@ namespace API.Controllers
 
             return Ok(pic);
         }
-
-        //[HttpGet]
-        //public IActionResult Get(string path)
-        //{
-        //    try
-        //    {
-        //        var file = PhysicalFile(path, "image/jpeg");
-
-        //        return file;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // TODO: Log
-        //        throw ex;
-        //    }
-        //}
 
         [HttpPost]
         public async Task<IActionResult> Post(PictureRequest pictureRequest)

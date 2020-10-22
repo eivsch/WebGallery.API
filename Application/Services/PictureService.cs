@@ -71,9 +71,9 @@ namespace Application.Services
             return _mapper.Map<PictureResponse>(aggregate);
         }
 
-        public async Task<PictureResponse> Get(string galleryId, int pictureId)
+        public async Task<PictureResponse> Get(string galleryId, int index)
         {
-            var aggregate = await _pictureRepository.FindByGalleryIndex(galleryId, pictureId);
+            var aggregate = await _pictureRepository.FindByGalleryIndex(galleryId, index);
 
             await GetTagsFromPersistenceAndAdd(aggregate);
 

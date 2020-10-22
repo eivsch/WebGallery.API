@@ -38,8 +38,10 @@ namespace Infrastructure.Galleries
         {
             var list = new List<Gallery>()
             {
-                Gallery.Create("abc", 1),
-                Gallery.Create("dfg", 1),
+                Gallery.Create("gallery1", 7),
+                Gallery.Create("subGal1", 5),
+                Gallery.Create("subGal2", 4),
+                Gallery.Create("subGal3", 5),
             };
 
             return list;
@@ -52,7 +54,8 @@ namespace Infrastructure.Galleries
 
         public async Task<Gallery> GetRandom(int itemsInGallery)
         {
-            var aggregate = Gallery.Create("abc", 1);
+            var aggregate = Gallery.Create($"random-{Guid.NewGuid()}".Substring(0, 15).ToLower(), 1);
+
             aggregate.AddGalleryItem("1", 1, "pic1", "tag1, tag2, tag3");
             aggregate.AddGalleryItem("2", 2, "untaggedPic");
             aggregate.AddGalleryItem("3", 3, "favoritePic", "favorite");

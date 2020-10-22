@@ -36,6 +36,7 @@ namespace API
             services.AddTransient<IGalleryService, GalleryService>();
             services.AddTransient<IPictureService, PictureService>();
             services.AddTransient<ITagService, TagService>();
+            services.AddTransient<IImageService, ImageService>();
 
             // Domain services
             services.AddTransient<IGalleryGeneratorFactory, GalleryGeneratorFactory>();

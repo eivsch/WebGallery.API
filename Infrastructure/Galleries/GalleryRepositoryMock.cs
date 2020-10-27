@@ -1,5 +1,6 @@
 ﻿using DomainModel.Aggregates.Gallery;
 using DomainModel.Aggregates.Gallery.Interfaces;
+using Infrastructure.Helpers;
 using Infrastructure.Pictures.Mock;
 using System;
 using System.Collections.Generic;
@@ -56,20 +57,19 @@ namespace Infrastructure.Galleries
 
         public async Task<Gallery> GetRandom(int itemsInGallery)
         {
+            if (itemsInGallery > 21)
+                itemsInGallery = 21;
+
             var aggregate = Gallery.Create($"random-{Guid.NewGuid()}".Substring(0, 15).ToLower(), 1);
 
-            aggregate.AddGalleryItem("1", 1, "pic1", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("2", 2, "untaggedPic");
-            aggregate.AddGalleryItem("3", 3, "favoritePic", "favorite");
-            aggregate.AddGalleryItem("4", 4, "pic4", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("5", 5, "pic5", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("6", 6, "pic6", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("7", 7, "taggedVid.mp4", "tag1");
-            aggregate.AddGalleryItem("8", 8, "untaggedVid.mp4");
-            aggregate.AddGalleryItem("9", 9, "taggedGif.gif", "tag1");
-            aggregate.AddGalleryItem("10", 10, "untaggedGif.gif");
-            aggregate.AddGalleryItem("11", 11, "pic11", "tag1, tag2, tag3");
-            aggregate.AddGalleryItem("12", 12, "pic12", "tag1, tag2, tag3");
+            var allData = new MockData().GetAll();
+            allData.ShuffleList();
+
+            var galleryItems = allData.Take(itemsInGallery);
+            foreach (var item in galleryItems)
+            {
+                aggregate.AddGalleryItem(item.Id, item.GlobalSortOrder, item.Name);
+            }
 
             return aggregate;
         }

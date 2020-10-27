@@ -13,6 +13,13 @@ namespace Application.Services
             _pictureRepository = pictureRepository;
         }
 
+        public async Task<string> Get(string id)
+        {
+            var aggregate = await _pictureRepository.FindById(id);
+
+            return aggregate.AppPath;
+        }
+
         public async Task<string> Get(int index)
         {
             var aggregate = await _pictureRepository.FindByIndex(index);

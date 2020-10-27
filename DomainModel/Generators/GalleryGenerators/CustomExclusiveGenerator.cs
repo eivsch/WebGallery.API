@@ -42,7 +42,7 @@ namespace DomainModel.Generators.GalleryGenerators
                     list.Add(new GeneratedItem
                     {
                         Id = item.Id,
-                        Index = item.Index,
+                        Index = item.IndexGlobal,
                         Name = item.Name
                     });
                 }
@@ -54,7 +54,7 @@ namespace DomainModel.Generators.GalleryGenerators
                         list.Add(new GeneratedItem
                         {
                             Id = item.Id,
-                            Index = item.Index,
+                            Index = item.IndexGlobal,
                             Name = item.Name
                         });
                     }

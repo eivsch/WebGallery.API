@@ -57,8 +57,8 @@ namespace Infrastructure.Galleries
                     ) && q
                     .Range(r => r
                         .Field(f => f.FolderSortOrder)
-                        .GreaterThanOrEquals(gallery.ItemIndexStart)
-                        .LessThan(gallery.ItemIndexStart + gallery.NumberOfItems)
+                        .GreaterThanOrEquals(gallery.GalleryItemIndexStart)
+                        .LessThan(gallery.GalleryItemIndexStart + gallery.NumberOfItems)
                     )
                 )
                 .Size(gallery.NumberOfItems)
@@ -69,7 +69,7 @@ namespace Infrastructure.Galleries
             {
                 gallery.AddGalleryItem(
                     galleryItemId: dto.Id,
-                    index: dto.GlobalSortOrder,
+                    indexGlobal: dto.GlobalSortOrder,
                     name: dto.Name
                 );
             }
@@ -137,7 +137,7 @@ namespace Infrastructure.Galleries
             return new GalleryPictureDTO
             {
                 Id = galleryItem.Id,
-                GlobalSortOrder = galleryItem.Index
+                GlobalSortOrder = galleryItem.IndexGlobal
             };
         }
 
@@ -161,7 +161,7 @@ namespace Infrastructure.Galleries
             {
                 gallery.AddGalleryItem(
                     galleryItemId: pic.Id, 
-                    index: pic.GlobalSortOrder, 
+                    indexGlobal: pic.GlobalSortOrder, 
                     name: pic.Name
                 );
             }

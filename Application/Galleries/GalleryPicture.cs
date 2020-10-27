@@ -6,7 +6,7 @@ namespace Application.Galleries
     {
         public string Id { get; set; }
         public string MediaType { get; set; }
-        public int Index { get; set; }
+        public int IndexGlobal { get; set; }
         public IEnumerable<string> Tags { get; set; }
     }
 }

@@ -7,13 +7,15 @@ namespace DomainModel.Aggregates.Gallery
 {
     public class GalleryItem : Entity
     {
-        private int _index;
+        private int _indexGlobal;
+        private int _indexGallery;
         private string _fileSystemPath;
         private string _name;
         private MediaType _mediaType;
         private readonly List<string>  _tags;
 
-        public virtual int Index => _index;
+        public virtual int IndexGlobal => _indexGlobal;
+        public virtual int IndexGallery => _indexGallery;
         public virtual string FileSystemPath => _fileSystemPath;
         public virtual string Name => _name;
         public virtual MediaType MediaType => _mediaType;
@@ -29,11 +31,12 @@ namespace DomainModel.Aggregates.Gallery
             _tags = new List<string>();
         }
 
-        internal static GalleryItem Create(string id, int index, string name, MediaType mediaType)
+        internal static GalleryItem Create(string id, int indexGlobal, int indexGallery, string name, MediaType mediaType)
         {
             var item = new GalleryItem(id)
             {
-                _index = index,
+                _indexGlobal = indexGlobal,
+                _indexGallery = indexGallery,
                 _name = name,
                 _mediaType = mediaType
             };

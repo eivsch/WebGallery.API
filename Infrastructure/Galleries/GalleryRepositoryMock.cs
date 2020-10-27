@@ -1,5 +1,6 @@
 ﻿using DomainModel.Aggregates.Gallery;
 using DomainModel.Aggregates.Gallery.Interfaces;
+using Infrastructure.Pictures.Mock;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace Infrastructure.Galleries
 
         public async Task<Gallery> FillEmptyGalleryWithItems(Gallery gallery)
         {
-            return Helper(gallery);
+            return AddItemsHelper(gallery);
         }
 
         public async Task<Gallery> GetRandom(int itemsInGallery)
@@ -83,42 +84,11 @@ namespace Infrastructure.Galleries
             throw new NotImplementedException();
         }
 
-        private Gallery Helper(Gallery aggregate)
+        private Gallery AddItemsHelper(Gallery aggregate)
         {
-            switch (aggregate.Id)
-            {
-                case "gallery1":
-                    aggregate.AddGalleryItem("id_1", 1, "car.jpg");
-                    aggregate.AddGalleryItem("id_2", 2, "car3.jpg");
-                    aggregate.AddGalleryItem("id_3", 3, "dude.gif");
-                    aggregate.AddGalleryItem("id_4", 4, "future-cars-lead.jpg");
-                    aggregate.AddGalleryItem("id_5", 5, "Powerfly5EU_19_23179_A_Portrait.jpg");
-                    aggregate.AddGalleryItem("id_6", 6, "shuttle.png");
-                    aggregate.AddGalleryItem("id_7", 7, "small.mp4");
-                    break;
-                case "subGal1":
-                    aggregate.AddGalleryItem("id_8", 8, "car2.jpg");
-                    aggregate.AddGalleryItem("id_9", 9, "Rower-gorski-MTB-INDIANA-Fat-Bike-M26-Czarny-skos.jpg");
-                    aggregate.AddGalleryItem("id_10", 10, "rower-MTB-street-jump-dirt-bike-rad-26-Mafiabikes-Blackjack-D-Green-new-neu-2020-3.jpg");
-                    aggregate.AddGalleryItem("id_11", 11, "unnamed.gif");
-                    aggregate.AddGalleryItem("id_12", 12, "woodland_wanderer_dribbble.gif");
-                    break;
-                case "subGal2":
-                    aggregate.AddGalleryItem("id_13", 13, "sub2_1.jpg");
-                    aggregate.AddGalleryItem("id_14", 14, "sub2_2.jpg");
-                    aggregate.AddGalleryItem("id_15", 15, "sub2_3.jpg");
-                    aggregate.AddGalleryItem("id_16", 16, "sub2_4.jpg");
-                    break;
-                case "subGal3":
-                    aggregate.AddGalleryItem("id_17", 17, "sub3_1.jpg");
-                    aggregate.AddGalleryItem("id_18", 18, "sub3_2.jpg");
-                    aggregate.AddGalleryItem("id_19", 19, "sub3_3.jpg");
-                    aggregate.AddGalleryItem("id_20", 20, "sub3_4.jpg");
-                    aggregate.AddGalleryItem("id_21", 21, "sub3_5.jpg");
-                    break;
-            }
-
-            var copy = Gallery.Create(aggregate.Id, aggregate.NumberOfItems, aggregate.ItemIndexStart);
+            var galleryItems = new MockData().GetAll().Where(d => d.FolderId == aggregate.Id && d.FolderSortOrder >= aggregate.GalleryItemIndexStart);
+            foreach (var item in galleryItems)
+                aggregate.AddGalleryItem(item.Id, item.GlobalSortOrder, item.Name);
 
             return aggregate;
         }

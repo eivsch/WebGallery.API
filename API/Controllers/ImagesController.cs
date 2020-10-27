@@ -10,14 +10,12 @@ namespace API.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        private readonly IPictureService _pictureService;
         private readonly IConfiguration _configuration;
         private readonly IImageService _imageService;
         private readonly string _root;
 
-        public ImagesController(IPictureService pictureService, IConfiguration configuration, IImageService imageService)
+        public ImagesController(IConfiguration configuration, IImageService imageService)
         {
-            _pictureService = pictureService;
             _configuration = configuration;
             _imageService = imageService;
 
@@ -36,9 +34,10 @@ namespace API.Controllers
         [HttpGet("sha/{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var pictureResponse = await _pictureService.Get(id);
+            string appPath = await _imageService.Get(id);
+            var path = GetAbsolutePath(appPath);
 
-            return Ok(pictureResponse);
+            return PhysicalFile(path, "image/jpeg");
         }
 
         private string GetAbsolutePath(string appPath)

@@ -52,7 +52,9 @@ namespace Application.Services
             var aggregate = Tag.Create(tagName);
             aggregate = await _tagRepository.Find(aggregate);
 
-            return _mapper.Map<TagResponse>(aggregate);
+            var response = _mapper.Map<TagResponse>(aggregate);
+
+            return response;
         }
 
         public async Task<IEnumerable<TagResponse>> GetAllUniqueTags()

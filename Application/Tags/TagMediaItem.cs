@@ -2,9 +2,9 @@
 
 namespace Application.Tags
 {
-    public class TaggedItem
+    public class TagMediaItem
     {
-        public string TaggedItemId { get; set; }
+        public string TagItemId { get; set; }
         public DateTime Created { get; set; }
     }
 }

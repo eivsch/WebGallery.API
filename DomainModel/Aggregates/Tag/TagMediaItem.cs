@@ -3,19 +3,19 @@ using System;
 
 namespace DomainModel.Aggregates.Tag
 {
-    public class TaggedMediaItem : Entity
+    public class TagMediaItem : Entity
     {
-        private TaggedMediaItem(string id) 
+        private TagMediaItem(string id) 
         {
             Id = id;
         }
 
-        internal static TaggedMediaItem Create(string itemId)
+        internal static TagMediaItem Create(string itemId)
         {
             if (string.IsNullOrWhiteSpace(itemId))
                 throw new ArgumentNullException(nameof(itemId));
 
-            return new TaggedMediaItem(itemId);
+            return new TagMediaItem(itemId);
         }
     }
 }

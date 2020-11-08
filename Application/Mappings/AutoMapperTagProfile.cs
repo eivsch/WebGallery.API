@@ -8,8 +8,8 @@ namespace Application.Mappings
         public AutoMapperTagProfile()
         {
             CreateMap<DomainModel.Aggregates.Tag.Tag, TagResponse>();
-            CreateMap<DomainModel.Aggregates.Tag.TaggedMediaItem, TaggedItem>()
-                .ForMember(dest => dest.TaggedItemId, opt => opt.MapFrom(src => src.Id));
+            CreateMap<DomainModel.Aggregates.Tag.TagMediaItem, TagMediaItem>()
+                .ForMember(dest => dest.TagItemId, opt => opt.MapFrom(src => src.Id));
         }
     }
 }

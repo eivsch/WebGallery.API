@@ -9,11 +9,11 @@ namespace DomainModel.Aggregates.Tag
     {
         private string _tagName;
         private int? _itemCount;
-        private List<TaggedMediaItem> _mediaItems = new List<TaggedMediaItem>();
+        private List<TagMediaItem> _mediaItems = new List<TagMediaItem>();
 
         public virtual string TagName => _tagName;
         public virtual int ItemCount => _itemCount ?? _mediaItems.Count;
-        public virtual IReadOnlyCollection<TaggedMediaItem> MediaItems => _mediaItems.AsReadOnly();
+        public virtual IReadOnlyCollection<TagMediaItem> MediaItems => _mediaItems.AsReadOnly();
 
         private Tag() { }
 
@@ -30,10 +30,10 @@ namespace DomainModel.Aggregates.Tag
 
         public virtual void AddMediaItem(string itemId)
         {
-            TaggedMediaItem taggedItem = _mediaItems.FirstOrDefault(i => i.Id == itemId);
+            TagMediaItem taggedItem = _mediaItems.FirstOrDefault(i => i.Id == itemId);
             if (taggedItem is null)
             {
-                taggedItem = TaggedMediaItem.Create(itemId);
+                taggedItem = TagMediaItem.Create(itemId);
 
                 _mediaItems.Add(taggedItem);
             }

@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Application.Tags
 {
     public class TagResponse
     {
         public string TagName { get; set; }
-        IEnumerable<TaggedItem> Items { get; set; }
+        public IEnumerable<TagMediaItem> MediaItems { get; set; }
     }
 }

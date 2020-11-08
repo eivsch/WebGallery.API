@@ -1,7 +1,11 @@
 ﻿using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
+using Infrastructure.Pictures.DTO.ElasticSearch;
+using Infrastructure.Pictures.Mock;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,19 +23,6 @@ namespace Infrastructure.Pictures
             throw new NotImplementedException();
         }
 
-        public async Task<string> FindByGalleryIndex(string galleryId, int index)
-        {
-            switch (galleryId)
-            {
-                case "abc":
-                    return @"C:\Eivsch\temp\pics\2017-NSX-3-1-1024x576.jpg";
-                case "dfg":
-                    return @"C:\Eivsch\temp\pics\8f35ba26fe296e36b3a96ee5416259b4.jpg";
-                default:
-                    return null;
-            }
-        }
-
         public Task<Picture> FindById(Guid id)
         {
             throw new NotImplementedException();
@@ -39,17 +30,9 @@ namespace Infrastructure.Pictures
 
         public async Task<Picture> FindById(string id)
         {
-            return Picture.Create(
-                id: id,
-                name: "name",
-                appPath: "app\\path",
-                originalPath: "orig\\path",
-                folderName: "folderName",
-                folderId: "folderAppPath",
-                folderSortOrder: 24,
-                globalSortOrder: 2465,
-                size: 34221,
-                created: DateTime.Now);
+            var dto = new MockData().GetAll().FirstOrDefault(d => d.Id == id);
+
+            return CreateFromDto(dto);
         }
 
         public Task<Picture> FindById(int id)
@@ -98,24 +81,32 @@ namespace Infrastructure.Pictures
             return aggregate;
         }
 
-        async Task<Picture> IPictureRepository.FindByIndex(int i)
+        public async Task<Picture> FindByIndex(int i)
         {
-            return Picture.Create("app\\path", "orig\\path", "name", "folderName", "folderAppPath", 365, 39943, i, DateTime.Now);
+            var dto = new MockData().GetAll().FirstOrDefault(d => d.GlobalSortOrder == i);
+            return CreateFromDto(dto);
         }
 
-        async Task<Picture> IPictureRepository.FindByGalleryIndex(string galleryId, int index)
+        public async Task<Picture> FindByGalleryIndex(string galleryId, int index)
+        {
+            var pictureDto = new MockData().GetAll().FirstOrDefault(d => d.FolderId == galleryId && d.FolderSortOrder == index);
+
+            return CreateFromDto(pictureDto);
+        }
+
+        private Picture CreateFromDto(PictureDTO pictureDto)
         {
             return Picture.Create(
-                id: "123123",
-                name: "name",
-                appPath: "app\\path",
-                originalPath: "orig\\path",
-                folderName: "folderName",
-                folderId: galleryId,
-                folderSortOrder: 24,
-                globalSortOrder: index,
-                size: 34221,
-                created: DateTime.Now);
+                    id: pictureDto.Id,
+                    name: pictureDto.Name,
+                    appPath: pictureDto.AppPath,
+                    originalPath: pictureDto.OriginalPath,
+                    folderName: pictureDto.FolderName,
+                    folderId: pictureDto.FolderId,
+                    folderSortOrder: pictureDto.FolderSortOrder,
+                    globalSortOrder: pictureDto.GlobalSortOrder,
+                    size: pictureDto.Size,
+                    created: pictureDto.CreateTimestamp);
         }
 
         public async Task<Picture> FindByAppPath(string appPath)

@@ -10,7 +10,7 @@ namespace Application.Services.Interfaces
         Task<IEnumerable<PictureResponse>> GetPictures(string galleryId, int offset = 0);
         Task<PictureResponse> Get(string pictureId);
         Task<PictureResponse> Get(int index);
-        Task<PictureResponse> Get(string galleryId, int galleryIndexOfPicture);
+        Task<PictureResponse> Get(string galleryId, int index);
         Task<PictureResponse> GetByAppPath(string appPath);
         Task<PictureResponse> Add(PictureRequest pictureRequest);
     }

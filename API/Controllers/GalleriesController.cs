@@ -27,9 +27,18 @@ namespace API.Controllers
         public async Task<IActionResult> Get(int itemCount = 24)
         {
             Log.Information("BEGIN - GalleryController|GET");
-            var galleryResponse = await _galleryService.GetAll();
+            var galleryResponseList = await _galleryService.GetAll();
 
-            return Ok(galleryResponse);
+            return Ok(galleryResponseList);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id, int itemIndexStart = 1, int numberOfItems = 48)
+        {
+            Log.Information("BEGIN - GalleryController|GET");
+            var galleryResponseList = await _galleryService.Get(id, itemIndexStart, numberOfItems);
+
+            return Ok(galleryResponseList);
         }
 
         [HttpGet("customized-random")]

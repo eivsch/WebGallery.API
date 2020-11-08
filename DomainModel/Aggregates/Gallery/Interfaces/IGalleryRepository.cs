@@ -6,7 +6,7 @@ namespace DomainModel.Aggregates.Gallery.Interfaces
 {
     public interface IGalleryRepository : IRepository<Gallery>
     {
-        Task<Gallery> GetItems(Gallery gallery);
+        Task<Gallery> FillEmptyGalleryWithItems(Gallery gallery);
         Task<List<Gallery>> GetAll();
         Task<Gallery> GetRandom(int itemsInGallery);
     }

@@ -44,9 +44,37 @@ namespace Infrastructure.Galleries
             throw new NotImplementedException();
         }
 
-        public async Task<Gallery> GetItems(Gallery gallery)
+        public async Task<Gallery> FillEmptyGalleryWithItems(Gallery gallery)
         {
-            throw new NotImplementedException();
+            if (gallery.GalleryItems.Count != 0)
+                throw new ArgumentException("The gallery must be empty, meaning it has no items.");
+
+            var searchResponse = await _client.SearchAsync<GalleryPictureDTO>(s => s
+                .Query(q => q
+                    .Match(m => m
+                        .Field(f => f.FolderId)
+                        .Query(gallery.Id)
+                    ) && q
+                    .Range(r => r
+                        .Field(f => f.FolderSortOrder)
+                        .GreaterThanOrEquals(gallery.GalleryItemIndexStart)
+                        .LessThan(gallery.GalleryItemIndexStart + gallery.NumberOfItems)
+                    )
+                )
+                .Size(gallery.NumberOfItems)
+                .Index("picture")
+            );
+
+            foreach (var dto in searchResponse.Documents)
+            {
+                gallery.AddGalleryItem(
+                    galleryItemId: dto.Id,
+                    indexGlobal: dto.GlobalSortOrder,
+                    name: dto.Name
+                );
+            }
+
+            return gallery;
         }
 
         public async Task<List<Gallery>> GetAll()
@@ -109,7 +137,7 @@ namespace Infrastructure.Galleries
             return new GalleryPictureDTO
             {
                 Id = galleryItem.Id,
-                GlobalSortOrder = galleryItem.Index
+                GlobalSortOrder = galleryItem.IndexGlobal
             };
         }
 
@@ -128,12 +156,12 @@ namespace Infrastructure.Galleries
                 .Index("picture")
             );
 
-            gallery = Gallery.Create("", itemsInGallery);
+            gallery = Gallery.Create($"random-{Guid.NewGuid()}".Substring(0, 15).ToLower(), itemsInGallery);
             foreach (var pic in searchResponse.Documents)
             {
                 gallery.AddGalleryItem(
                     galleryItemId: pic.Id, 
-                    index: pic.GlobalSortOrder, 
+                    indexGlobal: pic.GlobalSortOrder, 
                     name: pic.Name
                 );
             }

@@ -37,7 +37,7 @@ namespace DomainModel.Generators
 
                     gallery.AddGalleryItem(
                         galleryItemId: item.Id,
-                        index: item.Index,
+                        indexGlobal: item.Index,
                         name: item.Name,
                         tags: item.Tags
                     );

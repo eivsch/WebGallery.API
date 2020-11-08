@@ -49,9 +49,14 @@ namespace Infrastructure.Tags
             throw new NotImplementedException();
         }
 
-        public Task<List<string>> GetAllUniqueTags()
+        public async Task<List<string>> GetAllUniqueTags()
         {
-            throw new NotImplementedException();
+            return new List<string>
+            {
+                "tag1",
+                "tag2",
+                "tag3"
+            };
         }
 
         public async Task<IEnumerable<Tag>> GetRandom(IEnumerable<string> tags, int items)

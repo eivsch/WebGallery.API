@@ -26,10 +26,16 @@ namespace Application.Tests
             });
 
             var tagService = new TagService(pictureRepositoryMock, tagRepositoryMock, mapperConfig.CreateMapper());
-            var request = new TagRequest
+            var request = new Tag
             {
-                PictureId = "1",
-                Tag = "Tag1"
+                Name = "Tag1",
+                MediaItems = new List<TagMediaItem>
+                {
+                    new TagMediaItem
+                    {
+                        Id = "1",
+                    }
+                }
             };
 
             await tagService.AddTag(request);

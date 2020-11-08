@@ -4,7 +4,9 @@ namespace Application.Tags
 {
     public class TagMediaItem
     {
-        public string TagItemId { get; set; }
+        public string Id { get; set; }
+        public string AppPath { get; set; }
+        public int GlobalIndex { get; set; }
         public DateTime Created { get; set; }
     }
 }

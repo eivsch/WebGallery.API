@@ -22,7 +22,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<TagResponse>> Get()
+        public async Task<IEnumerable<Tag>> Get()
         {
             var allTags = await _tagService.GetAllUniqueTags();
 
@@ -30,7 +30,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(TagRequest tagRequest)
+        public async Task<IActionResult> Post(Tag tagRequest)
         {
             try
             {

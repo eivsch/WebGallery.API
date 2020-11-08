@@ -7,9 +7,9 @@ namespace Application.Mappings
     {
         public AutoMapperTagProfile()
         {
-            CreateMap<DomainModel.Aggregates.Tag.Tag, TagResponse>();
+            CreateMap<DomainModel.Aggregates.Tag.Tag, Tag>();
             CreateMap<DomainModel.Aggregates.Tag.TagMediaItem, TagMediaItem>()
-                .ForMember(dest => dest.TagItemId, opt => opt.MapFrom(src => src.Id));
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
         }
     }
 }

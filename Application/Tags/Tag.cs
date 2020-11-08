@@ -2,9 +2,9 @@
 
 namespace Application.Tags
 {
-    public class TagResponse
+    public class Tag
     {
-        public string TagName { get; set; }
+        public string Name { get; set; }
         public IEnumerable<TagMediaItem> MediaItems { get; set; }
     }
 }

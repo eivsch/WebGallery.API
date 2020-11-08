@@ -1,8 +1,11 @@
-﻿namespace Application.Tags
+﻿using System.Collections;
+using System.Collections.Generic;
+
+namespace Application.Tags
 {
     public class TagResponse
     {
         public string TagName { get; set; }
-        public string PictureId { get; set; }
+        IEnumerable<TaggedItem> Items { get; set; }
     }
 }

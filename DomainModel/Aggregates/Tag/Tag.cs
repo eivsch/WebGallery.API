@@ -1,39 +1,44 @@
-﻿using DomainModel.Common;
-using DomainModel.Common.Interfaces;
+﻿using DomainModel.Common.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DomainModel.Aggregates.Tag
 {
     public class Tag : IAggregateRoot
     {
         private string _tagName;
-        private string _pictureId;
+        private int? _itemCount;
+        private List<TaggedMediaItem> _mediaItems = new List<TaggedMediaItem>();
 
         public virtual string TagName => _tagName;
-        public virtual string PictureId => _pictureId;
+        public virtual int ItemCount => _itemCount ?? _mediaItems.Count;
+        public virtual IReadOnlyCollection<TaggedMediaItem> MediaItems => _mediaItems.AsReadOnly();
 
         private Tag() { }
 
-        //private Tag(string id = "") 
-        //{
-        //    if (string.IsNullOrWhiteSpace(id))
-        //        id = Guid.NewGuid().ToString();
-
-        //    Id = id;
-        //}
-
-        public static Tag Create(string tagName, string pictureId)
+        public static Tag Create(string tagName)
         {
             if (string.IsNullOrWhiteSpace(tagName))
                 throw new ArgumentNullException(nameof(tagName));
-            if (string.IsNullOrWhiteSpace(pictureId))
-                throw new ArgumentNullException(nameof(pictureId));
 
             return new Tag()
             {
                 _tagName = tagName,
-                _pictureId = pictureId
             };
         }
+
+        public virtual void AddMediaItem(string itemId)
+        {
+            TaggedMediaItem taggedItem = _mediaItems.FirstOrDefault(i => i.Id == itemId);
+            if (taggedItem is null)
+            {
+                taggedItem = TaggedMediaItem.Create(itemId);
+
+                _mediaItems.Add(taggedItem);
+            }
+        }
+
+        public virtual void SetItemCount(int itemCount) => _itemCount = itemCount;
     }
 }

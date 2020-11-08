@@ -65,7 +65,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetTagged(string tag)
         {
             Log.Information("BEGIN - GalleryController|GET");
-            var tags = await _tagService.GetAll(tag);
+            var tags = await _tagService.Get(tag);
 
             return Ok(tags);
         }

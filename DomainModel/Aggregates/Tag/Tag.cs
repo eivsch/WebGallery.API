@@ -28,12 +28,15 @@ namespace DomainModel.Aggregates.Tag
             };
         }
 
-        public virtual void AddMediaItem(string itemId)
+        public virtual void AddMediaItem(string itemId, DateTime? created)
         {
+            if (!created.HasValue)
+                created = DateTime.UtcNow;
+
             TagMediaItem taggedItem = _mediaItems.FirstOrDefault(i => i.Id == itemId);
             if (taggedItem is null)
             {
-                taggedItem = TagMediaItem.Create(itemId);
+                taggedItem = TagMediaItem.Create(itemId, created.Value);
 
                 _mediaItems.Add(taggedItem);
             }

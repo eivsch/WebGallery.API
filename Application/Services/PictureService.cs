@@ -44,7 +44,7 @@ namespace Application.Services
             foreach (var tag in pictureRequest.Tags)
             {
                 var tagAggregate = Tag.Create(tag);
-                tagAggregate.AddMediaItem(pictureRequest.Id);
+                tagAggregate.AddMediaItem(pictureRequest.Id, null);
 
                 await _tagRepository.Save(tagAggregate);
             }

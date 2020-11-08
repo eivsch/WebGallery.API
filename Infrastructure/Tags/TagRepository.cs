@@ -76,7 +76,7 @@ namespace Infrastructure.Tags
                 {
                     TagName = aggregate.TagName,
                     PictureId = item.Id,
-                    Added = DateTime.UtcNow
+                    Added = item.Created
                 };
 
                 var indexRequest = new IndexRequest<TagDTO>(dto, "tag");
@@ -103,7 +103,7 @@ namespace Infrastructure.Tags
                     allTags.Add(aggregate);
                 }
 
-                aggregate.AddMediaItem(dto.PictureId);
+                aggregate.AddMediaItem(dto.PictureId, dto.Added);
             }
 
             return allTags;

@@ -42,7 +42,7 @@ namespace Application.Services
                 throw new ApplicationException($"Cannot add new tag as a picture with id '{tagRequest.PictureId}' / index '{tagRequest.PictureIndex}' does not exist.");
 
             var aggregate = Tag.Create(tagRequest.Tag);
-            aggregate.AddMediaItem(pic.Id);
+            aggregate.AddMediaItem(pic.Id, null);
 
             await _tagRepository.Save(aggregate);
         }

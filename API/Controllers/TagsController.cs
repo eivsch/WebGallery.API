@@ -22,7 +22,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<string>> Get()
+        public async Task<IEnumerable<TagResponse>> Get()
         {
             var allTags = await _tagService.GetAllUniqueTags();
 

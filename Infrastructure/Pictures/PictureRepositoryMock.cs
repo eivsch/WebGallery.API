@@ -111,17 +111,8 @@ namespace Infrastructure.Pictures
 
         public async Task<Picture> FindByAppPath(string appPath)
         {
-            return Picture.Create(
-                id: "123123",
-                name: "name",
-                appPath: appPath,
-                originalPath: "orig\\path",
-                folderName: "folderName",
-                folderId: "hash1234",
-                folderSortOrder: 24,
-                globalSortOrder: 123,
-                size: 34221,
-                created: DateTime.Now);
+            var dto = new MockData().GetAll().FirstOrDefault(d => d.AppPath == appPath);
+            return CreateFromDto(dto);
         }
     }
 }

@@ -49,7 +49,8 @@ namespace Application.Services
 
         public async Task<TagResponse> Get(string tagName)
         {
-            var aggregate = await _tagRepository.Find(tagName);
+            var aggregate = Tag.Create(tagName);
+            aggregate = await _tagRepository.Find(aggregate);
 
             return _mapper.Map<TagResponse>(aggregate);
         }

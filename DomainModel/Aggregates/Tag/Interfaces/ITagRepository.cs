@@ -8,7 +8,6 @@ namespace DomainModel.Aggregates.Tag.Interfaces
     {
         Task<List<Tag>> GetAllUniqueTags();
         Task<IEnumerable<Tag>> FindAllTagsForPicture(string pictureId);
-        Task<Tag> Find(string tagName);
         Task<IEnumerable<Tag>> GetRandom(IEnumerable<string> tags, int items);
     }
 }

@@ -66,25 +66,20 @@ namespace Infrastructure.Tags
 
             return allTags;
         }
-        public async Task<Tag> Find(string tagName)
-        {
-            var tags = new MockDataTags().GetAll().Where(t => t.TagName == tagName);
-
-            return BuildAggregatesFromDtoCollection(tags).Single();
-        }
 
         public async Task<Tag> Save(Tag aggregate)
         {
             return aggregate;
         }
 
-
-
-
-        public Task<Tag> Find(Tag aggregate)
+        public async Task<Tag> Find(Tag aggregate)
         {
-            throw new NotImplementedException();
+            var tags = new MockDataTags().GetAll().Where(t => t.TagName == aggregate.TagName);
+
+            return BuildAggregatesFromDtoCollection(tags).Single();
         }
+
+
 
         public Task<IEnumerable<Tag>> FindAll(Tag aggregate)
         {

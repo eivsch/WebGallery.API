@@ -109,24 +109,6 @@ namespace Infrastructure.Tags
             return allTags;
         }
 
-        public async Task<Tag> Find(string tagName)
-        {
-            var searchResponse = await _client.SearchAsync<TagDTO>(s => s
-                .Query(q => q
-                    .Match(m => m
-                        .Field(f => f.TagName)
-                        .Query(tagName)
-                    )
-                )
-                .Size(1000)
-                .Index("tag")
-            );
-
-            var dtos = searchResponse.Documents;
-
-            return BuildAggregatesFromDtoCollection(dtos).Single();
-        }
-
         public async Task<IEnumerable<Tag>> GetRandom(IEnumerable<string> tags, int items)
         {
             var searchResponse = await _client.SearchAsync<TagDTO>(s => s
@@ -153,6 +135,24 @@ namespace Infrastructure.Tags
             return BuildAggregatesFromDtoCollection(response);
         }
 
+        public async Task<Tag> Find(Tag aggregate)
+        {
+            var searchResponse = await _client.SearchAsync<TagDTO>(s => s
+                .Query(q => q
+                    .Match(m => m
+                        .Field(f => f.TagName)
+                        .Query(aggregate.TagName)
+                    )
+                )
+                .Size(1000)
+                .Index("tag")
+            );
+
+            var dtos = searchResponse.Documents;
+
+            return BuildAggregatesFromDtoCollection(dtos).Single();
+        }
+
         #region Repository Boilerplate
 
         public Task<IEnumerable<Tag>> FindAll(Tag aggregate)
@@ -176,11 +176,6 @@ namespace Infrastructure.Tags
         }
 
         public void Remove(Tag aggregate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Tag> Find(Tag aggregate)
         {
             throw new NotImplementedException();
         }

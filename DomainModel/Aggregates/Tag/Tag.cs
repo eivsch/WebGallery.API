@@ -7,11 +7,11 @@ namespace DomainModel.Aggregates.Tag
 {
     public class Tag : IAggregateRoot
     {
-        private string _tagName;
+        private string _name;
         private int? _itemCount;
         private List<TagMediaItem> _mediaItems = new List<TagMediaItem>();
 
-        public virtual string TagName => _tagName;
+        public virtual string Name => _name;
         public virtual int ItemCount => _itemCount ?? _mediaItems.Count;
         public virtual IReadOnlyCollection<TagMediaItem> MediaItems => _mediaItems.AsReadOnly();
 
@@ -24,7 +24,7 @@ namespace DomainModel.Aggregates.Tag
 
             return new Tag()
             {
-                _tagName = tagName,
+                _name = tagName,
             };
         }
 

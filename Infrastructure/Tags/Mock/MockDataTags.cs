@@ -23,11 +23,10 @@ namespace Infrastructure.Tags.Mock
             },
             new TagDTO
             {
-                TagName = "Tag3",
+                TagName = "Car",
                 PictureId = "1",
                 Added = DateTime.Now
             },
-
             // Pic 2
             new TagDTO
             {
@@ -35,12 +34,32 @@ namespace Infrastructure.Tags.Mock
                 PictureId = "2",
                 Added = DateTime.Now
             },
-
             // Pic 3
             new TagDTO
             {
                 TagName = "Tag3",
                 PictureId = "3",
+                Added = DateTime.Now
+            },
+            // Pic 4
+            new TagDTO
+            {
+                TagName = "Car",
+                PictureId = "4",
+                Added = DateTime.Now
+            },
+            // Pic 5
+            new TagDTO
+            {
+                TagName = "Bike",
+                PictureId = "5",
+                Added = DateTime.Now
+            },
+            // Pic 6
+            new TagDTO
+            {
+                TagName = "Bike",
+                PictureId = "6",
                 Added = DateTime.Now
             },
         };

@@ -43,7 +43,7 @@ namespace Infrastructure.Tags
             var dtoList = new List<TagDTO>();
             foreach (var tag in tags)
             {
-                dtoList.AddRange(data.Where(t => t.TagName == tag));
+                dtoList.AddRange(data.Where(t => t.TagName.ToLower() == tag.ToLower()));
             }
 
             return BuildAggregatesFromDtoCollection(dtoList.Take(maxItemsToReturn));
@@ -54,7 +54,7 @@ namespace Infrastructure.Tags
             var allTags = new List<Tag>();
             foreach (var dto in dtos)
             {
-                Tag aggregate = allTags.FirstOrDefault(t => t.TagName == dto.TagName);
+                Tag aggregate = allTags.FirstOrDefault(t => t.Name == dto.TagName);
                 if (aggregate is null)
                 {
                     aggregate = Tag.Create(dto.TagName);
@@ -74,7 +74,7 @@ namespace Infrastructure.Tags
 
         public async Task<Tag> Find(Tag aggregate)
         {
-            var tags = new MockDataTags().GetAll().Where(t => t.TagName == aggregate.TagName);
+            var tags = new MockDataTags().GetAll().Where(t => t.TagName == aggregate.Name);
 
             return BuildAggregatesFromDtoCollection(tags).Single();
         }

@@ -56,6 +56,8 @@ namespace Application.Tests
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count() > 0);
+            Assert.IsNotNull(result.First().Name);
+            Assert.IsNotNull(result.First().ItemCount);
         }
 
         [TestMethod]

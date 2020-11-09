@@ -74,7 +74,7 @@ namespace Infrastructure.Tags
             {
                 var dto = new TagDTO
                 {
-                    TagName = aggregate.TagName,
+                    TagName = aggregate.Name,
                     PictureId = item.Id,
                     Added = item.Created
                 };
@@ -96,7 +96,7 @@ namespace Infrastructure.Tags
             var allTags = new List<Tag>();
             foreach (var dto in dtoList)
             {
-                Tag aggregate = allTags.FirstOrDefault(t => t.TagName == dto.TagName);
+                Tag aggregate = allTags.FirstOrDefault(t => t.Name == dto.TagName);
                 if (aggregate is null)
                 {
                     aggregate = Tag.Create(dto.TagName);
@@ -141,7 +141,7 @@ namespace Infrastructure.Tags
                 .Query(q => q
                     .Match(m => m
                         .Field(f => f.TagName)
-                        .Query(aggregate.TagName)
+                        .Query(aggregate.Name)
                     )
                 )
                 .Size(1000)

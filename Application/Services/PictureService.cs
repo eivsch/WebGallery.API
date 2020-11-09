@@ -114,7 +114,7 @@ namespace Application.Services
         {
             var tags = await _tagRepository.FindAllTagsForPicture(aggregate.Id);
             foreach (var tag in tags)
-                aggregate.AddTag(tag.TagName);
+                aggregate.AddTag(tag.Name);
         }
     }
 }

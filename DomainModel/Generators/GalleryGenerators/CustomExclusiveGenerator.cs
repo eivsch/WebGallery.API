@@ -48,7 +48,7 @@ namespace DomainModel.Generators.GalleryGenerators
                 }
                 else
                 {
-                    var matches = tags.Select(t => t.TagName).Intersect(_galleryDescriptor.TagFilter.Tags);
+                    var matches = tags.Select(t => t.Name).Intersect(_galleryDescriptor.TagFilter.Tags);
                     if (matches.Count() == 0)
                     {
                         list.Add(new GeneratedItem

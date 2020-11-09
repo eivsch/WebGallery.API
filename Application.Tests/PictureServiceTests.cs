@@ -109,7 +109,7 @@ namespace Application.Tests
             });
 
             var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
-            var response = await service.Get("1", 1);
+            var response = await service.Get("gallery1", 1);
 
             AssertAllPropertiesHaveValues(response);
         }
@@ -123,7 +123,7 @@ namespace Application.Tests
             });
 
             var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
-            var response = await service.GetByAppPath("app\\path");
+            var response = await service.GetByAppPath("gallery1\\car.jpg");
 
             AssertAllPropertiesHaveValues(response);
         }

@@ -5,7 +5,6 @@ using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Tags
@@ -17,31 +16,6 @@ namespace Infrastructure.Tags
         public TagRepository(IElasticClient elasticClient)
         {
             _client = elasticClient;
-        }
-
-        public Task<Tag> Find(Tag aggregate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Tag>> FindAll(Tag aggregate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Tag> FindById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Tag> FindById(string id)
-        {
-            throw new NotImplementedException();
-        }        
-
-        public Task<Tag> FindById(int id)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Tag>> FindAllTagsForPicture(string pictureId)
@@ -60,10 +34,10 @@ namespace Infrastructure.Tags
 
             var tags = searchResponse.Documents;
 
-            return tags.Select(s => BuildAggregateFromDto(s));
+            return BuildAggregatesFromDtoCollection(tags);
         }
 
-        public async Task<List<string>> GetAllUniqueTags()
+        public async Task<List<Tag>> GetAllUniqueTags()
         {
             try
             {
@@ -77,10 +51,13 @@ namespace Infrastructure.Tags
                     .Index("tag")
                 );
 
-                var list = new List<string>();
+                var list = new List<Tag>();
                 foreach (var bucket in result.Aggregations.Terms("my_agg").Buckets)
                 {
-                    list.Add(bucket.Key);
+                    var aggregate = Tag.Create(bucket.Key);
+                    aggregate.SetItemCount(Convert.ToInt32(bucket.DocCount));
+
+                    list.Add(aggregate);
                 }
 
                 return list;
@@ -91,55 +68,47 @@ namespace Infrastructure.Tags
             }
         }
 
-        public void Remove(Tag aggregate)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Tag> Save(Tag aggregate)
         {
-            var dto = new TagDTO
+            foreach (var item in aggregate.MediaItems)
             {
-                TagName = aggregate.TagName,
-                PictureId = aggregate.PictureId,
-                Added = DateTime.UtcNow
-            };
+                var dto = new TagDTO
+                {
+                    TagName = aggregate.Name,
+                    PictureId = item.Id,
+                    Added = item.Created
+                };
 
-            var indexRequest = new IndexRequest<TagDTO>(dto, "tag");
-            var response = await _client.IndexAsync(indexRequest);
+                var indexRequest = new IndexRequest<TagDTO>(dto, "tag");
+                var response = await _client.IndexAsync(indexRequest);
             
-            if (!response.IsValid)
-            {
-                throw new Exception(response.DebugInformation);
+                if (!response.IsValid)
+                {
+                    throw new Exception(response.DebugInformation);
+                }
             }
 
             return aggregate;
         }
 
-        private Tag BuildAggregateFromDto(TagDTO dto)
+        private List<Tag> BuildAggregatesFromDtoCollection(IEnumerable<TagDTO> dtoList)
         {
-            return Tag.Create(tagName: dto.TagName, pictureId: dto.PictureId);
+            var allTags = new List<Tag>();
+            foreach (var dto in dtoList)
+            {
+                Tag aggregate = allTags.FirstOrDefault(t => t.Name == dto.TagName);
+                if (aggregate is null)
+                {
+                    aggregate = Tag.Create(dto.TagName);
+                    allTags.Add(aggregate);
+                }
+
+                aggregate.AddMediaItem(dto.PictureId, dto.Added);
+            }
+
+            return allTags;
         }
 
-        public async Task<IEnumerable<Tag>> FindAll(string tagName)
-        {
-            var searchResponse = await _client.SearchAsync<TagDTO>(s => s
-                .Query(q => q
-                    .Match(m => m
-                        .Field(f => f.TagName)
-                        .Query(tagName)
-                    )
-                )
-                .Size(1000)
-                .Index("tag")
-            );
-
-            var tags = searchResponse.Documents;
-
-            return tags.Select(s => BuildAggregateFromDto(s));
-        }
-
-        // TODO: Use .Term instead of .Match, as 4=44 with Match
         public async Task<IEnumerable<Tag>> GetRandom(IEnumerable<string> tags, int items)
         {
             var searchResponse = await _client.SearchAsync<TagDTO>(s => s
@@ -163,7 +132,54 @@ namespace Infrastructure.Tags
 
             var response = searchResponse.Documents;
 
-            return response.Select(s => BuildAggregateFromDto(s));
+            return BuildAggregatesFromDtoCollection(response);
         }
+
+        public async Task<Tag> Find(Tag aggregate)
+        {
+            var searchResponse = await _client.SearchAsync<TagDTO>(s => s
+                .Query(q => q
+                    .Match(m => m
+                        .Field(f => f.TagName)
+                        .Query(aggregate.Name)
+                    )
+                )
+                .Size(1000)
+                .Index("tag")
+            );
+
+            var dtos = searchResponse.Documents;
+
+            return BuildAggregatesFromDtoCollection(dtos).Single();
+        }
+
+        #region Repository Boilerplate
+
+        public Task<IEnumerable<Tag>> FindAll(Tag aggregate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Tag> FindById(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Tag> FindById(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Tag> FindById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Remove(Tag aggregate)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

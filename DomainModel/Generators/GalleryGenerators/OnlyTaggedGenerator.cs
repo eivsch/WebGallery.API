@@ -28,22 +28,25 @@ namespace DomainModel.Generators.GalleryGenerators
         protected override async Task<List<GeneratedItem>> GenerateGalleryItems()
         {
             var list = new List<GeneratedItem>();
-            var taggedImages = await _tagRepository.GetRandom(null, _galleryDescriptor.NumberOfItems);
+            var tags = await _tagRepository.GetRandom(null, _galleryDescriptor.NumberOfItems);
 
-            foreach (var taggedImage in taggedImages)
+            foreach (var tag in tags)
             {
-                var picture = await _pictureRepository.FindById(taggedImage.PictureId);
-                
-                if (picture.Name.ToLower().EndsWith(".gif") && _galleryDescriptor.MediaFilterMode == MediaFilterMode.ExcludeGifs)
-                    continue;
-
-                list.Add(new GeneratedItem
+                foreach (var taggedImage in tag.MediaItems)
                 {
-                    Id = picture.Id,
-                    Index = picture.GlobalSortOrder,
-                    Name = picture.Name,
-                    Tags = taggedImage.TagName
-                });
+                    var picture = await _pictureRepository.FindById(taggedImage.Id);
+
+                    if (picture.Name.ToLower().EndsWith(".gif") && _galleryDescriptor.MediaFilterMode == MediaFilterMode.ExcludeGifs)
+                        continue;
+
+                    list.Add(new GeneratedItem
+                    {
+                        Id = picture.Id,
+                        Index = picture.GlobalSortOrder,
+                        Name = picture.Name,
+                        Tags = tag.Name
+                    });
+                }
             }
 
             return list;

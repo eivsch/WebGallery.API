@@ -19,7 +19,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "gallery1",
                 FolderName = "gallery1",
                 Name = "car.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -32,7 +32,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "gallery1",
                 FolderName = "gallery1",
                 Name = "car3.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -45,7 +45,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "gallery1",
                 FolderName = "gallery1",
                 Name = "dude.gif",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -58,7 +58,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "gallery1",
                 FolderName = "gallery1",
                 Name = "future-cars-lead.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -71,7 +71,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "gallery1",
                 FolderName = "gallery1",
                 Name = "Powerfly5EU_19_23179_A_Portrait.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -84,7 +84,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "gallery1",
                 FolderName = "gallery1",
                 Name = "shuttle.png",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -97,7 +97,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "gallery1",
                 FolderName = "gallery1",
                 Name = "small.mp4",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             // subGal1
@@ -111,7 +111,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal1",
                 FolderName = "subGal1",
                 Name = "car2.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -124,7 +124,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal1",
                 FolderName = "subGal1",
                 Name = "Rower-gorski-MTB-INDIANA-Fat-Bike-M26-Czarny-skos.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -137,7 +137,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal1",
                 FolderName = "subGal1",
                 Name = "rower-MTB-street-jump-dirt-bike-rad-26-Mafiabikes-Blackjack-D-Green-new-neu-2020-3.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -150,7 +150,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal1",
                 FolderName = "subGal1",
                 Name = "unnamed.gif",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -163,7 +163,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal1",
                 FolderName = "subGal1",
                 Name = "woodland_wanderer_dribbble.gif",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             // subGal2
@@ -177,7 +177,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal2",
                 FolderName = "subGal2",
                 Name = "sub2_1.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -190,7 +190,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal2",
                 FolderName = "subGal2",
                 Name = "sub2_2.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -203,7 +203,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal2",
                 FolderName = "subGal2",
                 Name = "sub2_3.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -216,7 +216,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal2",
                 FolderName = "subGal2",
                 Name = "sub2_4.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             // subGal3
@@ -230,7 +230,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal3",
                 FolderName = "subGal3",
                 Name = "sub3_1.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -243,7 +243,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal3",
                 FolderName = "subGal3",
                 Name = "sub3_2.gif",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -256,7 +256,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal3",
                 FolderName = "subGal3",
                 Name = "sub3_3.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -269,7 +269,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal3",
                 FolderName = "subGal3",
                 Name = "sub3_4.mp4",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
             new PictureDTO
@@ -282,7 +282,7 @@ namespace Infrastructure.Pictures.Mock
                 FolderId = "subGal3",
                 FolderName = "subGal3",
                 Name = "sub3_5.jpg",
-                OriginalPath = "",
+                OriginalPath = "x",
                 Size = 34221
             },
         };

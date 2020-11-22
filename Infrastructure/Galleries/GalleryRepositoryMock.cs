@@ -62,7 +62,7 @@ namespace Infrastructure.Galleries
 
             var aggregate = Gallery.Create($"random-{Guid.NewGuid()}".Substring(0, 15).ToLower(), 1);
 
-            var allData = new MockData().GetAll();
+            var allData = new MockData().GetAll().ToList();
             allData.ShuffleList();
 
             var galleryItems = allData.Take(itemsInGallery);

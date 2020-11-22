@@ -68,6 +68,7 @@ namespace API
                 mc.AddProfile(new Application.Mappings.AutoMapperGalleryProfile());
                 mc.AddProfile(new Application.Mappings.AutoMapperPictureProfile());
                 mc.AddProfile(new Application.Mappings.AutoMapperTagProfile());
+                mc.AddProfile(new Application.Mappings.AutoMapperMetadataProfile());
             });
             services.AddSingleton(mapperConfig.CreateMapper());
 

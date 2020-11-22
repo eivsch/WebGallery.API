@@ -1,36 +1,44 @@
-﻿using DomainModel.Aggregates.Metadata.Interfaces;
+﻿using DomainModel.Aggregates.Metadata.Details;
+using DomainModel.Aggregates.Metadata.Interfaces;
 using DomainModel.Common.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DomainModel.Aggregates.Metadata
 {
     public class Metadata : IAggregateRoot
     {
         private int _totalCount;
-        private IMetadataDetails _metadataDetails;
+        MetadataType _metadataType;
+        private IMetadataDetails _details;
 
         public virtual int TotalCount => _totalCount;
-        public virtual IMetadataDetails Details => _metadataDetails;
-
+        public virtual MetadataType MetadataType => _metadataType;
+        public virtual IMetadataDetails Details => _details;
 
         private Metadata()
         {
 
         }
 
-        public static Metadata Create(int totalCount)
+        public static Metadata Create(
+            MetadataType metadataType,
+            int totalCount, 
+            string mostLikedName = "", 
+            string mostRecentName = "", 
+            int? mostLikedCount = null, 
+            DateTime? mostRecentTs = null)
         {
+            IMetadataDetails details;
+            if (metadataType == MetadataType.Picture)
+                details = MetadataPictureDetails.Create(mostLikedName, mostRecentName, mostLikedCount, mostRecentTs);
+            else
+                throw new NotImplementedException();
+
             return new Metadata
             {
-                _totalCount = totalCount
+                _totalCount = totalCount,
+                _details = details
             };
-        }
-
-        public void AddMetric(string key, string value)
-        {
-
         }
     }
 }

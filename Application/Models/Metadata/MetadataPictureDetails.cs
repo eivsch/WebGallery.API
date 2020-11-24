@@ -1,8 +1,10 @@
-﻿using System;
+﻿using API.Utilities;
+using System;
+using System.Text.Json.Serialization;
 
 namespace Application.Models.Metadata
 {
-    public class MetadataPictureDetails : IMetadataDetails
+    public class MetadataPictureDetails : MetadataDetails
     {
         public string MostLikedName { get; set; }
         public string MostRecentName { get; set; }

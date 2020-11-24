@@ -2,7 +2,7 @@
 
 namespace Application.Models.Metadata
 {
-    public class MetadataAlbumDetails : IMetadataDetails
+    public class MetadataAlbumDetails : MetadataDetails
     {
         public string MostLikedName { get; set; }
         public string MostRecentName { get; set; }

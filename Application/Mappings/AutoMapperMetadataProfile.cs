@@ -8,9 +8,9 @@ namespace Application.Mappings
         public AutoMapperMetadataProfile()
         {
             CreateMap<DomainModel.Aggregates.Metadata.Metadata, MetadataResponse>()
-                .ForMember(dest => dest.ShortDescription, opt => opt.MapFrom(src => src.MetadataType.Name));
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.MetadataType.Name));
 
-            CreateMap<DomainModel.Aggregates.Metadata.Interfaces.IMetadataDetails, IMetadataDetails>()
+            CreateMap<DomainModel.Aggregates.Metadata.Interfaces.IMetadataDetails, MetadataDetails>()
                 .Include<DomainModel.Aggregates.Metadata.Details.MetadataPictureDetails, MetadataPictureDetails>()
                 .Include<DomainModel.Aggregates.Metadata.Details.MetadataGifDetails, MetadataGifDetails>()
                 .Include<DomainModel.Aggregates.Metadata.Details.MetadataVideoDetails, MetadataVideoDetails>()

@@ -1,6 +1,6 @@
 ﻿namespace Application.Models.Metadata
 {
-    public class MetadataTagDetails : IMetadataDetails
+    public class MetadataTagDetails : MetadataDetails
     {
         public string MostPopularName { get; set; }
         public string MostRecentMediaName { get; set; }

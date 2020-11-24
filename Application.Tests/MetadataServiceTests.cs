@@ -32,7 +32,7 @@ namespace Application.Tests
             var metaResponse = await metaService.Get("picture");
             var details = (MetadataPictureDetails) metaResponse.Details;
 
-            Assert.IsFalse(string.IsNullOrWhiteSpace(metaResponse.ShortDescription));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(metaResponse.Name));
             Assert.IsTrue(metaResponse.TotalCount > 0);
             Assert.IsFalse(string.IsNullOrWhiteSpace(details.MostLikedName));
             Assert.IsNotNull(details.MostLikedCount);
@@ -47,7 +47,7 @@ namespace Application.Tests
             var metaResponse = await metaService.Get("gif");
             var details = (MetadataGifDetails) metaResponse.Details;
 
-            Assert.IsFalse(string.IsNullOrWhiteSpace(metaResponse.ShortDescription));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(metaResponse.Name));
             Assert.IsTrue(metaResponse.TotalCount > 0);
             Assert.IsFalse(string.IsNullOrWhiteSpace(details.MostLikedName));
             Assert.IsNotNull(details.MostLikedCount);
@@ -62,7 +62,7 @@ namespace Application.Tests
             var metaResponse = await metaService.Get("video");
             var details = (MetadataVideoDetails) metaResponse.Details;
 
-            Assert.IsFalse(string.IsNullOrWhiteSpace(metaResponse.ShortDescription));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(metaResponse.Name));
             Assert.IsTrue(metaResponse.TotalCount > 0);
             Assert.IsFalse(string.IsNullOrWhiteSpace(details.MostLikedName));
             Assert.IsNotNull(details.MostLikedCount);
@@ -77,7 +77,7 @@ namespace Application.Tests
             var metaResponse = await metaService.Get("album");
             var details = (MetadataAlbumDetails) metaResponse.Details;
 
-            Assert.IsFalse(string.IsNullOrWhiteSpace(metaResponse.ShortDescription));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(metaResponse.Name));
             Assert.IsTrue(metaResponse.TotalCount > 0);
             Assert.IsFalse(string.IsNullOrWhiteSpace(details.MostLikedName));
             Assert.IsNotNull(details.MostLikedCount);
@@ -92,7 +92,7 @@ namespace Application.Tests
             var metaResponse = await metaService.Get("tag");
             var details = (MetadataTagDetails) metaResponse.Details;
 
-            Assert.IsFalse(string.IsNullOrWhiteSpace(metaResponse.ShortDescription));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(metaResponse.Name));
             Assert.IsTrue(metaResponse.TotalCount > 0);
             Assert.IsFalse(string.IsNullOrWhiteSpace(details.MostPopularName));
             Assert.IsNotNull(details.MostPopularCount);

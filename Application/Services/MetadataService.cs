@@ -48,6 +48,45 @@ namespace Application.Services
                     mostRecentTs: data.MostRecentTimestamp
                 );
             }
+            else if (metadataType == MetadataType.Gif)
+            {
+                var data = await _metadataService.GetGifMetadata();
+
+                aggregate = Metadata.Create(
+                    metadataType: metadataType,
+                    totalCount: data.Count,
+                    mostLikedName: data.MostLikedName,
+                    mostRecentName: data.MostRecentName,
+                    mostLikedCount: data.MostLikedCount,
+                    mostRecentTs: data.MostRecentTimestamp
+                );
+            }
+            else if (metadataType == MetadataType.Video)
+            {
+                var data = await _metadataService.GetVideoMetadata();
+
+                aggregate = Metadata.Create(
+                    metadataType: metadataType,
+                    totalCount: data.Count,
+                    mostLikedName: data.MostLikedName,
+                    mostRecentName: data.MostRecentName,
+                    mostLikedCount: data.MostLikedCount,
+                    mostRecentTs: data.MostRecentTimestamp
+                );
+            }
+            else if (metadataType == MetadataType.Tag)
+            {
+                var data = await _metadataService.GetTagMetadata();
+
+                aggregate = Metadata.Create(
+                    metadataType: metadataType,
+                    totalCount: data.Count,
+                    mostPopularName: data.MostPopularName,
+                    mostRecentMediaName: data.MostRecentMediaName,
+                    mostRecentTagName: data.MostRecentTagName,
+                    mostPopularCount: data.MostPopularCount
+                );
+            }
             else
                 throw new NotImplementedException();
 

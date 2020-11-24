@@ -151,12 +151,12 @@ namespace Infrastructure.Services
 
         private int Count(string type)
         {
-            string mediaSearchterm = GetMediaSearchTerm(type);
             switch (type.ToLower())
             {
                 case "picture":
                 case "gif":
                 case "video":
+                    string mediaSearchterm = GetMediaSearchTerm(type);
                     return new MockData().GetAll().Where(w => w.Name.EndsWith(mediaSearchterm)).Count();
                 case "tags":
                     return new MockDataTags().GetAll().Count();

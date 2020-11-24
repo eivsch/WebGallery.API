@@ -2,11 +2,10 @@
 using DomainModel.Common;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DomainModel.Aggregates.Metadata.Details
 {
-    public class MetadataAlbumDetails : ValueObject, IMetadataDetails
+    public class MetadataGifDetails : ValueObject, IMetadataDetails
     {
         private string _mostLikedName;
         private string _mostRecentName;
@@ -18,14 +17,14 @@ namespace DomainModel.Aggregates.Metadata.Details
         public virtual int? MostLikedCount => _mostLikedCount;
         public virtual DateTime? MostRecentTimestamp => _mostRecentTimestamp;
 
-        private MetadataAlbumDetails()
+        private MetadataGifDetails()
         {
 
         }
 
-        public static MetadataAlbumDetails Create(string mostLikedName = "", string mostRecentName = "", int? mostLikedCount = null, DateTime? mostRecentTs = null)
+        public static MetadataGifDetails Create(string mostLikedName = "", string mostRecentName = "", int? mostLikedCount = null, DateTime? mostRecentTs = null)
         {
-            return new MetadataAlbumDetails
+            return new MetadataGifDetails
             {
                 _mostRecentTimestamp = mostRecentTs,
                 _mostLikedCount = mostLikedCount,

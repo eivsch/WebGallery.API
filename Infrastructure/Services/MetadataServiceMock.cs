@@ -65,10 +65,12 @@ namespace Infrastructure.Services
             var count = Count(Types.Album);
             var mostPopular = GetMostPopularTag();
             var mostRecent = GetMostRecent();
+            var uniqueCount = GetUniqueCount();
 
             return new TagMetadata
             {
                 Count = count,
+                UniqueCount = uniqueCount,
                 MostPopularCount = mostPopular.Count,
                 MostPopularName = mostPopular.Name,
                 MostRecentMediaName = mostRecent.MediaName,
@@ -100,6 +102,14 @@ namespace Infrastructure.Services
                 var item = new MockData().GetAll().First(s => s.Id == lastTag.PictureId);
 
                 return (lastTag.TagName, item.Name);
+            }
+
+            int GetUniqueCount()
+            {
+                return new MockDataTags().GetAll()
+                    .Select(tag => tag.TagName)
+                    .Distinct()
+                    .Count();
             }
         }
 

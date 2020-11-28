@@ -81,6 +81,7 @@ namespace Application.Services
                 aggregate = Metadata.Create(
                     metadataType: metadataType,
                     totalCount: data.Count,
+                    totalUnique: data.UniqueCount,
                     mostPopularName: data.MostPopularName,
                     mostRecentMediaName: data.MostRecentMediaName,
                     mostRecentTagName: data.MostRecentTagName,

@@ -1,4 +1,6 @@
-﻿namespace Application.Models.Metadata
+﻿using System.Collections.Generic;
+
+namespace Application.Models.Metadata
 {
     public class MetadataResponse
     {

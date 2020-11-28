@@ -63,6 +63,7 @@ namespace DomainModel.Aggregates.Metadata
         public static Metadata Create(
             MetadataType metadataType,
             int totalCount,
+            int totalUnique,
             string mostPopularName = "",
             string mostRecentMediaName = "",
             string mostRecentTagName = "",
@@ -70,12 +71,13 @@ namespace DomainModel.Aggregates.Metadata
         {
             IMetadataDetails details;
             if (metadataType == MetadataType.Tag)
-                details = MetadataTagDetails.Create(mostPopularName, mostRecentMediaName, mostRecentTagName, mostPopularCount);
+                details = MetadataTagDetails.Create(totalUnique, mostPopularName, mostRecentMediaName, mostRecentTagName, mostPopularCount);
             else
                 throw new NotSupportedException($"The Metadata type '{nameof(metadataType.Name)}' is not supported. Use another Create() method.");
 
             var metrics = new Dictionary<string, string>();
             metrics.Add(nameof(totalCount), totalCount.ToString());
+            metrics.Add(nameof(totalUnique), totalUnique.ToString());
             metrics.Add(nameof(mostPopularName), mostPopularName);
             metrics.Add(nameof(mostRecentMediaName), mostRecentMediaName);
             metrics.Add(nameof(mostRecentTagName), mostRecentTagName);

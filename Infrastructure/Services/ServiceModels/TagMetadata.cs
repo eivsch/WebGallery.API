@@ -3,6 +3,7 @@
     public class TagMetadata
     {
         public int Count { get; set; }
+        public int UniqueCount { get; set; }
         public string MostPopularName { get; set; }
         public int MostPopularCount { get; set; }
         public string MostRecentMediaName { get; set; }

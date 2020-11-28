@@ -7,11 +7,13 @@ namespace DomainModel.Aggregates.Metadata.Details
 {
     public class MetadataTagDetails : ValueObject, IMetadataDetails
     {
+        private int _totalUnique;
         private string _mostPopularName;
         private string _mostRecentMediaName;
         private string _mostRecentTagName;
         private int? _mostPopularCount;
 
+        public virtual int TotalUnique => _totalUnique;
         public virtual string MostPopularName => _mostPopularName;
         public virtual string MostRecentMediaName => _mostRecentMediaName;
         public virtual string MostRecentTagName => _mostRecentTagName;
@@ -23,6 +25,7 @@ namespace DomainModel.Aggregates.Metadata.Details
         }
 
         public static MetadataTagDetails Create(
+            int totalUnique,
             string mostPopularName = "", 
             string mostRecentMediaName = "", 
             string mostRecentTagName = "", 
@@ -30,6 +33,7 @@ namespace DomainModel.Aggregates.Metadata.Details
         {
             return new MetadataTagDetails
             {
+                _totalUnique = totalUnique,
                 _mostPopularName = mostPopularName,
                 _mostRecentMediaName = mostRecentMediaName,
                 _mostRecentTagName = mostRecentTagName,

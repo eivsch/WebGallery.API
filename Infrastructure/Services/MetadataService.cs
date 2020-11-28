@@ -1,13 +1,8 @@
-﻿using DomainModel.Aggregates.Metadata;
-using DomainModel.Aggregates.Metadata.Interfaces;
-using Elasticsearch.Net;
-using Infrastructure.Services.DTO;
+﻿using Infrastructure.Services.DTO;
 using Infrastructure.Services.ServiceModels;
 using Nest;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services
@@ -15,40 +10,151 @@ namespace Infrastructure.Services
     public class MetadataService : IMetadataService
     {
         private readonly IElasticClient _client;
+        private (string Picture, string Tags, string Gif, string Video, string Album) Types => ("picture", "tags", "gif", "video", "album");
 
         public MetadataService(IElasticClient elasticClient)
         {
             _client = elasticClient;
         }
 
-        public Task<MediaMetadata> GetPictureMetadata()
+        public async Task<MediaMetadata> GetPictureMetadata()
         {
-            throw new NotImplementedException();
+            var count = await Count(Types.Picture);
+            //var mostLiked = GetMostLikedItem(Types.Picture);
+            var mostRecent = await GetMostRecentMediaItem(Types.Picture);
+
+            return new MediaMetadata
+            {
+                Count = (int) count,
+                MostLikedCount = 0,
+                MostLikedName = "N/A",
+                MostRecentName = mostRecent.Name,
+                MostRecentTimestamp = mostRecent.CreateTimestamp
+            };
         }
 
-        public Task<MediaMetadata> GetGifMetadata()
+        public async Task<MediaMetadata> GetGifMetadata()
         {
-            throw new NotImplementedException();
+            var count = await Count(Types.Gif);
+            //var mostLiked = GetMostLikedItem(Types.Gif);
+            var mostRecent = await GetMostRecentMediaItem(Types.Gif);
+
+            return new MediaMetadata
+            {
+                Count = (int) count,
+                MostLikedCount = 0,
+                MostLikedName = "N/A",
+                MostRecentName = mostRecent.Name,
+                MostRecentTimestamp = mostRecent.CreateTimestamp
+            };
         }
 
-        public Task<MediaMetadata> GetVideoMetadata()
+        public async Task<MediaMetadata> GetVideoMetadata()
         {
-            throw new NotImplementedException();
+            var count = await Count(Types.Video);
+            //var mostLiked = GetMostLikedItem(Types.Video);
+            var mostRecent = await GetMostRecentMediaItem(Types.Video);
+
+            return new MediaMetadata
+            {
+                Count = (int) count,
+                MostLikedCount = 0,
+                MostLikedName = "N/A",
+                MostRecentName = mostRecent.Name,
+                MostRecentTimestamp = mostRecent.CreateTimestamp
+            };
         }
 
-        public Task<TagMetadata> GetTagMetadata()
+        public async Task<TagMetadata> GetTagMetadata()
         {
-            throw new NotImplementedException();
+            var count = await Count(Types.Tags);
+            var aggregatedTagInfo = await GetAggregatedTagInfo();
+            var mostRecent = await GetMostRecentTag();
+
+            return new TagMetadata
+            {
+                Count = (int) count,
+                UniqueCount = aggregatedTagInfo.TotalUnique,
+                MostPopularCount = aggregatedTagInfo.MostPopularCount,
+                MostPopularName = aggregatedTagInfo.MostPopularName,
+                MostRecentMediaName = mostRecent.MediaName,
+                MostRecentTagName = mostRecent.TagName
+            };
+
+            #region TAG METHODS
+
+            async Task<(string MostPopularName, int MostPopularCount, int TotalUnique)> GetAggregatedTagInfo()
+            {
+                var searchResponse = await _client.SearchAsync<TagDTO>(s => s
+                    .Aggregations(a => a
+                        .Terms("my_agg", st => st
+                            .Field(f => f.TagName.Suffix("keyword"))
+                            .Size(800)
+                        )
+                    )
+                    .Index("tag")
+                );
+
+                var buckets = searchResponse.Aggregations.Terms("my_agg").Buckets;
+                var bucket = buckets.OrderByDescending(b => b.DocCount).FirstOrDefault();
+
+                return (bucket?.Key ?? "N/A", bucket?.Count ?? 0, buckets.Count);
+            }
+
+            async Task<(string TagName, string MediaName)> GetMostRecentTag()
+            {
+                var tagSearchResponse = await _client.SearchAsync<TagDTO>(s => s
+                    .Sort(s => s
+                        .Descending(p => p.Added)
+                    )
+                    .Size(1)
+                    .Index("tag")
+                );
+
+                var tagDto = tagSearchResponse.Documents.FirstOrDefault();
+                if (tagDto != null)
+                {
+                    var mediaItemSearchResponse = await _client.SearchAsync<ItemDTO>(s => s
+                    .Query(q => q
+                        .Match(m => m
+                            .Field(f => f.Id)
+                            .Query(tagDto.PictureId)
+                        )
+                    )
+                    .Size(1)
+                    .Index("picture")
+                    );
+
+                    var itemDto = mediaItemSearchResponse.Documents.Single();
+
+                    return (tagDto.TagName, itemDto.Name);
+                }
+
+                return ("N/A", "N/A");
+            }
+
+            #endregion
         }
 
-        public Task<AlbumMetadata> GetAlbumMetadata()
+        public async Task<AlbumMetadata> GetAlbumMetadata()
         {
-            throw new NotImplementedException();
+            var count = await Count(Types.Album);
+            //var mostLiked = GetMostLikedAlbum();
+            var mostRecentItem = await GetMostRecentMediaItem();
+
+            return new AlbumMetadata
+            {
+                Count = (int) count,
+                MostLikedCount = 0,
+                MostLikedName = "N/A",
+                MostRecentName = mostRecentItem.FolderName,
+                MostRecentTimestamp = mostRecentItem.CreateTimestamp
+            };
         }
 
-        private async Task<ItemDTO> GetMostRecentMediaItem(string type)
+        private async Task<ItemDTO> GetMostRecentMediaItem(string type = "")
         {
-            string searchTerm = GetMediaSearchTerm(type);
+            string searchTerm = string.IsNullOrWhiteSpace(type) ? "*" : GetMediaSearchTerm(type);
 
             var searchResponse = await _client.SearchAsync<ItemDTO>(s => s
                 .Query(q => q
@@ -71,7 +177,9 @@ namespace Infrastructure.Services
                 Id = dto.Id,
                 Name = dto.Name,
                 GlobalSortOrder = dto.GlobalSortOrder,
-                CreateTimestamp = dto.CreateTimestamp
+                CreateTimestamp = dto.CreateTimestamp,
+                FolderId = dto.FolderId,
+                FolderName = dto.FolderName
             };
         }
 
@@ -86,7 +194,7 @@ namespace Infrastructure.Services
 
                     return await CountMediaItems(searchTerm);
                 case "tags":
-                    var countTagResult = await _client.CountAsync<ItemDTO>(c => c.Index("tag"));
+                    var countTagResult = await _client.CountAsync<TagDTO>(c => c.Index("tag"));
 
                     return countTagResult.Count;
                 case "album":

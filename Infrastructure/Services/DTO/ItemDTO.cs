@@ -9,5 +9,6 @@ namespace Infrastructure.Services.DTO
         public string Name { get; set; }
         public DateTime CreateTimestamp { get; set; }
         public string FolderId { get; set; }
+        public string FolderName { get; set; }
     }
 }

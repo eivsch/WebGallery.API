@@ -62,7 +62,7 @@ namespace Infrastructure.Services
 
         public async Task<TagMetadata> GetTagMetadata()
         {
-            var count = Count(Types.Album);
+            var count = Count(Types.Tags);
             var mostPopular = GetMostPopularTag();
             var mostRecent = GetMostRecent();
             var uniqueCount = GetUniqueCount();

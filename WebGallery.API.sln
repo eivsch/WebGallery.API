@@ -15,7 +15,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0D4393FB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Tests", "Application.Tests\Application.Tests.csproj", "{2177A89C-CB39-45FB-AE9B-2BFAED8FEF76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Tests", "Domain.Tests\Domain.Tests.csproj", "{15CD105E-FBB2-4A71-A1A4-E4A6CF852DA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Tests", "Domain.Tests\Domain.Tests.csproj", "{15CD105E-FBB2-4A71-A1A4-E4A6CF852DA0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{63A70200-0024-4F44-8608-16A65E5F63B4}"
+	ProjectSection(SolutionItems) = preProject
+		TodoList.txt = TodoList.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

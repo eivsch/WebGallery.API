@@ -83,11 +83,11 @@ namespace Infrastructure.Galleries
             {
                 var result = await _client.SearchAsync<GalleryDTO>(s => s
                     .Aggregations(a => a
-                            .Terms("my_agg", st => st
-                                .Field(f => f.FolderId.Suffix("keyword"))   // "keyword" is an ElasticSearch data-type: https://www.elastic.co/guide/en/elasticsearch/client/net-api/current/multi-fields.html
-                                .Size(200)
-                            )
+                        .Terms("my_agg", st => st
+                            .Field(f => f.FolderId.Suffix("keyword"))   // "keyword" is an ElasticSearch data-type: https://www.elastic.co/guide/en/elasticsearch/client/net-api/current/multi-fields.html
+                            .Size(800)
                         )
+                    )
                     .Index("picture")
                 );
 

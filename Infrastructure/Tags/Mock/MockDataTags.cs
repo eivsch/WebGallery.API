@@ -6,7 +6,7 @@ namespace Infrastructure.Tags.Mock
 {
     internal class MockDataTags
     {
-        public List<TagDTO> GetAll() => new List<TagDTO>
+        public IEnumerable<TagDTO> GetAll() => new List<TagDTO>
         {
             // Pic 1
             new TagDTO
@@ -48,10 +48,28 @@ namespace Infrastructure.Tags.Mock
                 PictureId = "4",
                 Added = DateTime.Now
             },
+            new TagDTO
+            {
+                TagName = "Like",
+                PictureId = "4",
+                Added = DateTime.Now
+            },
             // Pic 5
             new TagDTO
             {
                 TagName = "Bike",
+                PictureId = "5",
+                Added = DateTime.Now
+            },
+            new TagDTO
+            {
+                TagName = "Like",
+                PictureId = "5",
+                Added = DateTime.Now.AddDays(-2)
+            },
+            new TagDTO
+            {
+                TagName = "Like",
                 PictureId = "5",
                 Added = DateTime.Now
             },

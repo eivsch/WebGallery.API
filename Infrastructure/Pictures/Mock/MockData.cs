@@ -6,7 +6,7 @@ namespace Infrastructure.Pictures.Mock
 {
     internal class MockData
     {
-        public List<PictureDTO> GetAll() => new List<PictureDTO>
+        public IEnumerable<PictureDTO> GetAll() => new List<PictureDTO>
         {
             // gallery1
             new PictureDTO

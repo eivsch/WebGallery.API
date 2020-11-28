@@ -37,6 +37,7 @@ namespace API
             services.AddTransient<IPictureService, PictureService>();
             services.AddTransient<ITagService, TagService>();
             services.AddTransient<IImageService, ImageService>();
+            services.AddTransient<IMetadataService, MetadataService>();
 
             // Domain services
             services.AddTransient<IGalleryGeneratorFactory, GalleryGeneratorFactory>();
@@ -46,6 +47,9 @@ namespace API
             services.AddTransient<IGalleryRepository, GalleryRepository>();
             services.AddTransient<IPictureRepository, PictureRepositoryES>();
             services.AddTransient<ITagRepository, TagRepository>();
+
+            services.AddTransient<Infrastructure.Services.IMetadataService, Infrastructure.Services.MetadataService>();
+            //services.AddTransient<Infrastructure.Services.IMetadataService, Infrastructure.Services.MetadataServiceMock>();
 
             // External dependencies
             services.AddTransient<IWebGalleryDb, WebGalleryDb>((db) =>

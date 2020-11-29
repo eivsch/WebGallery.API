@@ -33,8 +33,8 @@ namespace Application.Services
                 Picture pic;
                 if (!string.IsNullOrWhiteSpace(item.Id))
                     pic = await _pictureRepository.FindById(item.Id);
-                else if (item.GlobalIndex > 0)
-                    pic = await _pictureRepository.FindByIndex(item.GlobalIndex);
+                else if (item.GlobalIndex.HasValue && item.GlobalIndex > 0)
+                    pic = await _pictureRepository.FindByIndex(item.GlobalIndex.Value);
                 else if (!string.IsNullOrWhiteSpace(item.AppPath))
                     pic = await _pictureRepository.FindByAppPath(item.AppPath);
                 else
@@ -43,7 +43,7 @@ namespace Application.Services
                 if (pic is null)
                     throw new ApplicationException($"Cannot add new tag as a picture with id '{item.Id}' / index '{item.GlobalIndex}' does not exist.");
 
-                aggregate.AddMediaItem(pic.Id, null);
+                aggregate.AddMediaItem(pic.Id, item.Created);
             }
 
             await _tagRepository.Save(aggregate);

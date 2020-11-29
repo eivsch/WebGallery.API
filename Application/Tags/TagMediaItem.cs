@@ -6,7 +6,7 @@ namespace Application.Tags
     {
         public string Id { get; set; }
         public string AppPath { get; set; }
-        public int GlobalIndex { get; set; }
+        public int? GlobalIndex { get; set; }
         public DateTime Created { get; set; }
     }
 }

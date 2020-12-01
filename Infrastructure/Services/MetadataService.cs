@@ -75,7 +75,7 @@ namespace Infrastructure.Services
             {
                 Count = (int) count,
                 UniqueCount = aggregatedTagInfo.TotalUnique,
-                MostPopularCount = aggregatedTagInfo.MostPopularCount,
+                MostPopularCount = (int) aggregatedTagInfo.MostPopularCount,
                 MostPopularName = aggregatedTagInfo.MostPopularName,
                 MostRecentMediaName = mostRecent.MediaName,
                 MostRecentTagName = mostRecent.TagName
@@ -83,7 +83,7 @@ namespace Infrastructure.Services
 
             #region TAG METHODS
 
-            async Task<(string MostPopularName, int MostPopularCount, int TotalUnique)> GetAggregatedTagInfo()
+            async Task<(string MostPopularName, long MostPopularCount, int TotalUnique)> GetAggregatedTagInfo()
             {
                 var searchResponse = await _client.SearchAsync<TagDTO>(s => s
                     .Aggregations(a => a
@@ -98,7 +98,7 @@ namespace Infrastructure.Services
                 var buckets = searchResponse.Aggregations.Terms("my_agg").Buckets;
                 var bucket = buckets.OrderByDescending(b => b.DocCount).FirstOrDefault();
 
-                return (bucket?.Key ?? "N/A", bucket?.Count ?? 0, buckets.Count);
+                return (bucket?.Key ?? "N/A", bucket?.DocCount ?? 0, buckets.Count);
             }
 
             async Task<(string TagName, string MediaName)> GetMostRecentTag()
@@ -154,12 +154,12 @@ namespace Infrastructure.Services
 
         private async Task<ItemDTO> GetMostRecentMediaItem(string type = "")
         {
-            string searchTerm = string.IsNullOrWhiteSpace(type) ? "*" : GetMediaSearchTerm(type);
+            string searchTerm = string.IsNullOrWhiteSpace(type) ? "" : GetMediaSearchTerm(type);
 
             var searchResponse = await _client.SearchAsync<ItemDTO>(s => s
                 .Query(q => q
                     .Match(m => m
-                        .Field(f => f.Name.Suffix("keyword"))
+                        .Field(f => f.Name)
                         .Query(searchTerm)
                     )
                 )
@@ -208,7 +208,7 @@ namespace Infrastructure.Services
                 var countPictureResult = await _client.CountAsync<ItemDTO>(c => c
                     .Query(q => q
                         .Match(m => m
-                            .Field(f => f.Name.Suffix("keyword"))
+                            .Field(f => f.Name)
                             .Query(searchTerm)
                         )
                     )

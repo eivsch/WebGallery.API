@@ -25,8 +25,6 @@ namespace DomainModel.Aggregates.GalleryDescriptor
 
         internal void AddTag(string tag)
         {
-            tag = tag.ToUpper();
-
             if (!Tags.Contains(tag))
                 _tags.Add(tag);
         }

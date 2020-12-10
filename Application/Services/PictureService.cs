@@ -17,16 +17,24 @@ namespace Application.Services
         private readonly IPictureRepository _pictureRepository;
         private readonly ITagRepository _tagRepository;
         private readonly IMapper _mapper;
+        private readonly Infrastructure.Services.IMetadataService _metadataService;
 
-        public PictureService(IPictureRepository pictureRepository, ITagRepository tagRepository, IMapper mapper)
+        public PictureService(
+            IPictureRepository pictureRepository, 
+            ITagRepository tagRepository, 
+            IMapper mapper, 
+            Infrastructure.Services.IMetadataService metadataService)
         {
             _pictureRepository = pictureRepository;
             _tagRepository = tagRepository;
             _mapper = mapper;
+            _metadataService = metadataService;
         }
 
         public async Task<PictureResponse> Add(PictureRequest pictureRequest)
         {
+            var currentGlobalMax = await _metadataService.GetGlobalSortOrderMax();
+
             Picture aggregate = Picture.Create
                 (
                     appPath: pictureRequest.AppPath,
@@ -36,8 +44,8 @@ namespace Application.Services
                     folderAppPath: pictureRequest.FolderAppPath,
                     folderSortOrder: pictureRequest.FolderSortOrder,
                     size: pictureRequest.Size,
-                    globalSortOrder: pictureRequest.GlobalSortOrder,
-                    created: pictureRequest.Created
+                    globalSortOrder: ++currentGlobalMax,
+                    created: pictureRequest.CreateTimestamp
                 );
 
             aggregate = await _pictureRepository.Save(aggregate);

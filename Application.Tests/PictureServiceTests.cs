@@ -2,6 +2,7 @@ using Application.Pictures;
 using Application.Services;
 using AutoMapper;
 using Infrastructure.Pictures;
+using Infrastructure.Services;
 using Infrastructure.Tags;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -32,12 +33,11 @@ namespace Application.Tests
                 FolderAppPath = "folderAppPath",
                 FolderSortOrder = 365,
                 Size = 39943,
-                GlobalSortOrder = 33324,
                 Tags = new List<string> { "tag1, tag2" },
-                Created = DateTime.Now
+                CreateTimestamp = DateTime.Now
             };
 
-            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper(), new MetadataServiceMock());
             var response = await service.Add(request);
 
             Assert.IsNotNull(response);
@@ -61,12 +61,11 @@ namespace Application.Tests
                 FolderAppPath = "folderAppPath",
                 FolderSortOrder = 365,
                 Size = 39943,
-                GlobalSortOrder = 33324,
                 Tags = new List<string> { "tag1, tag2" },
-                Created = DateTime.Now
+                CreateTimestamp = DateTime.Now
             };
 
-            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper(), new MetadataServiceMock());
             var response = await service.Add(request);
 
             AssertAllPropertiesHaveValues(response);
@@ -80,7 +79,7 @@ namespace Application.Tests
                 mc.AddProfile(new Mappings.AutoMapperPictureProfile());
             });
 
-            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper(), new MetadataServiceMock());
             var response = await service.Get("1");
 
             AssertAllPropertiesHaveValues(response);
@@ -94,7 +93,7 @@ namespace Application.Tests
                 mc.AddProfile(new Mappings.AutoMapperPictureProfile());
             });
 
-            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper(), new MetadataServiceMock());
             var response = await service.Get(1);
 
             AssertAllPropertiesHaveValues(response);
@@ -108,7 +107,7 @@ namespace Application.Tests
                 mc.AddProfile(new Mappings.AutoMapperPictureProfile());
             });
 
-            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper(), new MetadataServiceMock());
             var response = await service.Get("gallery1", 1);
 
             AssertAllPropertiesHaveValues(response);
@@ -122,7 +121,7 @@ namespace Application.Tests
                 mc.AddProfile(new Mappings.AutoMapperPictureProfile());
             });
 
-            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper(), new MetadataServiceMock());
             var response = await service.GetByAppPath("gallery1\\car.jpg");
 
             AssertAllPropertiesHaveValues(response);
@@ -136,7 +135,7 @@ namespace Application.Tests
                 mc.AddProfile(new Mappings.AutoMapperPictureProfile());
             });
 
-            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper());
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper(), new MetadataServiceMock());
             var response = await service.GetPictures("fhjsh#432434");
 
             foreach (var e in response) AssertAllPropertiesHaveValues(e);

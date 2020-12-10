@@ -62,6 +62,10 @@ namespace DomainModel.Aggregates.Picture
                 throw new ArgumentException("A valid global sort order must be provded.");
 
             string id = CryptographicHelper.HashValues(appPath);
+            
+            if (string.IsNullOrWhiteSpace(folderAppPath))
+                folderAppPath = appPath.Replace(name, "").Replace("\\", "").Replace("/", "");
+                
             string folderId = CryptographicHelper.HashValues(folderAppPath);
 
             return new Picture(id)

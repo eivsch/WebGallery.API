@@ -230,5 +230,10 @@ namespace Infrastructure.Services
 
             return searchTerm;
         }
+
+        public async Task<int> GetGlobalSortOrderMax()
+        {
+            return new MockData().GetAll().Count();
+        }
     }
 }

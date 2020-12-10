@@ -17,19 +17,26 @@ namespace Infrastructure.Services
             _client = elasticClient;
         }
 
+        public async Task<int> GetGlobalSortOrderMax()
+        {
+            var mostRecent = await GetMostRecentMediaItemByGlobalindex();
+
+            return mostRecent?.GlobalSortOrder ?? 0;
+        }
+
         public async Task<MediaMetadata> GetPictureMetadata()
         {
             var count = await Count(Types.Picture);
             //var mostLiked = GetMostLikedItem(Types.Picture);
-            var mostRecent = await GetMostRecentMediaItem(Types.Picture);
+            var mostRecent = await GetMostRecentMediaItemByGlobalindex(Types.Picture);
 
             return new MediaMetadata
             {
                 Count = (int) count,
                 MostLikedCount = 0,
                 MostLikedName = "N/A",
-                MostRecentName = mostRecent.Name,
-                MostRecentTimestamp = mostRecent.CreateTimestamp
+                MostRecentName = mostRecent?.Name ?? "N/A",
+                MostRecentTimestamp = mostRecent?.CreateTimestamp ?? DateTime.MinValue
             };
         }
 
@@ -37,15 +44,15 @@ namespace Infrastructure.Services
         {
             var count = await Count(Types.Gif);
             //var mostLiked = GetMostLikedItem(Types.Gif);
-            var mostRecent = await GetMostRecentMediaItem(Types.Gif);
+            var mostRecent = await GetMostRecentMediaItemByGlobalindex(Types.Gif);
 
             return new MediaMetadata
             {
                 Count = (int) count,
                 MostLikedCount = 0,
                 MostLikedName = "N/A",
-                MostRecentName = mostRecent.Name,
-                MostRecentTimestamp = mostRecent.CreateTimestamp
+                MostRecentName = mostRecent?.Name ?? "N/A",
+                MostRecentTimestamp = mostRecent?.CreateTimestamp ?? DateTime.MinValue
             };
         }
 
@@ -53,15 +60,15 @@ namespace Infrastructure.Services
         {
             var count = await Count(Types.Video);
             //var mostLiked = GetMostLikedItem(Types.Video);
-            var mostRecent = await GetMostRecentMediaItem(Types.Video);
+            var mostRecent = await GetMostRecentMediaItemByGlobalindex(Types.Video);
 
             return new MediaMetadata
             {
                 Count = (int) count,
                 MostLikedCount = 0,
                 MostLikedName = "N/A",
-                MostRecentName = mostRecent.Name,
-                MostRecentTimestamp = mostRecent.CreateTimestamp
+                MostRecentName = mostRecent?.Name ?? "N/A",
+                MostRecentTimestamp = mostRecent?.CreateTimestamp ?? DateTime.MinValue
             };
         }
 
@@ -140,19 +147,19 @@ namespace Infrastructure.Services
         {
             var count = await Count(Types.Album);
             //var mostLiked = GetMostLikedAlbum();
-            var mostRecentItem = await GetMostRecentMediaItem();
+            var mostRecentItem = await GetMostRecentMediaItemByGlobalindex();
 
             return new AlbumMetadata
             {
                 Count = (int) count,
                 MostLikedCount = 0,
                 MostLikedName = "N/A",
-                MostRecentName = mostRecentItem.FolderName,
-                MostRecentTimestamp = mostRecentItem.CreateTimestamp
+                MostRecentName = mostRecentItem?.FolderName ?? "N/A",
+                MostRecentTimestamp = mostRecentItem?.CreateTimestamp ?? DateTime.MinValue
             };
         }
 
-        private async Task<ItemDTO> GetMostRecentMediaItem(string type = "")
+        private async Task<ItemDTO> GetMostRecentMediaItemByGlobalindex(string type = "")
         {
             string searchTerm = string.IsNullOrWhiteSpace(type) ? "" : GetMediaSearchTerm(type);
 
@@ -170,17 +177,9 @@ namespace Infrastructure.Services
                 .Index("picture")
             );
 
-            var dto = searchResponse.Documents.Single();
+            var dto = searchResponse.Documents.FirstOrDefault();
 
-            return new ItemDTO
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                GlobalSortOrder = dto.GlobalSortOrder,
-                CreateTimestamp = dto.CreateTimestamp,
-                FolderId = dto.FolderId,
-                FolderName = dto.FolderName
-            };
+            return dto;
         }
 
         private async Task<long> Count(string type)

@@ -13,8 +13,7 @@ namespace Application.Pictures
         public string FolderAppPath { get; set; }
         public int FolderSortOrder { get; set; }
         public int Size { get; set; }
-        public int GlobalSortOrder { get; set; }
         public IEnumerable<string> Tags { get; set; } = new List<string>();
-        public DateTime Created { get; set; }
+        public DateTime CreateTimestamp { get; set; }
     }
 }

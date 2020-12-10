@@ -10,5 +10,6 @@ namespace Infrastructure.Services
         public Task<MediaMetadata> GetVideoMetadata();
         public Task<TagMetadata> GetTagMetadata();
         public Task<AlbumMetadata> GetAlbumMetadata();
+        Task<int> GetGlobalSortOrderMax();
     }
 }

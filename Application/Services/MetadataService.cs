@@ -93,5 +93,10 @@ namespace Application.Services
 
             return _mapper.Map<MetadataResponse>(aggregate);
         }
+
+        public async Task<int> GetGlobalIndexMax()
+        {
+            return await _metadataService.GetGlobalSortOrderMax();
+        }
     }
 }

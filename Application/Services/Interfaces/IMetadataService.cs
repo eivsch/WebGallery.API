@@ -6,5 +6,6 @@ namespace Application.Services.Interfaces
     public interface IMetadataService
     {
         Task<MetadataResponse> Get(string itemType);
+        Task<int> GetGlobalIndexMax();
     }
 }

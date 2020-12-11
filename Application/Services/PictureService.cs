@@ -33,8 +33,6 @@ namespace Application.Services
 
         public async Task<PictureResponse> Add(PictureRequest pictureRequest)
         {
-            var currentGlobalMax = await _metadataService.GetGlobalSortOrderMax();
-
             Picture aggregate = Picture.Create
                 (
                     appPath: pictureRequest.AppPath,
@@ -44,7 +42,7 @@ namespace Application.Services
                     folderAppPath: pictureRequest.FolderAppPath,
                     folderSortOrder: pictureRequest.FolderSortOrder,
                     size: pictureRequest.Size,
-                    globalSortOrder: ++currentGlobalMax,
+                    globalSortOrder: pictureRequest.GlobalSortOrder,
                     created: pictureRequest.CreateTimestamp
                 );
 

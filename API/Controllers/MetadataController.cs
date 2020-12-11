@@ -31,5 +31,15 @@ namespace API.Controllers
 
             return Ok(data);
         }
+
+        [HttpGet("global-max")]
+        public async Task<IActionResult> Get()
+        {
+            Log.Information("BEGIN - MetadataController|GET");
+
+            var data = await _metadataService.GetGlobalIndexMax();
+
+            return Ok(data);
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace DomainModel.Aggregates.Gallery
     {
         private int _numberOfItems;
         private int _galleryItemIndexStart;
+        private string _galleryName;
         private List<string> _tags = new List<string>();
         private readonly List<MediaType> _mediaTypes = new List<MediaType>();
         private readonly List<GalleryItem> _galleryItems = new List<GalleryItem>();
@@ -22,6 +23,7 @@ namespace DomainModel.Aggregates.Gallery
 
         public virtual int NumberOfItems => _numberOfItems;
         public virtual int GalleryItemIndexStart => _galleryItemIndexStart;
+        public virtual string GalleryName => _galleryName;
         public virtual IReadOnlyCollection<string> Tags => _tags.AsReadOnly();
         public virtual IReadOnlyCollection<MediaType> MediaTypes => _mediaTypes.AsReadOnly();
         public virtual IReadOnlyCollection<GalleryItem> GalleryItems => _galleryItems.AsReadOnly();
@@ -34,14 +36,14 @@ namespace DomainModel.Aggregates.Gallery
                 Id = id;
         }
 
-        public static Gallery Create(string id, int numberOfItems, int galleryItemIndexStart = 1)
+        public static Gallery Create(string id, int numberOfItems, int galleryItemIndexStart = 1, string galleryName = "")
         {
-            
             var gallery = new Gallery(id)
             {
                 _numberOfItems = numberOfItems,
                 _galleryItemIndexStart = galleryItemIndexStart,
-                _galleryItemsRunningIndex = galleryItemIndexStart
+                _galleryItemsRunningIndex = galleryItemIndexStart,
+                _galleryName = galleryName
             };
 
             return gallery;
@@ -72,6 +74,14 @@ namespace DomainModel.Aggregates.Gallery
                 foreach(var tag in tags.Split(','))
                     galleryItem.AddTag(tag);
             }
+        }
+
+        public void SetGalleryName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentNullException(nameof(name));
+                
+            _galleryName = name;
         }
 
         private MediaType ParseMediaTypeFromName(string name)

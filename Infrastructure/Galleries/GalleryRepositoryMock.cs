@@ -68,7 +68,7 @@ namespace Infrastructure.Galleries
             var galleryItems = allData.Take(itemsInGallery);
             foreach (var item in galleryItems)
             {
-                aggregate.AddGalleryItem(item.Id, item.GlobalSortOrder, item.Name);
+                aggregate.AddGalleryItem(item.Id, item.GlobalSortOrder, item.Name, item.AppPath);
             }
 
             return aggregate;
@@ -88,7 +88,7 @@ namespace Infrastructure.Galleries
         {
             var galleryItems = new MockData().GetAll().Where(d => d.FolderId == aggregate.Id && d.FolderSortOrder >= aggregate.GalleryItemIndexStart);
             foreach (var item in galleryItems)
-                aggregate.AddGalleryItem(item.Id, item.GlobalSortOrder, item.Name);
+                aggregate.AddGalleryItem(item.Id, item.GlobalSortOrder, item.Name, item.AppPath);
 
             return aggregate;
         }

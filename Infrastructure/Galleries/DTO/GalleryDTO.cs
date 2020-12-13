@@ -7,6 +7,7 @@ namespace Infrastructure.Galleries.DTO
     {
         public string Id { get; set; }
         public string FolderId { get; set; }
+        public string FolderName { get; set; }
         public IEnumerable<GalleryPictureDTO> GalleryPictures { get; set; }
     }
 }

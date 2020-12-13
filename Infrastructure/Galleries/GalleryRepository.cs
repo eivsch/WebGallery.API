@@ -65,12 +65,16 @@ namespace Infrastructure.Galleries
                 .Index("picture")
             );
 
+            string galleryname = searchResponse.Documents?.FirstOrDefault()?.FolderName ?? "Unknown";
+            gallery.SetGalleryName(galleryname);
+
             foreach (var dto in searchResponse.Documents)
             {
                 gallery.AddGalleryItem(
                     galleryItemId: dto.Id,
                     indexGlobal: dto.GlobalSortOrder,
-                    name: dto.Name
+                    name: dto.Name,
+                    appPath: dto.AppPath
                 );
             }
 
@@ -81,7 +85,7 @@ namespace Infrastructure.Galleries
         {
             try
             {
-                var result = await _client.SearchAsync<GalleryDTO>(s => s
+                var aggregationResponse = await _client.SearchAsync<GalleryDTO>(s => s
                     .Aggregations(a => a
                         .Terms("my_agg", st => st
                             .Field(f => f.FolderId.Suffix("keyword"))   // "keyword" is an ElasticSearch data-type: https://www.elastic.co/guide/en/elasticsearch/client/net-api/current/multi-fields.html
@@ -92,10 +96,26 @@ namespace Infrastructure.Galleries
                 );
 
                 var list = new List<Gallery>();
-                foreach (var bucket in result.Aggregations.Terms("my_agg").Buckets)
+                foreach (var bucket in aggregationResponse.Aggregations.Terms("my_agg").Buckets)
                 {
+                    var singleGallerySearchResponse = await _client.SearchAsync<GalleryDTO>(s => s
+                        .Query(q => q
+                            .Match(m => m
+                                .Field(f => f.FolderId.Suffix("keyword"))
+                                .Query(bucket.Key)
+                            )
+                        )
+                        .Size(1)
+                        .Index("picture")
+                    );
+
+                    var gallery = singleGallerySearchResponse.Documents.FirstOrDefault();
+
                     list.Add(
-                        Gallery.Create(bucket.Key, Convert.ToInt32(bucket.DocCount))
+                        Gallery.Create(
+                            bucket.Key, 
+                            Convert.ToInt32(bucket.DocCount), 
+                            galleryName: gallery.FolderName)
                     );
                 }
 
@@ -129,8 +149,6 @@ namespace Infrastructure.Galleries
 
             return aggregate;
         }
-        
-
 
         private GalleryPictureDTO Map(GalleryItem galleryItem)
         {
@@ -162,7 +180,8 @@ namespace Infrastructure.Galleries
                 gallery.AddGalleryItem(
                     galleryItemId: pic.Id, 
                     indexGlobal: pic.GlobalSortOrder, 
-                    name: pic.Name
+                    name: pic.Name,
+                    appPath: pic.AppPath
                 );
             }
 

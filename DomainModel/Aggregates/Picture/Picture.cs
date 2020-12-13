@@ -58,8 +58,6 @@ namespace DomainModel.Aggregates.Picture
         {
             if (string.IsNullOrWhiteSpace(appPath))
                 throw new ArgumentNullException($"Parameter {nameof(appPath)} cannot be empty");
-            if (globalSortOrder == 0)
-                throw new ArgumentException("A valid global sort order must be provded.");
 
             string id = CryptographicHelper.HashValues(appPath);
             
@@ -99,8 +97,6 @@ namespace DomainModel.Aggregates.Picture
                 throw new ArgumentNullException($"Parameter {nameof(id)} cannot be empty");
             if(string.IsNullOrWhiteSpace(folderId))
                 throw new ArgumentNullException($"Parameter {nameof(folderId)} cannot be empty");
-            if (globalSortOrder == 0)
-                throw new ArgumentException("A valid global sort order must be provded.");
 
             return new Picture(id)
             {

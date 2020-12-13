@@ -11,6 +11,7 @@ namespace DomainModel.Aggregates.Gallery
         private int _indexGallery;
         private string _fileSystemPath;
         private string _name;
+        private string _appPath;
         private MediaType _mediaType;
         private readonly List<string>  _tags;
 
@@ -18,6 +19,7 @@ namespace DomainModel.Aggregates.Gallery
         public virtual int IndexGallery => _indexGallery;
         public virtual string FileSystemPath => _fileSystemPath;
         public virtual string Name => _name;
+        public virtual string AppPath => _appPath;
         public virtual MediaType MediaType => _mediaType;
         public virtual IReadOnlyCollection<string> Tags => _tags;
 
@@ -31,14 +33,15 @@ namespace DomainModel.Aggregates.Gallery
             _tags = new List<string>();
         }
 
-        internal static GalleryItem Create(string id, int indexGlobal, int indexGallery, string name, MediaType mediaType)
+        internal static GalleryItem Create(string id, int indexGlobal, int indexGallery, string name, string appPath, MediaType mediaType)
         {
             var item = new GalleryItem(id)
             {
                 _indexGlobal = indexGlobal,
                 _indexGallery = indexGallery,
                 _name = name,
-                _mediaType = mediaType
+                _mediaType = mediaType,
+                _appPath = appPath
             };
 
             return item;

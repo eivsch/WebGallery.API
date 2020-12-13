@@ -39,6 +39,7 @@ namespace DomainModel.Generators
                         galleryItemId: item.Id,
                         indexGlobal: item.Index,
                         name: item.Name,
+                        appPath: item.AppPath,
                         tags: item.Tags
                     );
                 }

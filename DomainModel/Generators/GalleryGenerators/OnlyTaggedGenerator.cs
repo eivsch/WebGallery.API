@@ -39,11 +39,13 @@ namespace DomainModel.Generators.GalleryGenerators
                     if (picture.Name.ToLower().EndsWith(".gif") && _galleryDescriptor.MediaFilterMode == MediaFilterMode.ExcludeGifs)
                         continue;
 
+                    // TODO: Handle this mapping in a common way for all generators
                     list.Add(new GeneratedItem
                     {
                         Id = picture.Id,
                         Index = picture.GlobalSortOrder,
                         Name = picture.Name,
+                        AppPath = picture.AppPath,
                         Tags = tag.Name
                     });
                 }

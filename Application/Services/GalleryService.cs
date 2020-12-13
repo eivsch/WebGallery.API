@@ -70,7 +70,12 @@ namespace Application.Services
 
             foreach(var item in request.GalleryPictures)
             {
-                aggregate.AddGalleryItem(galleryItemId: item.Id, indexGlobal: item.IndexGlobal, name: "Unknown");
+                aggregate.AddGalleryItem(
+                    galleryItemId: item.Id, 
+                    indexGlobal: item.IndexGlobal, 
+                    name: "Unknown",
+                    appPath: "TODO"
+                );
             }
 
             aggregate = await _galleryRepository.Save(aggregate);

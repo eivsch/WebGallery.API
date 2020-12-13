@@ -44,6 +44,7 @@ namespace DomainModel.Generators.GalleryGenerators
                         Id = picture.Id,
                         Index = picture.GlobalSortOrder,
                         Name = picture.Name,
+                        AppPath = picture.AppPath,
                         Tags = tag.Name,
                     });
                 }

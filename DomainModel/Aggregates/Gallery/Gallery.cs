@@ -47,8 +47,11 @@ namespace DomainModel.Aggregates.Gallery
             return gallery;
         }
 
-        public virtual void AddGalleryItem(string galleryItemId, int indexGlobal, string name, string tags = "")
+        public virtual void AddGalleryItem(string galleryItemId, int indexGlobal, string name, string appPath, string tags = "")
         {
+            if (string.IsNullOrWhiteSpace(appPath))
+                throw new ArgumentNullException(nameof(appPath));
+
             GalleryItem galleryItem = _galleryItems.FirstOrDefault(i => i.Id == galleryItemId);
             if (galleryItem == null)
             {
@@ -57,6 +60,7 @@ namespace DomainModel.Aggregates.Gallery
                     indexGlobal: indexGlobal, 
                     indexGallery: _galleryItemsRunningIndex++,
                     name: name, 
+                    appPath: appPath,
                     mediaType: ParseMediaTypeFromName(name)
                 );
 

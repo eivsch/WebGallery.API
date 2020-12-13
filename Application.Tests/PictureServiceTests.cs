@@ -151,7 +151,6 @@ namespace Application.Tests
             Assert.IsFalse(string.IsNullOrWhiteSpace(response.FolderId));
             Assert.IsTrue(response.FolderSortOrder > 0);
             Assert.IsTrue(response.Size > 0);
-            Assert.IsTrue(response.GlobalSortOrder > 0);
             Assert.IsNotNull(response.Tags);
             Assert.IsTrue(response.Tags.Count() > 0);
             Assert.IsNotNull(response.CreateTimestamp);

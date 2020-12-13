@@ -37,6 +37,7 @@ namespace DomainModel.Generators.GalleryGenerators
                     Id = item.Id,
                     Index = item.IndexGlobal,
                     Name = item.Name,
+                    AppPath = item.AppPath,
                     Tags = string.Join(",", item.Tags)
                 });
             }

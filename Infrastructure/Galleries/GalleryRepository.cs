@@ -70,7 +70,8 @@ namespace Infrastructure.Galleries
                 gallery.AddGalleryItem(
                     galleryItemId: dto.Id,
                     indexGlobal: dto.GlobalSortOrder,
-                    name: dto.Name
+                    name: dto.Name,
+                    appPath: dto.AppPath
                 );
             }
 
@@ -129,8 +130,6 @@ namespace Infrastructure.Galleries
 
             return aggregate;
         }
-        
-
 
         private GalleryPictureDTO Map(GalleryItem galleryItem)
         {
@@ -162,7 +161,8 @@ namespace Infrastructure.Galleries
                 gallery.AddGalleryItem(
                     galleryItemId: pic.Id, 
                     indexGlobal: pic.GlobalSortOrder, 
-                    name: pic.Name
+                    name: pic.Name,
+                    appPath: pic.AppPath
                 );
             }
 

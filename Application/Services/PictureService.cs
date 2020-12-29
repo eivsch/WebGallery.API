@@ -40,9 +40,9 @@ namespace Application.Services
                     name: pictureRequest.Name,
                     folderName: pictureRequest.FolderName,
                     folderAppPath: pictureRequest.FolderAppPath,
-                    folderSortOrder: pictureRequest.FolderSortOrder,
+                    folderSortOrder: pictureRequest.FolderSortOrder ?? -1,
                     size: pictureRequest.Size,
-                    globalSortOrder: pictureRequest.GlobalSortOrder,
+                    globalSortOrder: pictureRequest.GlobalSortOrder ?? -1,
                     created: pictureRequest.CreateTimestamp
                 );
 

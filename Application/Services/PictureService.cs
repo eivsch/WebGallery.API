@@ -83,6 +83,9 @@ namespace Application.Services
         {
             var aggregate = await _pictureRepository.FindByGalleryIndex(galleryId, index);
 
+            if (aggregate is null)
+                return null;
+
             await GetTagsFromPersistenceAndAdd(aggregate);
 
             return _mapper.Map<PictureResponse>(aggregate);

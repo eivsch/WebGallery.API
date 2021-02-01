@@ -37,7 +37,10 @@ namespace Infrastructure.Pictures
                 .Index("picture")
             );
 
-            var dto = searchResponse.Documents.Single();
+            var dto = searchResponse.Documents.FirstOrDefault();
+
+            if (dto is null)
+                return null;
             
             return BuildAggregateFromDto(dto);
         }

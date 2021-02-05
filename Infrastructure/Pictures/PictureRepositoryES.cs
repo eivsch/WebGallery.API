@@ -4,9 +4,7 @@ using Infrastructure.Pictures.DTO.ElasticSearch;
 using Nest;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Pictures
@@ -37,10 +35,10 @@ namespace Infrastructure.Pictures
                 .Index("picture")
             );
 
-            var dto = searchResponse.Documents.FirstOrDefault();
-
-            if (dto is null)
+            if (searchResponse.Documents.Count == 0)
                 return null;
+
+            var dto = searchResponse.Documents.Single();
             
             return BuildAggregateFromDto(dto);
         }
@@ -61,6 +59,9 @@ namespace Infrastructure.Pictures
                     .Size(1)
                     .Index("picture")
                 );
+
+                if (searchResponse.Documents.Count == 0)
+                    return null;
 
                 dto = searchResponse.Documents.Single();
             }
@@ -86,7 +87,7 @@ namespace Infrastructure.Pictures
                 .Index("picture")
             );
 
-            return searchResponse.Documents.Single();
+            return searchResponse.Documents.FirstOrDefault();
         }
 
         public async Task<IEnumerable<Picture>> FindAll(string galleryId, int offset = 0)
@@ -172,6 +173,9 @@ namespace Infrastructure.Pictures
                 .Size(1)
                 .Index("picture")
             );
+
+            if (searchResponse.Documents.Count == 0)
+                return null;
 
             var dto = searchResponse.Documents.Single();
 

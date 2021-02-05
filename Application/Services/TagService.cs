@@ -30,20 +30,16 @@ namespace Application.Services
             var aggregate = DomainModel.Aggregates.Tag.Tag.Create(tagRequest.Name);
             foreach (var item in tagRequest.MediaItems)
             {
-                Picture pic;
-                if (!string.IsNullOrWhiteSpace(item.Id))
-                    pic = await _pictureRepository.FindById(item.Id);
-                else if (item.GlobalIndex.HasValue && item.GlobalIndex > 0)
-                    pic = await _pictureRepository.FindByIndex(item.GlobalIndex.Value);
-                else if (!string.IsNullOrWhiteSpace(item.AppPath))
-                    pic = await _pictureRepository.FindByAppPath(item.AppPath);
-                else
-                    throw new ArgumentException("Must have either a picture id or index in order to add a tag");
+                Picture pic = await _pictureRepository.FindById(item.Id)
+                    ?? await _pictureRepository.FindByAppPath(item.AppPath);
 
+                if (pic is null && item.GlobalIndex.HasValue) 
+                    pic = await _pictureRepository.FindByIndex(item.GlobalIndex.Value); 
+                    
                 if (pic is null)
-                    throw new ApplicationException($"Cannot add new tag as a picture with id '{item.Id}' / index '{item.GlobalIndex}' does not exist.");
+                    throw new ArgumentException($"Cannot add new tag as a picture with id '{item.Id}' / appPath '{item.AppPath}' / index '{item.GlobalIndex}' does not exist.");
 
-                aggregate.AddMediaItem(pic.Id, item.Created);
+                aggregate.AddMediaItem(pic.Id, pic.AppPath, item.Created);
             }
 
             await _tagRepository.Save(aggregate);

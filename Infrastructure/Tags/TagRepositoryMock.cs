@@ -61,7 +61,7 @@ namespace Infrastructure.Tags
                     allTags.Add(aggregate);
                 }
 
-                aggregate.AddMediaItem(dto.PictureId, dto.Added);
+                aggregate.AddMediaItem(dto.PictureId, dto.PictureAppPath, dto.Added);
             }
 
             return allTags;

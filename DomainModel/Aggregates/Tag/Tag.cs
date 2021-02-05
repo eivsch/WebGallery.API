@@ -28,7 +28,7 @@ namespace DomainModel.Aggregates.Tag
             };
         }
 
-        public virtual void AddMediaItem(string itemId, DateTime? created)
+        public virtual void AddMediaItem(string itemId, string itemAppPath, DateTime? created)
         {
             if (!created.HasValue)
                 created = DateTime.UtcNow;
@@ -36,7 +36,7 @@ namespace DomainModel.Aggregates.Tag
             TagMediaItem taggedItem = _mediaItems.FirstOrDefault(i => i.Id == itemId);
             if (taggedItem is null)
             {
-                taggedItem = TagMediaItem.Create(itemId, created.Value);
+                taggedItem = TagMediaItem.Create(itemId, itemAppPath, created.Value);
 
                 _mediaItems.Add(taggedItem);
             }

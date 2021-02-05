@@ -6,6 +6,7 @@ namespace Infrastructure.Tags.DTO
     {
         public string TagName { get; set; }
         public string PictureId { get; set; }
+        public string PictureAppPath { get; set; }
         public DateTime Added { get; set; }
     }
 }

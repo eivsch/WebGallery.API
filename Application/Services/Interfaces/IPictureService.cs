@@ -11,6 +11,7 @@ namespace Application.Services.Interfaces
         Task<PictureResponse> Get(string pictureId);
         Task<PictureResponse> Get(int index);
         Task<PictureResponse> Get(string galleryId, int index);
+        Task<PictureResponse> GetRandomFromAlbum(string albumId);
         Task<PictureResponse> GetByAppPath(string appPath);
         Task<PictureResponse> Add(PictureRequest pictureRequest);
     }

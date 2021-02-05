@@ -119,6 +119,18 @@ namespace Application.Services
             return list;
         }
 
+        public async Task<PictureResponse> GetRandomFromAlbum(string albumId)
+        {
+            var aggregate = await _pictureRepository.FindRandomFromAlbum(albumId);
+
+            if (aggregate is null)
+                return null;
+
+            await GetTagsFromPersistenceAndAdd(aggregate);
+
+            return _mapper.Map<PictureResponse>(aggregate);
+        }
+
         private async Task GetTagsFromPersistenceAndAdd(Picture aggregate)
         {
             var tags = await _tagRepository.FindAllTagsForPicture(aggregate.Id);

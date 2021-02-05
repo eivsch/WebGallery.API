@@ -245,5 +245,32 @@ namespace Infrastructure.Pictures
             
             return BuildAggregateFromDto(dto);
         }
+
+        public async Task<Picture> FindRandomFromAlbum(string albumId)
+        {
+            var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
+                .Query(q => q
+                    .Match(m => m
+                            .Field(f => f.FolderId)
+                            .Query(albumId)
+                        )
+                    && q
+                    .FunctionScore(f => f
+                        .Functions(fx => fx
+                            .RandomScore(rng => rng.Seed(DateTime.Now.Millisecond))
+                        )
+                    )
+                )
+                .Size(1)
+                .Index("picture")
+            );
+
+            if (searchResponse.Documents.Count == 0)
+                return null;
+
+            var dto = searchResponse.Documents.Single();
+
+            return BuildAggregateFromDto(dto);
+        }
     }
 }

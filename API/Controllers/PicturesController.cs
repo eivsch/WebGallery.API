@@ -44,6 +44,21 @@ namespace API.Controllers
             return Ok(pic);
         }
 
+        [HttpGet("random")]
+        public async Task<IActionResult> GetRandom(string albumId)
+        {
+            PictureResponse pic;
+            if (string.IsNullOrWhiteSpace(albumId))
+                pic = await _pictureService.Get(albumId);
+            else 
+                pic = await _pictureService.Get(-1);
+
+            if (pic is null)
+                return NotFound();
+
+            return Ok(pic);
+        }
+
         [HttpGet("single")]
         public async Task<IActionResult> GetSingle(string appPath)
         {

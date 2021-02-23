@@ -114,5 +114,10 @@ namespace Infrastructure.Pictures
             var dto = new MockData().GetAll().FirstOrDefault(d => d.AppPath == appPath);
             return CreateFromDto(dto);
         }
+
+        public Task<Picture> FindRandomFromAlbum(string albumId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

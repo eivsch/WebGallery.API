@@ -48,8 +48,8 @@ namespace API.Controllers
         public async Task<IActionResult> GetRandom(string albumId)
         {
             PictureResponse pic;
-            if (string.IsNullOrWhiteSpace(albumId))
-                pic = await _pictureService.Get(albumId);
+            if (!string.IsNullOrWhiteSpace(albumId))
+                pic = await _pictureService.GetRandomFromAlbum(albumId);
             else 
                 pic = await _pictureService.Get(-1);
 

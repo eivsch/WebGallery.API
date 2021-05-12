@@ -34,7 +34,7 @@ namespace Application.Services
                     ?? await _pictureRepository.FindByAppPath(item.AppPath);
 
                 if (pic is null && item.GlobalIndex.HasValue) 
-                    pic = await _pictureRepository.FindByIndex(item.GlobalIndex.Value); 
+                    pic = await _pictureRepository.FindByIndex(item.GlobalIndex.Value);
                     
                 if (pic is null)
                     throw new ArgumentException($"Cannot add new tag as a picture with id '{item.Id}' / appPath '{item.AppPath}' / index '{item.GlobalIndex}' does not exist.");

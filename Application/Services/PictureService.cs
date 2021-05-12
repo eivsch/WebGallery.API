@@ -79,46 +79,6 @@ namespace Application.Services
             return _mapper.Map<PictureResponse>(aggregate);
         }
 
-        public async Task<PictureResponse> Get(string galleryId, int index)
-        {
-            var aggregate = await _pictureRepository.FindByGalleryIndex(galleryId, index);
-
-            if (aggregate is null)
-                return null;
-
-            await GetTagsFromPersistenceAndAdd(aggregate);
-
-            return _mapper.Map<PictureResponse>(aggregate);
-        }
-
-        public async Task<PictureResponse> GetByAppPath(string appPath)
-        {
-            var aggregate = await _pictureRepository.FindByAppPath(appPath);
-
-            if (aggregate is null)
-                return null;
-
-            await GetTagsFromPersistenceAndAdd(aggregate);
-
-            return _mapper.Map<PictureResponse>(aggregate);
-        }
-
-        public async Task<IEnumerable<PictureResponse>> GetPictures(string galleryId, int offset = 0)
-        {
-            var pictureAggregates = await _pictureRepository.FindAll(galleryId, offset);
-
-            var list = new List<PictureResponse>();
-            foreach (var aggregate in pictureAggregates)
-            {
-                await GetTagsFromPersistenceAndAdd(aggregate);
-                var pictureResponse = _mapper.Map<PictureResponse>(aggregate);
-
-                list.Add(pictureResponse);
-            }
-
-            return list;
-        }
-
         public async Task<PictureResponse> GetRandomFromAlbum(string albumId)
         {
             var aggregate = await _pictureRepository.FindRandomFromAlbum(albumId);

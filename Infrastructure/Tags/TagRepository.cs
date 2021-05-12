@@ -18,6 +18,30 @@ namespace Infrastructure.Tags
             _client = elasticClient;
         }
 
+        public async Task<Tag> Save(Tag aggregate)
+        {
+            foreach (var item in aggregate.MediaItems)
+            {
+                var dto = new TagDTO
+                {
+                    TagName = aggregate.Name,
+                    PictureId = item.Id,
+                    PictureAppPath = item.AppPath,
+                    Added = item.Created
+                };
+
+                var indexRequest = new IndexRequest<TagDTO>(dto, "tag");
+                var response = await _client.IndexAsync(indexRequest);
+
+                if (!response.IsValid)
+                {
+                    throw new Exception(response.DebugInformation);
+                }
+            }
+
+            return aggregate;
+        }
+
         public async Task<IEnumerable<Tag>> FindAllTagsForPicture(string pictureId)
         {
             var searchResponse = await _client.SearchAsync<TagDTO>(s => s
@@ -68,48 +92,6 @@ namespace Infrastructure.Tags
             }
         }
 
-        public async Task<Tag> Save(Tag aggregate)
-        {
-            foreach (var item in aggregate.MediaItems)
-            {
-                var dto = new TagDTO
-                {
-                    TagName = aggregate.Name,
-                    PictureId = item.Id,
-                    PictureAppPath = item.AppPath,
-                    Added = item.Created
-                };
-
-                var indexRequest = new IndexRequest<TagDTO>(dto, "tag");
-                var response = await _client.IndexAsync(indexRequest);
-            
-                if (!response.IsValid)
-                {
-                    throw new Exception(response.DebugInformation);
-                }
-            }
-
-            return aggregate;
-        }
-
-        private List<Tag> BuildAggregatesFromDtoCollection(IEnumerable<TagDTO> dtoList)
-        {
-            var allTags = new List<Tag>();
-            foreach (var dto in dtoList)
-            {
-                Tag aggregate = allTags.FirstOrDefault(t => t.Name == dto.TagName);
-                if (aggregate is null)
-                {
-                    aggregate = Tag.Create(dto.TagName);
-                    allTags.Add(aggregate);
-                }
-
-                aggregate.AddMediaItem(dto.PictureId, dto.PictureAppPath, dto.Added);
-            }
-
-            return allTags;
-        }
-
         public async Task<IEnumerable<Tag>> GetRandom(IEnumerable<string> tags, int items)
         {
             var searchResponse = await _client.SearchAsync<TagDTO>(s => s
@@ -154,7 +136,25 @@ namespace Infrastructure.Tags
             return BuildAggregatesFromDtoCollection(dtos).Single();
         }
 
-        #region Repository Boilerplate
+        private List<Tag> BuildAggregatesFromDtoCollection(IEnumerable<TagDTO> dtoList)
+        {
+            var allTags = new List<Tag>();
+            foreach (var dto in dtoList)
+            {
+                Tag aggregate = allTags.FirstOrDefault(t => t.Name == dto.TagName);
+                if (aggregate is null)
+                {
+                    aggregate = Tag.Create(dto.TagName);
+                    allTags.Add(aggregate);
+                }
+
+                aggregate.AddMediaItem(dto.PictureId, dto.PictureAppPath, dto.Added);
+            }
+
+            return allTags;
+        }
+
+        #region Not Implemented
 
         public Task<IEnumerable<Tag>> FindAll(Tag aggregate)
         {

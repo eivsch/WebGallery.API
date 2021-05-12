@@ -19,6 +19,8 @@ namespace Infrastructure.Galleries
             _client = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
         }
 
+        #region Not Implemented
+
         public Task<Gallery> Find(Gallery aggregate)
         {
             throw new NotImplementedException();
@@ -43,6 +45,13 @@ namespace Infrastructure.Galleries
         {
             throw new NotImplementedException();
         }
+
+        public void Remove(Gallery aggregate)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion Not Implemented
 
         public async Task<Gallery> FillEmptyGalleryWithItems(Gallery gallery)
         {
@@ -127,38 +136,6 @@ namespace Infrastructure.Galleries
             }
         }
 
-        public void Remove(Gallery aggregate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Gallery> Save(Gallery aggregate)
-        {
-            var dto = new GalleryDTO
-            {
-                Id = aggregate.Id,
-                GalleryPictures = aggregate.GalleryItems.ToList().Select(i => Map(i))
-            };
-
-            var indexRequest = new IndexRequest<GalleryDTO>(dto, "gallery");
-            var response = await _client.IndexAsync(indexRequest);
-            if (!response.IsValid)
-            {
-                throw new Exception(response.DebugInformation);
-            }
-
-            return aggregate;
-        }
-
-        private GalleryPictureDTO Map(GalleryItem galleryItem)
-        {
-            return new GalleryPictureDTO
-            {
-                Id = galleryItem.Id,
-                GlobalSortOrder = galleryItem.IndexGlobal
-            };
-        }
-
         public async Task<Gallery> GetRandom(int itemsInGallery)
         {
             Gallery gallery;
@@ -186,6 +163,33 @@ namespace Infrastructure.Galleries
             }
 
             return gallery;
+        }
+
+        public async Task<Gallery> Save(Gallery aggregate)
+        {
+            var dto = new GalleryDTO
+            {
+                Id = aggregate.Id,
+                GalleryPictures = aggregate.GalleryItems.ToList().Select(i => Map(i))
+            };
+
+            var indexRequest = new IndexRequest<GalleryDTO>(dto, "gallery");
+            var response = await _client.IndexAsync(indexRequest);
+            if (!response.IsValid)
+            {
+                throw new Exception(response.DebugInformation);
+            }
+
+            return aggregate;
+        }
+
+        private GalleryPictureDTO Map(GalleryItem galleryItem)
+        {
+            return new GalleryPictureDTO
+            {
+                Id = galleryItem.Id,
+                GlobalSortOrder = galleryItem.IndexGlobal
+            };
         }
     }
 }

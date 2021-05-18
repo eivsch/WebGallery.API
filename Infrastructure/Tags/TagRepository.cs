@@ -1,6 +1,7 @@
 ﻿using DomainModel.Aggregates.Tag;
 using DomainModel.Aggregates.Tag.Interfaces;
 using Infrastructure.Tags.DTO;
+using Microsoft.AspNetCore.Http;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,23 @@ namespace Infrastructure.Tags
     public class TagRepository : ITagRepository
     {
         private readonly IElasticClient _client;
+        private string _indexName;
 
-        public TagRepository(IElasticClient elasticClient)
+        public TagRepository(IElasticClient elasticClient, IHttpContextAccessor httpContextAccessor)
         {
             _client = elasticClient;
+
+            ResolveIndexName();
+
+            void ResolveIndexName()
+            {
+                var httpRequestHeaders = httpContextAccessor.HttpContext.Request.Headers;
+                var userId = httpRequestHeaders["Gallery-User"];
+                if (!string.IsNullOrWhiteSpace(userId))
+                    _indexName = $"{userId}_tag";
+                else
+                    _indexName = "tag";
+            }
         }
 
         public async Task<Tag> Save(Tag aggregate)
@@ -30,7 +44,7 @@ namespace Infrastructure.Tags
                     Added = item.Created
                 };
 
-                var indexRequest = new IndexRequest<TagDTO>(dto, "tag");
+                var indexRequest = new IndexRequest<TagDTO>(dto, _indexName);
                 var response = await _client.IndexAsync(indexRequest);
 
                 if (!response.IsValid)
@@ -53,7 +67,7 @@ namespace Infrastructure.Tags
                     )
                 )
                 .Size(1000)
-                .Index("tag")
+                .Index(_indexName)
             );
 
             var tags = searchResponse.Documents;
@@ -72,7 +86,7 @@ namespace Infrastructure.Tags
                             .Size(1000)
                         )
                     )
-                    .Index("tag")
+                    .Index(_indexName)
                 );
 
                 var list = new List<Tag>();
@@ -110,7 +124,7 @@ namespace Infrastructure.Tags
                     )
                 )
                 .Size(items)
-                .Index("tag")
+                .Index(_indexName)
             );
 
             var response = searchResponse.Documents;
@@ -128,7 +142,7 @@ namespace Infrastructure.Tags
                     )
                 )
                 .Size(1000)
-                .Index("tag")
+                .Index(_indexName)
             );
 
             var dtos = searchResponse.Documents;

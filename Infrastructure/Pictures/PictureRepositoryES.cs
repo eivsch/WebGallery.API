@@ -1,6 +1,7 @@
 ﻿using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
 using Infrastructure.Pictures.DTO.ElasticSearch;
+using Microsoft.AspNetCore.Http;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,25 @@ namespace Infrastructure.Pictures
     public class PictureRepositoryES : IPictureRepository
     {
         private readonly IElasticClient _client;
+        private string _indexName;
 
-        public PictureRepositoryES(IElasticClient elasticClient)
+        public PictureRepositoryES(IElasticClient elasticClient, IHttpContextAccessor httpContextAccessor)
         {
             _client = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
+            
+            ResolveIndexName();
+            
+            void ResolveIndexName()
+            {
+                var httpRequestHeaders = httpContextAccessor.HttpContext.Request.Headers;
+                var userId = httpRequestHeaders["Gallery-User"];
+                if (!string.IsNullOrWhiteSpace(userId))
+                    _indexName = $"{userId}_picture";
+                else
+                    _indexName = "picture";
+            }
         }
+
 
         #region Not Implemented
 
@@ -63,12 +78,12 @@ namespace Infrastructure.Pictures
                 GlobalSortOrder = aggregate.GlobalSortOrder,
             };
 
-            var existing = _client.Get<PictureDTO>(new GetRequest<PictureDTO>("picture", aggregate.Id));
+            var existing = _client.Get<PictureDTO>(new GetRequest<PictureDTO>(_indexName, aggregate.Id));
 
             WriteResponseBase response;
             if (!existing.Found)
             {
-                var indexRequest = new IndexRequest<PictureDTO>(dto, "picture");
+                var indexRequest = new IndexRequest<PictureDTO>(dto, _indexName);
                 response = await _client.IndexAsync(indexRequest);
             }
             else
@@ -76,7 +91,7 @@ namespace Infrastructure.Pictures
                 response = await _client.UpdateAsync<PictureDTO>(dto.Id, u => u
                     .Doc(dto)
                     .Upsert(dto)
-                    .Index("picture")
+                    .Index(_indexName)
                 );
             }
 
@@ -102,7 +117,7 @@ namespace Infrastructure.Pictures
                         )
                     )
                     .Size(1)
-                    .Index("picture")
+                    .Index(_indexName)
                 );
 
                 if (searchResponse.Documents.Count == 0)
@@ -129,7 +144,7 @@ namespace Infrastructure.Pictures
                     )
                 )
                 .Size(1)
-                .Index("picture")
+                .Index(_indexName)
             );
 
             if (searchResponse.Documents.Count == 0)
@@ -150,7 +165,7 @@ namespace Infrastructure.Pictures
                     )
                 )
                 .Size(1)
-                .Index("picture")
+                .Index(_indexName)
             );
 
             if (searchResponse.Documents.Count == 0)
@@ -177,7 +192,7 @@ namespace Infrastructure.Pictures
                     )
                 )
                 .Size(1)
-                .Index("picture")
+                .Index(_indexName)
             );
 
             if (searchResponse.Documents.Count == 0)
@@ -199,7 +214,7 @@ namespace Infrastructure.Pictures
                     )
                 )
                 .Size(1)
-                .Index("picture")
+                .Index(_indexName)
             );
 
             return searchResponse.Documents.FirstOrDefault();

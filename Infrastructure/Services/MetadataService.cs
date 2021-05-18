@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Services.DTO;
 using Infrastructure.Services.ServiceModels;
+using Microsoft.AspNetCore.Http;
 using Nest;
 using System;
 using System.Linq;
@@ -10,11 +11,31 @@ namespace Infrastructure.Services
     public class MetadataService : IMetadataService
     {
         private readonly IElasticClient _client;
+        private string _pictureIndexName;
+        private string _tagIndexName;
         private (string Picture, string Tags, string Gif, string Video, string Album) Types => ("picture", "tags", "gif", "video", "album");
 
-        public MetadataService(IElasticClient elasticClient)
+        public MetadataService(IElasticClient elasticClient, IHttpContextAccessor httpContextAccessor)
         {
             _client = elasticClient;
+
+            ResolveIndexNames();
+
+            void ResolveIndexNames()
+            {
+                var httpRequestHeaders = httpContextAccessor.HttpContext.Request.Headers;
+                var userId = httpRequestHeaders["Gallery-User"];
+                if (!string.IsNullOrWhiteSpace(userId))
+                {
+                    _pictureIndexName = $"{userId}_picture";
+                    _tagIndexName = $"{userId}_tag";
+                }
+                else
+                {
+                    _pictureIndexName = "picture";
+                    _tagIndexName = "tag";
+                }
+            }
         }
 
         public async Task<int> GetGlobalSortOrderMax()
@@ -99,7 +120,7 @@ namespace Infrastructure.Services
                             .Size(800)
                         )
                     )
-                    .Index("tag")
+                    .Index(_tagIndexName)
                 );
 
                 var buckets = searchResponse.Aggregations.Terms("my_agg").Buckets;
@@ -115,7 +136,7 @@ namespace Infrastructure.Services
                         .Descending(p => p.Added)
                     )
                     .Size(1)
-                    .Index("tag")
+                    .Index(_tagIndexName)
                 );
 
                 var tagDto = tagSearchResponse.Documents.FirstOrDefault();
@@ -129,7 +150,7 @@ namespace Infrastructure.Services
                         )
                     )
                     .Size(1)
-                    .Index("picture")
+                    .Index(_pictureIndexName)
                     );
 
                     var itemDto = mediaItemSearchResponse.Documents.Single();
@@ -174,7 +195,7 @@ namespace Infrastructure.Services
                     .Descending(p => p.GlobalSortOrder)
                 )
                 .Size(1)
-                .Index("picture")
+                .Index(_pictureIndexName)
             );
 
             var dto = searchResponse.Documents.FirstOrDefault();
@@ -193,7 +214,7 @@ namespace Infrastructure.Services
 
                     return await CountMediaItems(searchTerm);
                 case "tags":
-                    var countTagResult = await _client.CountAsync<TagDTO>(c => c.Index("tag"));
+                    var countTagResult = await _client.CountAsync<TagDTO>(c => c.Index(_tagIndexName));
 
                     return countTagResult.Count;
                 case "album":
@@ -211,7 +232,7 @@ namespace Infrastructure.Services
                             .Query(searchTerm)
                         )
                     )
-                    .Index("picture")
+                    .Index(_pictureIndexName)
                 );
 
                 return countPictureResult.Count;
@@ -226,7 +247,7 @@ namespace Infrastructure.Services
                             .Size(800)
                         )
                     )
-                    .Index("picture")
+                    .Index(_pictureIndexName)
                 );
 
                 return searchResponse.Aggregations.Terms("my_agg").Buckets.Count;

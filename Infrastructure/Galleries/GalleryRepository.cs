@@ -1,6 +1,7 @@
 ﻿using DomainModel.Aggregates.Gallery;
 using DomainModel.Aggregates.Gallery.Interfaces;
 using Infrastructure.Galleries.DTO;
+using Microsoft.AspNetCore.Http;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,26 @@ namespace Infrastructure.Galleries
     public class GalleryRepository : IGalleryRepository
     {
         private readonly IElasticClient _client;
+        private string _indexName;
 
-        public GalleryRepository(IElasticClient elasticClient)
+        public GalleryRepository(IElasticClient elasticClient, IHttpContextAccessor httpContextAccessor)
         {
             _client = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
+
+            ResolveIndexName();
+
+            void ResolveIndexName()
+            {
+                var httpRequestHeaders = httpContextAccessor.HttpContext.Request.Headers;
+                var userId = httpRequestHeaders["Gallery-User"];
+                if (!string.IsNullOrWhiteSpace(userId))
+                    _indexName = $"{userId}_picture";
+                else
+                    _indexName = "picture";
+            }
         }
+
+        #region Not Implemented
 
         public Task<Gallery> Find(Gallery aggregate)
         {
@@ -44,6 +60,18 @@ namespace Infrastructure.Galleries
             throw new NotImplementedException();
         }
 
+        public async Task<Gallery> Save(Gallery aggregate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Remove(Gallery aggregate)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion Not Implemented
+
         public async Task<Gallery> FillEmptyGalleryWithItems(Gallery gallery)
         {
             if (gallery.GalleryItems.Count != 0)
@@ -62,7 +90,7 @@ namespace Infrastructure.Galleries
                     )
                 )
                 .Size(gallery.NumberOfItems)
-                .Index("picture")
+                .Index(_indexName)
             );
 
             string galleryname = searchResponse.Documents?.FirstOrDefault()?.FolderName ?? "Unknown";
@@ -92,7 +120,7 @@ namespace Infrastructure.Galleries
                             .Size(800)
                         )
                     )
-                    .Index("picture")
+                    .Index(_indexName)
                 );
 
                 var list = new List<Gallery>();
@@ -106,7 +134,7 @@ namespace Infrastructure.Galleries
                             )
                         )
                         .Size(1)
-                        .Index("picture")
+                        .Index(_indexName)
                     );
 
                     var gallery = singleGallerySearchResponse.Documents.FirstOrDefault();
@@ -127,38 +155,6 @@ namespace Infrastructure.Galleries
             }
         }
 
-        public void Remove(Gallery aggregate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Gallery> Save(Gallery aggregate)
-        {
-            var dto = new GalleryDTO
-            {
-                Id = aggregate.Id,
-                GalleryPictures = aggregate.GalleryItems.ToList().Select(i => Map(i))
-            };
-
-            var indexRequest = new IndexRequest<GalleryDTO>(dto, "gallery");
-            var response = await _client.IndexAsync(indexRequest);
-            if (!response.IsValid)
-            {
-                throw new Exception(response.DebugInformation);
-            }
-
-            return aggregate;
-        }
-
-        private GalleryPictureDTO Map(GalleryItem galleryItem)
-        {
-            return new GalleryPictureDTO
-            {
-                Id = galleryItem.Id,
-                GlobalSortOrder = galleryItem.IndexGlobal
-            };
-        }
-
         public async Task<Gallery> GetRandom(int itemsInGallery)
         {
             Gallery gallery;
@@ -171,7 +167,7 @@ namespace Infrastructure.Galleries
                     )
                 )
                 .Size(itemsInGallery)
-                .Index("picture")
+                .Index(_indexName)
             );
 
             gallery = Gallery.Create($"random-{Guid.NewGuid()}".Substring(0, 15).ToLower(), itemsInGallery);

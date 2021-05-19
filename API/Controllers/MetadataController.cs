@@ -25,8 +25,6 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string type)
         {
-            Log.Information("BEGIN - MetadataController|GET");
-
             var data = await _metadataService.Get(type);
 
             return Ok(data);
@@ -35,8 +33,6 @@ namespace API.Controllers
         [HttpGet("global-max")]
         public async Task<IActionResult> Get()
         {
-            Log.Information("BEGIN - MetadataController|GET");
-
             var data = await _metadataService.GetGlobalIndexMax();
 
             return Ok(data);

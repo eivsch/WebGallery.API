@@ -1,6 +1,7 @@
 ﻿using DomainModel.Aggregates.Tag;
 using DomainModel.Aggregates.Tag.Interfaces;
 using Infrastructure.Tags.DTO;
+using Microsoft.AspNetCore.Http;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,47 @@ namespace Infrastructure.Tags
     public class TagRepository : ITagRepository
     {
         private readonly IElasticClient _client;
+        private string _indexName;
 
-        public TagRepository(IElasticClient elasticClient)
+        public TagRepository(IElasticClient elasticClient, IHttpContextAccessor httpContextAccessor)
         {
             _client = elasticClient;
+
+            ResolveIndexName();
+
+            void ResolveIndexName()
+            {
+                var httpRequestHeaders = httpContextAccessor.HttpContext.Request.Headers;
+                var userId = httpRequestHeaders["Gallery-User"];
+                if (!string.IsNullOrWhiteSpace(userId))
+                    _indexName = $"{userId}_tag";
+                else
+                    _indexName = "tag";
+            }
+        }
+
+        public async Task<Tag> Save(Tag aggregate)
+        {
+            foreach (var item in aggregate.MediaItems)
+            {
+                var dto = new TagDTO
+                {
+                    TagName = aggregate.Name,
+                    PictureId = item.Id,
+                    PictureAppPath = item.AppPath,
+                    Added = item.Created
+                };
+
+                var indexRequest = new IndexRequest<TagDTO>(dto, _indexName);
+                var response = await _client.IndexAsync(indexRequest);
+
+                if (!response.IsValid)
+                {
+                    throw new Exception(response.DebugInformation);
+                }
+            }
+
+            return aggregate;
         }
 
         public async Task<IEnumerable<Tag>> FindAllTagsForPicture(string pictureId)
@@ -29,7 +67,7 @@ namespace Infrastructure.Tags
                     )
                 )
                 .Size(1000)
-                .Index("tag")
+                .Index(_indexName)
             );
 
             var tags = searchResponse.Documents;
@@ -48,7 +86,7 @@ namespace Infrastructure.Tags
                             .Size(1000)
                         )
                     )
-                    .Index("tag")
+                    .Index(_indexName)
                 );
 
                 var list = new List<Tag>();
@@ -66,48 +104,6 @@ namespace Infrastructure.Tags
             {
                 throw ex;
             }
-        }
-
-        public async Task<Tag> Save(Tag aggregate)
-        {
-            foreach (var item in aggregate.MediaItems)
-            {
-                var dto = new TagDTO
-                {
-                    TagName = aggregate.Name,
-                    PictureId = item.Id,
-                    PictureAppPath = item.AppPath,
-                    Added = item.Created
-                };
-
-                var indexRequest = new IndexRequest<TagDTO>(dto, "tag");
-                var response = await _client.IndexAsync(indexRequest);
-            
-                if (!response.IsValid)
-                {
-                    throw new Exception(response.DebugInformation);
-                }
-            }
-
-            return aggregate;
-        }
-
-        private List<Tag> BuildAggregatesFromDtoCollection(IEnumerable<TagDTO> dtoList)
-        {
-            var allTags = new List<Tag>();
-            foreach (var dto in dtoList)
-            {
-                Tag aggregate = allTags.FirstOrDefault(t => t.Name == dto.TagName);
-                if (aggregate is null)
-                {
-                    aggregate = Tag.Create(dto.TagName);
-                    allTags.Add(aggregate);
-                }
-
-                aggregate.AddMediaItem(dto.PictureId, dto.PictureAppPath, dto.Added);
-            }
-
-            return allTags;
         }
 
         public async Task<IEnumerable<Tag>> GetRandom(IEnumerable<string> tags, int items)
@@ -128,7 +124,7 @@ namespace Infrastructure.Tags
                     )
                 )
                 .Size(items)
-                .Index("tag")
+                .Index(_indexName)
             );
 
             var response = searchResponse.Documents;
@@ -146,7 +142,7 @@ namespace Infrastructure.Tags
                     )
                 )
                 .Size(1000)
-                .Index("tag")
+                .Index(_indexName)
             );
 
             var dtos = searchResponse.Documents;
@@ -154,7 +150,25 @@ namespace Infrastructure.Tags
             return BuildAggregatesFromDtoCollection(dtos).Single();
         }
 
-        #region Repository Boilerplate
+        private List<Tag> BuildAggregatesFromDtoCollection(IEnumerable<TagDTO> dtoList)
+        {
+            var allTags = new List<Tag>();
+            foreach (var dto in dtoList)
+            {
+                Tag aggregate = allTags.FirstOrDefault(t => t.Name == dto.TagName);
+                if (aggregate is null)
+                {
+                    aggregate = Tag.Create(dto.TagName);
+                    allTags.Add(aggregate);
+                }
+
+                aggregate.AddMediaItem(dto.PictureId, dto.PictureAppPath, dto.Added);
+            }
+
+            return allTags;
+        }
+
+        #region Not Implemented
 
         public Task<IEnumerable<Tag>> FindAll(Tag aggregate)
         {

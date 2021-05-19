@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DomainModel.Aggregates.Gallery.Interfaces;
-using System.Linq;
 using DomainModel.Aggregates.GalleryDescriptor;
 using DomainModel.Factories;
 using AutoMapper;
@@ -57,28 +56,6 @@ namespace Application.Services
             var galleryGenerator = _galleryGeneratorFactory.GetGalleryGenerator(descriptor);
 
             var aggregate = await galleryGenerator.GenerateGallery();
-
-            return _mapper.Map<GalleryResponse>(aggregate);
-        }
-
-        public async Task<GalleryResponse> Save(GalleryRequest request)
-        {
-            var aggregate = Gallery.Create(
-                id: request.Id, 
-                numberOfItems: request.GalleryPictures?.Count() ?? -1
-            );
-
-            foreach(var item in request.GalleryPictures)
-            {
-                aggregate.AddGalleryItem(
-                    galleryItemId: item.Id, 
-                    indexGlobal: item.IndexGlobal, 
-                    name: "Unknown",
-                    appPath: "TODO"
-                );
-            }
-
-            aggregate = await _galleryRepository.Save(aggregate);
 
             return _mapper.Map<GalleryResponse>(aggregate);
         }

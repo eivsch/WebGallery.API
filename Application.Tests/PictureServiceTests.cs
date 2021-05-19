@@ -99,48 +99,6 @@ namespace Application.Tests
             AssertAllPropertiesHaveValues(response);
         }
 
-        [TestMethod]
-        public async Task Test_GetByGalleryAndPictureIds()
-        {
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new Mappings.AutoMapperPictureProfile());
-            });
-
-            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper(), new MetadataServiceMock());
-            var response = await service.Get("gallery1", 1);
-
-            AssertAllPropertiesHaveValues(response);
-        }
-
-        [TestMethod]
-        public async Task Test_GetByAppPath()
-        {
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new Mappings.AutoMapperPictureProfile());
-            });
-
-            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper(), new MetadataServiceMock());
-            var response = await service.GetByAppPath("gallery1\\car.jpg");
-
-            AssertAllPropertiesHaveValues(response);
-        }
-
-        [TestMethod]
-        public async Task Test_GetPictures()
-        {
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new Mappings.AutoMapperPictureProfile());
-            });
-
-            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper(), new MetadataServiceMock());
-            var response = await service.GetPictures("fhjsh#432434");
-
-            foreach (var e in response) AssertAllPropertiesHaveValues(e);
-        }
-
         private void AssertAllPropertiesHaveValues(PictureResponse response)
         {
             Assert.IsFalse(string.IsNullOrWhiteSpace(response.Id));

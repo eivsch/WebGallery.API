@@ -24,6 +24,7 @@ namespace DomainModel.Aggregates.Picture
         private int _size;
         private DateTime _createTimestamp;
         private List<string> _tags = new List<string>();
+        private List<string> _detectedObjects = new List<string>();
 
         public virtual string Name => _name;
         public virtual string AppPath => _appPath;
@@ -35,6 +36,7 @@ namespace DomainModel.Aggregates.Picture
         public virtual int Size => _size;
         public virtual DateTime CreateTimestamp => _createTimestamp;
         public virtual IReadOnlyCollection<string> Tags => _tags;
+        public virtual IReadOnlyCollection<string> DetectedObjects => _detectedObjects.OrderBy(s => s).ToList().AsReadOnly();
 
         private Picture(string id)
         {
@@ -119,6 +121,14 @@ namespace DomainModel.Aggregates.Picture
 
             if (!_tags.Contains(tagName))
                 _tags.Add(tagName);
+        }
+
+        public void AddDetectedObject(string objectName)
+        {
+            if (string.IsNullOrWhiteSpace(objectName))
+                throw new ArgumentNullException(nameof(objectName));
+
+            _detectedObjects.Add(objectName);
         }
     }
 }

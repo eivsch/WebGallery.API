@@ -17,5 +17,6 @@ namespace Application.Pictures
         public int Size { get; set; }
         public DateTime CreateTimestamp { get; set; }
         public IEnumerable<string> Tags { get; set; }
+        public IEnumerable<string> DetectedObjects { get; set; }
     }
 }

@@ -15,5 +15,6 @@ namespace Infrastructure.Pictures.DTO.ElasticSearch
         public int GlobalSortOrder { get; set; }
         public int Size { get; set; }
         public DateTime CreateTimestamp { get; set; }
+        public string DetectedObjects { get; set; }
     }
 }

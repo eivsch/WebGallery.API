@@ -236,8 +236,11 @@ namespace Infrastructure.Pictures
                 created: dto.CreateTimestamp
             );
 
-            foreach(string s in dto.DetectedObjects.Split(','))
-                aggregate.AddDetectedObject(s);
+            if (!string.IsNullOrWhiteSpace(dto.DetectedObjects))
+            {
+                foreach(string s in dto.DetectedObjects.Split(','))
+                    aggregate.AddDetectedObject(s);
+            }
 
             return aggregate;
         }

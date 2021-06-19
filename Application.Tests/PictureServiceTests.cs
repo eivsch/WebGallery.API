@@ -72,6 +72,35 @@ namespace Application.Tests
         }
 
         [TestMethod]
+        public async Task Test_Add_WithDetectedObjects()
+        {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new Mappings.AutoMapperPictureProfile());
+            });
+
+            var request = new PictureRequest
+            {
+                Id = "dsadas",
+                Name = "name",
+                AppPath = "app\\path",
+                OriginalPath = "orig\\path",
+                FolderName = "folderName",
+                FolderAppPath = "folderAppPath",
+                FolderSortOrder = 365,
+                Size = 39943,
+                Tags = new List<string> { "tag1, tag2" },
+                CreateTimestamp = DateTime.Now,
+                DetectedObjects = new List<string> { "object1", "object2", "object3" }
+            };
+
+            var service = new PictureService(new PictureRepositoryMock(), new TagRepositoryMock(), mapperConfig.CreateMapper(), new MetadataServiceMock());
+            var response = await service.Add(request);
+
+            Assert.AreEqual(3, response.DetectedObjects.Count());
+        }
+
+        [TestMethod]
         public async Task Test_GetById()
         {
             var mapperConfig = new MapperConfiguration(mc =>

@@ -76,6 +76,7 @@ namespace Infrastructure.Pictures
                 Size = aggregate.Size,
                 CreateTimestamp = aggregate.CreateTimestamp,
                 GlobalSortOrder = aggregate.GlobalSortOrder,
+                DetectedObjects = string.Join(",", aggregate.DetectedObjects)
             };
 
             var existing = _client.Get<PictureDTO>(new GetRequest<PictureDTO>(_indexName, aggregate.Id));
@@ -234,6 +235,9 @@ namespace Infrastructure.Pictures
                 size: dto.Size,
                 created: dto.CreateTimestamp
             );
+
+            foreach(string s in dto.DetectedObjects.Split(','))
+                aggregate.AddDetectedObject(s);
 
             return aggregate;
         }

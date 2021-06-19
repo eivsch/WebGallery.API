@@ -46,7 +46,11 @@ namespace Application.Services
                     created: pictureRequest.CreateTimestamp
                 );
 
+            foreach (string s in pictureRequest.DetectedObjects)
+                aggregate.AddDetectedObject(s);
+            
             aggregate = await _pictureRepository.Save(aggregate);
+            
             foreach (var tag in pictureRequest.Tags)
             {
                 var tagAggregate = Tag.Create(tag);

@@ -84,6 +84,11 @@ namespace API
 
             services.AddControllers();
 
+            services.AddSwaggerGen(c => 
+            {
+                c.OperationFilter<Utilities.AddRequiredHeaderParameter>();
+            });
+
             if (!IsDevelopmentEnv)
                 services.AddApplicationInsightsTelemetry();     // Should automatically get the key from configuration
         }
@@ -100,6 +105,12 @@ namespace API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebGallery.API");
+            });
 
             // Write streamlined request completion events, instead of the more verbose ones from the framework.
             // To use the default framework request logging instead, remove this line and set the "Microsoft"

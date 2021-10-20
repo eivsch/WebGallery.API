@@ -210,6 +210,7 @@ namespace Infrastructure.Pictures
             {
                 var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
                     .QueryOnQueryString(query)
+                    .Size(48)
                     .Index(_indexName)
                 );
 

@@ -1,3 +1,4 @@
+using API.Utilities;
 using Application.Services;
 using Application.Services.Interfaces;
 using AutoMapper;
@@ -10,6 +11,7 @@ using Infrastructure.Galleries;
 using Infrastructure.Pictures;
 using Infrastructure.Tags;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
@@ -89,6 +91,8 @@ namespace API
                 c.OperationFilter<Utilities.AddRequiredHeaderParameter>();
             });
 
+            ConfigureHealthChecks(services);
+
             if (!IsDevelopmentEnv)
                 services.AddApplicationInsightsTelemetry();     // Should automatically get the key from configuration
         }
@@ -122,7 +126,16 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions()
+                {
+                    ResponseWriter = HealthCheckResponseWriter.WriteResponse
+                });
             });
+        }
+
+        private void ConfigureHealthChecks(IServiceCollection services)
+        {
+            services.AddHealthChecks().AddElasticsearch(Configuration.GetValue($"ConnectionStrings:ElasticSearchEndpoint", ""));
         }
     }
 }

@@ -95,6 +95,13 @@ namespace Application.Services
             return _mapper.Map<PictureResponse>(aggregate);
         }
 
+        public async Task<IEnumerable<PictureResponse>> Search(string query)
+        {
+            var result = await _pictureRepository.Search(query);
+
+            return _mapper.Map<IEnumerable<PictureResponse>>(result);
+        }
+
         private async Task GetTagsFromPersistenceAndAdd(Picture aggregate)
         {
             var tags = await _tagRepository.FindAllTagsForPicture(aggregate.Id);

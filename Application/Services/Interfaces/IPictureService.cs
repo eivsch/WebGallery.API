@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Pictures;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Application.Services.Interfaces
@@ -10,5 +11,6 @@ namespace Application.Services.Interfaces
         Task<PictureResponse> Get(int index);
         Task<PictureResponse> GetRandomFromAlbum(string albumId);
         Task<PictureResponse> Add(PictureRequest pictureRequest);
+        Task<IEnumerable<PictureResponse>> Search(string query);
     }
 }

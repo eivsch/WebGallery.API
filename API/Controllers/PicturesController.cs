@@ -55,5 +55,13 @@ namespace API.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> Search(string query)
+        {
+            var result = await _pictureService.Search(query);
+
+            return Ok(result);
+        }
     }
 }

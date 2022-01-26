@@ -48,9 +48,9 @@ namespace Application.Services
         public async Task<int> DeleteTag(string pictureId, string tagName)
         {
             if (string.IsNullOrWhiteSpace(pictureId))
-                throw new ArgumentException($"Parameter 'pictureId' is empty.");
+                throw new ArgumentNullException($"Parameter 'pictureId' is empty.");
             if (string.IsNullOrWhiteSpace(tagName))
-                throw new ArgumentException($"Parameter 'tagName' is empty.");
+                throw new ArgumentNullException($"Parameter 'tagName' is empty.");
 
             int deletedCount = await _tagRepository.DeleteTag(pictureId, tagName);
 

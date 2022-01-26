@@ -9,5 +9,6 @@ namespace Application.Services.Interfaces
         Task AddTag(Tag tagRequest);
         Task<IEnumerable<Tag>> GetAllUniqueTags();
         Task<Tag> Get(string tagName);
+        Task<int> DeleteTag(string pictureId, string tagName);
     }
 }

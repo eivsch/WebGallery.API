@@ -105,5 +105,10 @@ namespace Infrastructure.Tags
         {
             throw new NotImplementedException();
         }
+
+        public Task<int> DeleteTag(string pictureId, string tagName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

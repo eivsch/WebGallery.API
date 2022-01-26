@@ -9,5 +9,6 @@ namespace DomainModel.Aggregates.Tag.Interfaces
         Task<List<Tag>> GetAllUniqueTags();
         Task<IEnumerable<Tag>> FindAllTagsForPicture(string pictureId);
         Task<IEnumerable<Tag>> GetRandom(IEnumerable<string> tags, int items);
+        Task<int> DeleteTag(string pictureId, string tagName);
     }
 }

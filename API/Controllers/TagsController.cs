@@ -45,5 +45,16 @@ namespace API.Controllers
 
             return Ok();
         }
+
+        [HttpDelete("{pictureId}/{tagName}")]
+        public async Task<IActionResult> Delete(string pictureId, string tagName)
+        {
+            int deletedCount = await _tagService.DeleteTag(pictureId, tagName);
+
+            if (deletedCount > 0)
+                return Ok($"Deleted {deletedCount} tags.");
+
+            return NotFound();
+        }
     }
 }

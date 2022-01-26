@@ -45,6 +45,18 @@ namespace Application.Services
             await _tagRepository.Save(aggregate);
         }
 
+        public async Task<int> DeleteTag(string pictureId, string tagName)
+        {
+            if (string.IsNullOrWhiteSpace(pictureId))
+                throw new ArgumentException($"Parameter 'pictureId' is empty.");
+            if (string.IsNullOrWhiteSpace(tagName))
+                throw new ArgumentException($"Parameter 'tagName' is empty.");
+
+            int deletedCount = await _tagRepository.DeleteTag(pictureId, tagName);
+
+            return deletedCount;
+        }
+
         public async Task<Tag> Get(string tagName)
         {
             var aggregate = DomainModel.Aggregates.Tag.Tag.Create(tagName);

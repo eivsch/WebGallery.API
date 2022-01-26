@@ -58,6 +58,15 @@ namespace Infrastructure.Tags
 
         public async Task<IEnumerable<Tag>> FindAllTagsForPicture(string pictureId)
         {
+            var searchResponse = await SearchTagsByPictureId(pictureId);
+
+            var tags = searchResponse.Documents;
+
+            return BuildAggregatesFromDtoCollection(tags);
+        }
+
+        private async Task<ISearchResponse<TagDTO>> SearchTagsByPictureId(string pictureId)
+        {
             var searchResponse = await _client.SearchAsync<TagDTO>(s => s
                 .Query(q => q
                     .Terms(c => c
@@ -70,9 +79,7 @@ namespace Infrastructure.Tags
                 .Index(_indexName)
             );
 
-            var tags = searchResponse.Documents;
-
-            return BuildAggregatesFromDtoCollection(tags);
+            return searchResponse;
         }
 
         public async Task<List<Tag>> GetAllUniqueTags()
@@ -148,6 +155,31 @@ namespace Infrastructure.Tags
             var dtos = searchResponse.Documents;
 
             return BuildAggregatesFromDtoCollection(dtos).Single();
+        }
+
+
+        public async Task<int> DeleteTag(string pictureId, string tagName)
+        {
+            var searchResponse = await SearchTagsByPictureId(pictureId);
+
+            // Map the internal _id field to the DTO 'Id' field
+            var tags = searchResponse.Hits.Select(h =>
+            {
+                h.Source.Id = h.Id;
+                return h.Source;
+            }).ToList();
+
+            int deleted = 0;
+            foreach (var tag in tags)
+            {
+                if (tag.TagName.ToLower() == tagName.ToLower())
+                {
+                    await _client.DeleteAsync(new DeleteRequest(_indexName, tag.Id));
+                    deleted++;
+                }
+            }
+
+            return deleted;
         }
 
         private List<Tag> BuildAggregatesFromDtoCollection(IEnumerable<TagDTO> dtoList)

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <ApplicationInsightsResourceId>/subscriptions/8b189fd0-5a0d-46bc-a534-4f773d3ac095/resourceGroups/web-gallery-rg/providers/microsoft.insights/components/WebGalleryInsights</ApplicationInsightsResourceId>
     <UserSecretsId>5e80da2a-ceb3-4afb-b70e-0ecd30238a2e</UserSecretsId>
   </PropertyGroup>

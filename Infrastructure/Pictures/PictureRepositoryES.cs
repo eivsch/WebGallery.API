@@ -204,6 +204,27 @@ namespace Infrastructure.Pictures
             return BuildAggregateFromDto(dto);
         }
 
+        public async Task<IEnumerable<Picture>> Search(string query)
+        {
+            try
+            {
+                var searchResponse = await _client.SearchAsync<PictureDTO>(s => s
+                    .QueryOnQueryString(query)
+                    .Size(48)
+                    .Index(_indexName)
+                );
+
+                if (searchResponse.IsValid)
+                    return searchResponse.Documents.Select(s => BuildAggregateFromDto(s));
+
+                throw new Exception(searchResponse.DebugInformation);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         private async Task<PictureDTO> FindRandom()
         {
             var searchResponse = await _client.SearchAsync<PictureDTO>(s => s

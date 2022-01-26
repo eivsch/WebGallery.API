@@ -119,5 +119,10 @@ namespace Infrastructure.Pictures
         {
             throw new NotImplementedException();
         }
+
+        public Task<IEnumerable<Picture>> Search(string query)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

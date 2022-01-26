@@ -9,5 +9,6 @@ namespace DomainModel.Aggregates.Picture.Interfaces
         Task<Picture> FindByIndex(int i);
         Task<Picture> FindByAppPath(string appPath);
         Task<Picture> FindRandomFromAlbum(string albumId);
+        Task<IEnumerable<Picture>> Search(string query);
     }
 }

@@ -16,7 +16,7 @@ namespace API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>()
-                    //.UseUrls("http://0.0.0.0:5051")
+                    //.UseUrls("https://0.0.0.0:5051")
                     ;
                 })
                 .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration

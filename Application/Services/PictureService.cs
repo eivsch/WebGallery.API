@@ -71,6 +71,9 @@ namespace Application.Services
             if (aggregate == null)
                 return false;
 
+            foreach (var tag in aggregate.Tags)
+                await _tagRepository.DeleteTag(aggregate.Id, tag);
+
             await _pictureRepository.Remove(aggregate);
 
             return true;

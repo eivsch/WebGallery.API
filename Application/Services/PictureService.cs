@@ -71,6 +71,7 @@ namespace Application.Services
             if (aggregate == null)
                 return false;
 
+            await GetTagsFromPersistenceAndAdd(aggregate);
             foreach (var tag in aggregate.Tags)
                 await _tagRepository.DeleteTag(aggregate.Id, tag);
 

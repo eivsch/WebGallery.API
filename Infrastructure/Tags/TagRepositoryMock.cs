@@ -101,12 +101,12 @@ namespace Infrastructure.Tags
             throw new NotImplementedException();
         }
 
-        public void Remove(Tag aggregate)
+        public Task<int> DeleteTag(string pictureId, string tagName)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> DeleteTag(string pictureId, string tagName)
+        public Task Remove(Tag aggregate)
         {
             throw new NotImplementedException();
         }

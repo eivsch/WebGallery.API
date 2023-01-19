@@ -65,6 +65,17 @@ namespace Application.Services
             return response;
         }
 
+        public async Task<bool> DeletePicture(string pictureId)
+        {
+            var aggregate = await _pictureRepository.FindById(pictureId);
+            if (aggregate == null)
+                return false;
+
+            await _pictureRepository.Remove(aggregate);
+
+            return true;
+        }
+
         public async Task<PictureResponse> Get(string pictureId)
         {
             var aggregate = await _pictureRepository.FindById(pictureId);

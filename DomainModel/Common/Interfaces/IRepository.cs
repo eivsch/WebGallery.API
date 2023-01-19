@@ -18,6 +18,6 @@ namespace DomainModel.Common.Interfaces
 
         Task<TAggregate> Save(TAggregate aggregate);
 
-        void Remove(TAggregate aggregate);
+        Task Remove(TAggregate aggregate);
     }
 }

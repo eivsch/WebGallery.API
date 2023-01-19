@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Application.Pictures;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace API.Controllers
 {
@@ -42,9 +43,6 @@ namespace API.Controllers
             else 
                 pic = await _pictureService.Get(-1);
 
-            if (pic is null)
-                return NotFound();
-
             return Ok(pic);
         }
 
@@ -62,6 +60,21 @@ namespace API.Controllers
             var result = await _pictureService.Search(query);
 
             return Ok(result);
+        }
+
+        [HttpDelete("sha/{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            bool wasDeleted = await _pictureService.DeletePicture(id);
+
+            if (!wasDeleted)
+            {
+                Log.Information($"Could not delete picture {id}. It might not exist.");
+
+                return Ok();
+            }
+
+            return Ok($"Deleted {id}");
         }
     }
 }

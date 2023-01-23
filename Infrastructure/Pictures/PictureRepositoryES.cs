@@ -1,5 +1,6 @@
 ﻿using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
+using DomainModel.Aggregates.Tag;
 using Infrastructure.Pictures.DTO.ElasticSearch;
 using Microsoft.AspNetCore.Http;
 using Nest;
@@ -41,11 +42,6 @@ namespace Infrastructure.Pictures
         }
 
         public Task<Picture> FindById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Remove(Picture aggregate)
         {
             throw new NotImplementedException();
         }
@@ -242,6 +238,11 @@ namespace Infrastructure.Pictures
             return searchResponse.Documents.FirstOrDefault();
         }
 
+        public async Task Remove(Picture aggregate)
+        {
+            await _client.DeleteAsync(new DeleteRequest(_indexName, aggregate.Id));
+        }
+        
         private Picture BuildAggregateFromDto(PictureDTO dto)
         {
             Picture aggregate = Picture.Create(

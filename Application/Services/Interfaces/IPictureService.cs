@@ -12,5 +12,6 @@ namespace Application.Services.Interfaces
         Task<PictureResponse> GetRandomFromAlbum(string albumId);
         Task<PictureResponse> Add(PictureRequest pictureRequest);
         Task<IEnumerable<PictureResponse>> Search(string query);
+        Task<bool> DeletePicture(string pictureId);
     }
 }

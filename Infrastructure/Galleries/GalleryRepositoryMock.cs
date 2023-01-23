@@ -1,5 +1,6 @@
 ﻿using DomainModel.Aggregates.Gallery;
 using DomainModel.Aggregates.Gallery.Interfaces;
+using DomainModel.Common.Interfaces;
 using Infrastructure.Helpers;
 using Infrastructure.Pictures.Mock;
 using System;
@@ -74,11 +75,6 @@ namespace Infrastructure.Galleries
             return aggregate;
         }
 
-        public void Remove(Gallery aggregate)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<Gallery> Save(Gallery aggregate)
         {
             throw new NotImplementedException();
@@ -91,6 +87,11 @@ namespace Infrastructure.Galleries
                 aggregate.AddGalleryItem(item.Id, item.GlobalSortOrder, item.Name, item.AppPath);
 
             return aggregate;
+        }
+
+        public Task Remove(Gallery aggregate)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DomainModel.Aggregates.Picture;
 using DomainModel.Aggregates.Picture.Interfaces;
+using DomainModel.Common.Interfaces;
 using Infrastructure.Pictures.DTO.ElasticSearch;
 using Infrastructure.Pictures.Mock;
 using Microsoft.IdentityModel.Tokens;
@@ -71,11 +72,6 @@ namespace Infrastructure.Pictures
             };
         }
 
-        public void Remove(Picture aggregate)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Picture> Save(Picture aggregate)
         {
             return aggregate;
@@ -121,6 +117,11 @@ namespace Infrastructure.Pictures
         }
 
         public Task<IEnumerable<Picture>> Search(string query)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Remove(Picture aggregate)
         {
             throw new NotImplementedException();
         }

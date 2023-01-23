@@ -222,7 +222,7 @@ namespace Infrastructure.Tags
             throw new NotImplementedException();
         }
 
-        public void Remove(Tag aggregate)
+        public Task Remove(Tag aggregate)
         {
             throw new NotImplementedException();
         }

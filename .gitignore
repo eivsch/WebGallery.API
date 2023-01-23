@@ -339,3 +339,5 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /API/logs
+API/Properties/ServiceDependencies/webgallery-api - Web Deploy/profile.arm.json
+.vscode/settings.json

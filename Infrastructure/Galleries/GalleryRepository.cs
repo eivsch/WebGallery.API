@@ -65,7 +65,7 @@ namespace Infrastructure.Galleries
             throw new NotImplementedException();
         }
 
-        public void Remove(Gallery aggregate)
+        public Task Remove(Gallery aggregate)
         {
             throw new NotImplementedException();
         }
